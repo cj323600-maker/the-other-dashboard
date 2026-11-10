@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <style>
 :root{--ink:#141B22;--bg:#F4F6F8;--card:#fff;--mut:#5B6773;--line:#E2E7EC;--blue:#1F5FBF;--soft:#F1F5FA;--ok:#1E7B47;--okbg:#E6F4EA;--bad:#B3261E;--badbg:#FBE9E7;
---c-daily:#1F5FBF;--c-weekly:#1E7B47;--c-monthly:#6B3FA0;--c-member:#E07B39;--c-trend:#2F5D8A}
+--c-daily:#1F5FBF;--c-weekly:#1E7B47;--c-monthly:#6B3FA0;--c-member:#E07B39;--c-trend:#2F5D8A;--c-market:#0E7C86}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--ink:#E6EBF0;--bg:#0F1419;--card:#182029;--mut:#98A4AF;--line:#2A3540;--blue:#6E9EE8;--soft:#1D2834;--ok:#5CC48A;--okbg:#17321F;--bad:#F2928A;--badbg:#3A1C1A}}
 *{box-sizing:border-box}
 html,body{margin:0;background:var(--bg);color:var(--ink)}
@@ -85,8 +85,8 @@ h2.sec small{font-size:12px;font-weight:500;color:var(--mut)}
   <nav class="tabs" id="tabs"></nav>
   <main id="view"></main>
   <div class="rule">
-    최신본은 각 저장소 업데이트 시 자동 반영 · 일간보고 <code>Daily-dashboard</code> · 주간보고 <code>week-dashboard</code> · 월간보고 <code>Month-dashboard</code> · 회원사 분석 <code>Country-dashboard</code> · 출품 및 낙찰 추이 <code>Auction-dashboard</code><br>
-    지난 보고서는 이 저장소 메뉴별 폴더(<code>daily</code> <code>weekly</code> <code>monthly</code> <code>member</code> <code>trend</code>)에 <code>날짜_제목.html</code> 형식으로 보관
+    최신본은 각 저장소 업데이트 시 자동 반영 · 일간보고 <code>Daily-dashboard</code> · 주간보고 <code>week-dashboard</code> · 월간보고 <code>Month-dashboard</code> · 회원사 분석 <code>Country-dashboard</code> · 출품 및 낙찰 추이 <code>Auction-dashboard</code> · 수출시장 환경모니터 <code>market/index.html</code><br>
+    지난 보고서는 이 저장소 메뉴별 폴더(<code>daily</code> <code>weekly</code> <code>monthly</code> <code>member</code> <code>trend</code> <code>market</code>)에 <code>날짜_제목.html</code> 형식으로 보관
   </div>
 </div>
 <script>
@@ -101,7 +101,8 @@ var MODS=[
   {key:"weekly", name:"주간보고",          dir:"weekly", src:"week-dashboard",    c:"var(--c-weekly)"},
   {key:"monthly",name:"월간보고",          dir:"monthly",src:"Month-dashboard",   c:"var(--c-monthly)"},
   {key:"member", name:"회원사 분석",       dir:"member", src:"Country-dashboard", c:"var(--c-member)"},
-  {key:"trend",  name:"출품 및 낙찰 추이", dir:"trend",  src:"Auction-dashboard", c:"var(--c-trend)"}
+  {key:"trend",  name:"출품 및 낙찰 추이", dir:"trend",  src:"Auction-dashboard", c:"var(--c-trend)"},
+  {key:"market", name:"수출시장 환경모니터",dir:"market", self:true,              c:"var(--c-market)"}
 ];
 var VIEWABLE=/\.(html?|pdf|png|jpe?g|gif|svg|webp|txt|md)$/i;
 var NEW_DAYS=3,now=new Date(),WK="일월화수목금토";
@@ -141,7 +142,7 @@ function loadTree(){
 }
 
 var DATA=null,ERR=null,LIVE={},KPI=null;
-function liveUrl(m){return(/\.github\.io$/.test(h)?"/":"https://"+CFG.owner+".github.io/")+m.src+"/";}
+function liveUrl(m){if(m.self)return m.dir+"/";return(/\.github\.io$/.test(h)?"/":"https://"+CFG.owner+".github.io/")+m.src+"/";}
 function ago(t){
   if(!t)return"";var s=(now-t)/1000,x=new Date(t);
   var rel=s<3600?Math.max(1,Math.round(s/60))+"분 전":s<86400?Math.round(s/3600)+"시간 전":Math.round(s/86400)+"일 전";
@@ -153,7 +154,7 @@ function loadLive(m){
     if(!r.ok)throw 0;var lm=Date.parse(r.headers.get("last-modified")||"");return r.text().then(function(t){return[t,lm];});
   }).then(function(a){
     var doc=new DOMParser().parseFromString(a[0],"text/html");
-    var st=txt(doc.querySelector(".sub")).replace(/\[대외비\]/g,"").trim();if(st.length>80)st=st.slice(0,80)+"…";
+    var st=txt(doc.querySelector(m.self?".hd p":".sub")).replace(/\[대외비\]/g,"").trim();if(st.length>80)st=st.slice(0,80)+"…";
     LIVE[m.key]={title:(doc.title||m.name).trim(),sub:st,lm:isNaN(a[1])?0:a[1]};
     if(m.key==="daily"){renderAuction(st);KPI=readKpi(doc);}
   }).catch(function(){LIVE[m.key]={title:m.name+" 최신본",sub:"",lm:0};});
@@ -172,7 +173,7 @@ function readKpi(doc){
 function group(paths){
   var out={};
   MODS.forEach(function(m){
-    out[m.key]=paths.filter(function(p){if(p.indexOf(m.dir+"/")!==0)return false;var f=p.split("/").pop();return f.charAt(0)!=="."&&!/^readme\.md$/i.test(f);})
+    out[m.key]=paths.filter(function(p){if(p.indexOf(m.dir+"/")!==0)return false;var f=p.split("/").pop();return f.charAt(0)!=="."&&!/^readme\.md$/i.test(f)&&f!=="index.html";})
       .map(parse).sort(function(a,b){return b.sortKey-a.sortKey||a.file.localeCompare(b.file,"ko");});
   });
   return out;
@@ -206,7 +207,7 @@ function renderHome(){
 
 function renderList(m){
   var v=LIVE[m.key];
-  document.getElementById("view").innerHTML='<section class="panel" style="--c:'+m.c+'"><h2>'+esc(m.name)+'</h2><p class="desc">최신본은 '+esc(m.src)+' 저장소, 지난 보고서는 보관 폴더 '+esc(m.dir)+'/</p>'
+  document.getElementById("view").innerHTML='<section class="panel" style="--c:'+m.c+'"><h2>'+esc(m.name)+'</h2><p class="desc">최신본은 '+esc(m.self?"이 저장소 "+m.dir+"/":m.src+" 저장소")+', 지난 보고서는 보관 폴더 '+esc(m.dir)+'/</p>'
     +'<a class="live" href="'+liveUrl(m)+'"><div class="t">'+esc(v?v.title:m.name)+(v&&v.lm?'<div class="s">업데이트 '+esc(ago(v.lm))+'</div>':'')+'</div><span class="tag">최신본</span></a>'
     +'<input class="search" id="q" type="search" placeholder="지난 보고서 검색 (예: 2026-11, 10월)" autocomplete="off"><div id="list"></div></section>';
   var q=document.getElementById("q");
