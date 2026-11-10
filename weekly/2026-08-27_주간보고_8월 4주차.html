@@ -1,0 +1,1745 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>코오롱오토옥션 주간 보고</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+:root{
+  --ink:#0f1a24; --muted:#6b7c8c; --line:#e3e8ed; --canvas:#f2f4f7; --surface:#fff;
+  --ok:#0e7c66; --warn:#b47800; --bad:#c0392b; --base:#1f6feb; --est:#7f9bb5;
+  --sans:"Pretendard Variable",Pretendard,-apple-system,system-ui,"Malgun Gothic",sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{font-family:var(--sans);background:var(--canvas);color:var(--ink);
+  font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+h2{margin:0;font-size:14px;font-weight:700;letter-spacing:-.02em}
+
+.top{background:var(--ink);color:#fff;padding:14px 16px;border-bottom:3px solid var(--ok)}
+.top b{font-size:16px;letter-spacing:-.03em}
+.top .m{display:flex;align-items:center;gap:8px;margin-top:4px;font-size:11.5px;color:#9fb3c4}
+.top .m span{margin-left:auto;color:#ffb4ac;border:1px solid rgba(255,180,172,.4);
+  padding:2px 7px;border-radius:4px;font-weight:700;font-size:10.5px}
+.top .m span.smp{margin-left:auto;color:#ffd79a;border-color:rgba(255,215,154,.45)}
+.top .m span+span{margin-left:6px}
+
+.wrap{max-width:520px;margin:0 auto;padding:14px 14px 48px}
+@media(min-width:900px){.wrap{max-width:1080px}}
+
+.kpis{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+@media(min-width:900px){.kpis{grid-template-columns:repeat(4,1fr)}}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:11px 12px}
+.kpi .t{font-size:11px;color:var(--muted);font-weight:600;letter-spacing:-.01em}
+.kpi .v{font-size:21px;font-weight:800;letter-spacing:-.04em;margin-top:2px;line-height:1.15}
+.kpi .v em{font-size:12px;font-weight:600;font-style:normal;color:var(--muted);margin-left:2px}
+.kpi .s{font-size:11px;color:var(--muted);margin-top:3px}
+.kpi .s b{font-weight:700}
+.kpi.ok{border-left:3px solid var(--ok)} .kpi.warn{border-left:3px solid var(--warn)}
+.kpi.bad{border-left:3px solid var(--bad)}
+.kpi .s b.ok{color:var(--ok)} .kpi .s b.warn{color:var(--warn)} .kpi .s b.bad{color:var(--bad)}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;
+  padding:12px;margin-bottom:12px}
+.card .hd{display:flex;align-items:baseline;gap:6px;margin-bottom:8px;flex-wrap:wrap}
+.card .hd h2{white-space:nowrap;flex:0 0 auto}
+.card .hd .u{margin-left:auto;font-size:10.5px;color:var(--muted);
+  white-space:normal;text-align:right;flex:1 1 auto;min-width:0;line-height:1.35}
+@media(max-width:620px){
+  .card .hd .u{margin-left:0;text-align:left;flex-basis:100%;font-size:10px}
+}
+.cw{position:relative;height:230px}
+.cw.tall{height:300px}
+@media(max-width:620px){
+  .cw{height:250px}
+  .cw.tall{height:320px}
+  .cw.sm{height:190px}
+}
+.cw.mid{height:210px}
+@media(min-width:900px){.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .grid2 .card{margin-bottom:0}.grid2{margin-bottom:12px}}
+@media(min-width:860px){.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  .grid3 .card{margin-bottom:0}.grid3{margin-bottom:12px}}
+
+.pt{margin:20px 0 8px;font-size:12px;font-weight:800;letter-spacing:-.02em;color:var(--ink);
+  border-left:3px solid var(--ink);padding-left:8px}
+.pt em{font-style:normal;font-weight:600;color:var(--muted);margin-left:5px;font-size:11px}
+
+.tw{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 -12px;padding:0 12px}
+table{border-collapse:collapse;width:100%;font-size:11.5px;white-space:nowrap}
+th,td{border-bottom:1px solid var(--line);padding:6px 6px;text-align:right}
+th{font-weight:700;color:var(--muted);font-size:10.5px;background:#f8fafb;
+  border-bottom:1px solid #cfd8e0}
+th.l,td.l{text-align:left}
+td.n{font-variant-numeric:tabular-nums}
+th:first-child,td:first-child{position:sticky;left:0;background:var(--surface);z-index:1;
+  min-width:104px;max-width:130px;white-space:normal}
+th:first-child{background:#f8fafb}
+tr.sub td{background:#f6f8fa;font-weight:700}
+tr.sub td:first-child{background:#f6f8fa}
+tr.tot td{background:#eef2f5;font-weight:800;border-bottom:1px solid #cfd8e0}
+tr.tot td:first-child{background:#eef2f5}
+tr.der td{color:var(--muted);font-size:10.5px}
+td .nm{font-weight:600;display:block;line-height:1.25}
+td .ds{color:var(--muted);font-size:10px;display:block;line-height:1.25}
+.est{color:var(--est)}
+.bg{display:inline-block;padding:1px 6px;border-radius:9px;font-size:10px;font-weight:800;
+  border:1px solid}
+.bg.ok{color:var(--ok);border-color:#b8ddd3;background:#eefaf6}
+.bg.warn{color:var(--warn);border-color:#f0dca8;background:#fdf7e8}
+.bg.bad{color:var(--bad);border-color:#f2c4bd;background:#fdeeec}
+.bg.na{color:var(--muted);border-color:var(--line);background:#f6f8fa}
+
+.lg{display:flex;flex-wrap:wrap;gap:10px;font-size:10.5px;color:var(--muted);margin-top:8px}
+.lg i{width:9px;height:9px;border-radius:2px;display:inline-block;margin-right:4px;
+  vertical-align:-1px}
+/* 5대 핵심 지표 */
+.kpi5{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:14px}
+@media(min-width:820px){.kpi5{grid-template-columns:repeat(5,1fr)}}
+.k5{background:var(--surface);border:1px solid var(--line);border-radius:10px;
+  padding:11px 12px}
+.k5.ok{border-left:3px solid var(--ok)} .k5.warn{border-left:3px solid var(--warn)}
+.k5.bad{border-left:3px solid var(--bad)}
+.k5 .t{font-size:11px;color:var(--muted);font-weight:700;letter-spacing:-.01em}
+.k5 .v{font-size:23px;font-weight:800;letter-spacing:-.045em;line-height:1.12;margin-top:1px;
+  font-variant-numeric:tabular-nums}
+.k5 .v em{font-size:11.5px;font-weight:600;font-style:normal;color:var(--muted);margin-left:2px}
+.k5 .d{margin-top:3px}
+.dl{font-size:11px;font-weight:800;font-variant-numeric:tabular-nums}
+.dl em{font-style:normal;font-weight:600;font-size:9.5px;color:var(--muted);margin-left:4px}
+.dl.up{color:var(--ok)} .dl.dn{color:var(--bad)} .dl.flat{color:var(--muted)}
+.k5 .s{font-size:10.5px;color:var(--muted);margin-top:5px;padding-top:5px;
+  border-top:1px dashed var(--line)}
+.k5 .s b.ok{color:var(--ok)} .k5 .s b.warn{color:var(--warn)} .k5 .s b.bad{color:var(--bad)}
+/* 지표별 순위 카드 */
+/* 모바일 전용 전치 표 */
+.only-mob{display:block}
+.only-desk{display:none}
+@media(min-width:760px){.only-mob{display:none}.only-desk{display:block}}
+table.rkm.mob{min-width:0;width:100%;table-layout:fixed}
+table.rkm.mob th,table.rkm.mob td{padding:6px 2px;font-size:10px}
+table.rkm.mob th:first-child,table.rkm.mob td:first-child{width:56px;min-width:56px;
+  position:static}
+table.rkm.mob .mn{font-size:9.5px;font-weight:700;color:var(--muted);
+  white-space:normal;line-height:1.25;letter-spacing:-.04em}
+table.rkm.mob .ct{font-size:9.5px;letter-spacing:-.06em;overflow:hidden;
+  text-overflow:ellipsis;white-space:nowrap}
+table.rkm.mob .cv{font-size:8.5px;letter-spacing:-.04em}
+table.rkm.mob .cw{font-size:9px;margin-right:0}
+table.rkm.mob tr.tot td{background:#f0f3f6;font-weight:800}
+table.rkm.mob td.sum{font-size:11px}
+table.rkm.mob .bg{font-size:8.5px;padding:1px 3px}
+/* 가로 스크롤 표에 끝 표시 */
+.card:not(.mcard) .tw{background:linear-gradient(90deg,transparent 92%,
+  rgba(15,26,36,.05));background-attachment:local}
+/* 순위 매트릭스 */
+table.rkm{width:100%;min-width:560px;border-collapse:collapse}
+table.rkm th{font-size:9.5px;padding:6px 5px;white-space:nowrap;text-align:center}
+table.rkm th.l{text-align:left}
+table.rkm td{padding:7px 5px;text-align:center;white-space:nowrap;
+  border-bottom:1px solid var(--line);font-size:11px}
+table.rkm td.l{text-align:left}
+table.rkm th:first-child,table.rkm td:first-child{position:sticky;left:0;
+  background:var(--surface);z-index:1;min-width:60px;width:60px}
+table.rkm th:first-child{background:#f8fafb}
+table.rkm tr.top td{background:#fdf7e8}
+table.rkm tr.top td:first-child{background:#fdf7e8}
+table.rkm td.c1{background:#fdf7e8}
+table.rkm .ct{display:block;font-weight:700;letter-spacing:-.03em;font-size:11px}
+table.rkm tr.top .ct{font-weight:800;color:#8a5c00}
+table.rkm .cv{display:block;font-size:9.5px;color:var(--muted);margin-top:1px;
+  font-variant-numeric:tabular-nums}
+table.rkm tr.top .cv{color:#a08245}
+table.rkm .cw{margin-right:2px}
+table.rkm .rn{display:inline-block;width:16px;height:16px;line-height:16px;
+  border-radius:50%;background:#e7ecf1;color:var(--muted);font-size:9.5px;
+  font-weight:800;text-align:center}
+table.rkm tr.top .rn{background:#b47800;color:#fff}
+table.rkm .rl{display:none}
+table.rkm .tmn{font-weight:700;letter-spacing:-.02em}
+table.rkm td.sum{font-weight:800;font-variant-numeric:tabular-nums;font-size:12px;
+  color:var(--ink)}
+table.rkm tr.top td.sum{color:#8a5c00}
+table.rkm .tmn{color:var(--ink)}
+table.rkm tr.top .tmn{color:#8a5c00;font-weight:800}
+table.rkm tr.top td{color:#8a5c00}
+table.rkm.sc .ct{font-size:10.5px;color:var(--muted);font-weight:700}
+table.rkm.sc tr.top .ct{color:#8a5c00}
+table.rkm.sc .cv{font-weight:800;color:var(--ink);font-size:11px}
+/* 주간 팀별 성적표 */
+.sccard{padding:0;overflow:hidden}
+table.sct{width:100%;table-layout:fixed;border-collapse:separate;border-spacing:0;min-width:0}
+table.sct th{font-size:10.5px;font-weight:800;color:#fff;padding:8px 3px;
+  text-align:center;background:var(--ink);white-space:nowrap;letter-spacing:-.02em}
+table.sct th.l{text-align:left;padding-left:12px}
+table.sct th em{display:block;font-style:normal;font-size:8.5px;font-weight:600;
+  color:#9fb3c4;margin-top:1px}
+table.sct th:first-child,table.sct td:first-child{width:31%;min-width:0;
+  position:static;background:transparent}
+table.sct td{padding:5px 3px;border-bottom:1px solid var(--line);vertical-align:middle}
+table.sct tr:last-child td{border-bottom:0}
+table.sct tr.top td{background:#faf7ff}
+table.sct td.tm{padding-left:8px;white-space:nowrap;overflow:hidden}
+table.sct .rk{display:inline-block;width:19px;height:19px;line-height:19px;text-align:center;
+  border-radius:50%;background:#e7ecf1;color:var(--muted);font-size:10px;font-weight:800;
+  vertical-align:middle;margin-right:5px}
+table.sct tr.top .rk{background:transparent;font-size:14px}
+table.sct .nmw{display:inline-block;vertical-align:middle;max-width:calc(100% - 62px);
+  overflow:hidden}
+table.sct .nm{display:block;font-size:12.5px;font-weight:800;letter-spacing:-.04em;
+  line-height:1.2;overflow:hidden;text-overflow:ellipsis;color:var(--ink)}
+table.sct .ow{display:block;font-size:9.5px;color:var(--muted);line-height:1.2}
+table.sct .hit{display:inline-block;font-size:10px;font-weight:800;padding:2px 5px;
+  border-radius:4px;vertical-align:middle;margin-left:5px}
+table.sct .hit.g{background:var(--ok);color:#fff}
+table.sct .hit.r{background:var(--bad);color:#fff}
+table.sct .cell{border-radius:7px;padding:6px 2px;text-align:center;border:1px solid}
+table.sct .cell.g{background:#eaf7f1;border-color:#bfe4d5}
+table.sct .cell.r{background:#fdecea;border-color:#f5c9c3}
+table.sct .cell .v{display:block;font-size:13px;font-weight:800;color:var(--ink);
+  font-variant-numeric:tabular-nums;letter-spacing:-.04em;line-height:1.15}
+table.sct .cell .d{display:inline-block;margin-top:3px;font-size:10px;font-weight:800;
+  font-variant-numeric:tabular-nums;letter-spacing:-.03em;padding:1px 5px;border-radius:9px}
+table.sct .cell.g .d{color:#0a6553;background:#cdeee0}
+table.sct .cell.r .d{color:#a5301f;background:#f9d5cf}
+.sfoot{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 12px 0}
+.sf{border-radius:8px;padding:9px 11px}
+.sf.g{background:#f1f9f5;border-left:3px solid var(--ok)}
+.sf.r{background:#fdf1ef;border-left:3px solid var(--bad)}
+.sf b{display:block;font-size:11px;margin-bottom:4px}
+.sf.g b{color:var(--ok)} .sf.r b{color:var(--bad)}
+.sf .tn{display:block;font-size:12.5px;font-weight:800;letter-spacing:-.03em}
+.sf .ds{display:block;font-size:10.5px;color:var(--muted);margin-bottom:4px;line-height:1.35}
+.oneline{margin:8px 12px 12px;background:var(--ink);border-radius:8px;padding:10px 12px}
+.oneline b{display:block;font-size:10.5px;color:#ffc98a;margin-bottom:3px}
+.oneline span{display:block;font-size:12.5px;font-weight:700;color:#fff;
+  letter-spacing:-.02em;line-height:1.45}
+@media(max-width:560px){
+  table.sct th:first-child,table.sct td:first-child{width:96px}
+  table.sct th{font-size:9px;padding:6px 1px}
+  table.sct th.l{padding-left:8px}
+  table.sct td{padding:4px 1.5px}
+  table.sct td.tm{padding-left:6px}
+  table.sct .rk{width:16px;height:16px;line-height:16px;font-size:9px;margin-right:3px}
+  table.sct .nmw{max-width:calc(100% - 26px)}
+  table.sct .nm{font-size:11px}
+  table.sct .ow{font-size:8.5px}
+  table.sct .hit{display:block;margin:2px 0 0 19px;width:-moz-fit-content;width:fit-content;
+    font-size:9px;padding:1px 4px}
+  table.sct .cell{padding:5px 0;border-radius:6px}
+  table.sct .cell .v{font-size:11px}
+  table.sct .cell .d{font-size:9px;padding:1px 3px;letter-spacing:-.05em}
+  .sfoot{grid-template-columns:1fr;margin:10px 10px 0}
+  .oneline{margin:8px 10px 10px}
+  .oneline span{font-size:11.5px}
+}
+/* 지표 카드 — 모든 값이 표 안에서 보이도록 */
+.mcard .lg{margin:2px 0 6px}
+.cw.sm{height:172px}
+table.mt{width:100%;table-layout:fixed}
+table.mt th{font-size:9.5px;padding:5px 3px;white-space:nowrap}
+table.mt td{font-size:10.5px;padding:6px 3px;white-space:nowrap;color:var(--ink)}
+table.mt{min-width:0;width:100%}
+table.mt th:first-child,table.mt td:first-child{width:34%;min-width:0;
+  position:static;background:transparent}
+table.mt th:nth-child(2),table.mt td:nth-child(2){width:15%}
+table.mt th:nth-child(3),table.mt td:nth-child(3){width:16%}
+table.mt th:nth-child(4),table.mt td:nth-child(4){width:14%}
+table.mt th:last-child,table.mt td:last-child{width:21%}
+table.mt .rn{vertical-align:middle}
+.mcard .tw{margin:0;padding:0;overflow:visible}
+table.mt td.tmc{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+table.mt .tmn{font-weight:700;letter-spacing:-.03em;margin-left:3px}
+table.mt .cw{font-size:11px;line-height:1;margin-left:2px}
+table.mt tr.top td{background:#f2ecfb;font-weight:800}
+table.mt tr.top .tmn{color:#5b3a8c}
+table.mt td.tg{color:var(--muted);font-variant-numeric:tabular-nums}
+table.mt tr.top td.tg{color:#8b74b3}
+table.mt td.ac{font-weight:800;font-variant-numeric:tabular-nums}
+table.mt .rn{display:inline-block;width:15px;height:15px;line-height:15px;
+  border-radius:50%;background:#e7ecf1;color:var(--muted);font-size:9px;
+  font-weight:800;text-align:center}
+table.mt tr.top .rn{background:#7c4dbe;color:#fff}
+table.mt td.pos{color:var(--ok);font-weight:700;font-variant-numeric:tabular-nums}
+table.mt td.neg{color:var(--bad);font-weight:700;font-variant-numeric:tabular-nums}
+table.mt .bg{font-size:8.5px;padding:1px 3px;white-space:nowrap}
+table.mt .rk{font-size:9.5px;font-weight:700;color:var(--muted)}
+table.mt .rk.r1{color:#b47800}
+.ai{margin-top:8px;font-size:10.5px;line-height:1.55;color:var(--ink);background:#f6f8fa;
+  border:1px solid var(--line);border-radius:7px;padding:7px 9px}
+.ai span{display:inline-block;font-size:9px;font-weight:800;color:#fff;background:var(--slate,#5c7d99);
+  border-radius:3px;padding:1px 5px;margin-right:5px;vertical-align:1px}
+/* 팀 순위 카드 */
+.rkcard .rkbox{display:grid;grid-template-columns:1fr;gap:10px;align-items:center}
+@media(min-width:820px){.rkcard .rkbox{grid-template-columns:minmax(176px,38%) 1fr}}
+.rkl{margin:0;padding:0;list-style:none}
+.rkl li{display:grid;grid-template-columns:17px minmax(0,1fr) auto auto;gap:7px;
+  align-items:center;padding:7px 5px;border-bottom:1px dashed var(--line);
+  font-size:11.5px;white-space:nowrap}
+.rkl li:last-child{border-bottom:0}
+.rkl li.top{background:#fdf7e8;border-radius:6px;border-bottom-color:transparent}
+.rkl .rn{width:17px;height:17px;border-radius:50%;background:#e7ecf1;color:var(--muted);
+  font-size:9.5px;font-weight:800;display:flex;align-items:center;justify-content:center}
+.rkl li.top .rn{background:#b47800;color:#fff}
+.rkl .tm{font-weight:700;letter-spacing:-.02em;overflow:hidden;text-overflow:ellipsis}
+.rkl li.top .tm{font-weight:800}
+.rkl .vl{font-size:13px;font-weight:800;letter-spacing:-.03em;
+  font-variant-numeric:tabular-nums}
+.lg .rt{margin-left:auto;color:var(--muted)}
+/* 이번 주 볼 것 */
+.watch{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--bad);
+  border-radius:10px;padding:12px;margin-bottom:14px}
+.watch .wh{display:flex;align-items:baseline;gap:6px;font-size:14px;font-weight:800;
+  letter-spacing:-.02em;margin-bottom:6px}
+.watch .wh span{margin-left:auto;font-size:11px;font-weight:600;color:var(--muted)}
+.watch ol{margin:0;padding:0;list-style:none}
+.watch li{padding:9px 0;border-top:1px dashed var(--line)}
+.watch li:first-child{border-top:0}
+.wl1{display:flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;
+  letter-spacing:-.01em}
+.wl1 .nm{flex:1;min-width:0}
+.wl1 b{font-variant-numeric:tabular-nums}
+.wl1 b.ok{color:var(--ok)} .wl1 b.warn{color:var(--warn)} .wl1 b.bad{color:var(--bad)}
+.wl1 .inv{font-size:9.5px;font-weight:700;color:var(--bad);border:1px solid #f2c4bd;
+  background:#fdeeec;border-radius:3px;padding:1px 4px;flex:0 0 auto}
+.wl2{font-size:10.5px;color:var(--muted);margin-top:3px}
+.wl3{font-size:11.5px;line-height:1.45;margin-top:4px;display:flex;gap:6px}
+.wl3 em{font-style:normal;font-weight:700;font-size:10px;color:#fff;background:var(--muted);
+  border-radius:3px;padding:1px 4px;height:15px;line-height:13px;flex:0 0 auto;margin-top:1px}
+.wl3.act em{background:var(--ok)}
+.wmore{font-size:10.5px;color:var(--muted);border-top:1px dashed var(--line);
+  padding-top:8px;margin-top:4px}
+/* 접이식 Part */
+details.fold{border:1px solid var(--line);border-radius:10px;background:var(--surface);
+  margin-bottom:10px;overflow:hidden}
+details.fold>summary{list-style:none;cursor:pointer;padding:12px;font-size:12.5px;
+  font-weight:800;letter-spacing:-.02em;display:flex;align-items:center;gap:6px}
+details.fold>summary::-webkit-details-marker{display:none}
+details.fold>summary em{font-style:normal;font-weight:600;color:var(--muted);font-size:10.5px;
+  flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+details.fold>summary .ar{color:var(--muted);font-size:11px}
+details.fold[open]>summary{border-bottom:1px solid var(--line)}
+details.fold[open]>summary .ar{transform:rotate(180deg);display:inline-block}
+.fbody{padding:10px;background:var(--canvas)}
+.fbody .pt{margin-top:8px}
+td.tx{white-space:normal;min-width:150px;max-width:230px;line-height:1.4;
+  font-size:10.5px;color:var(--ink)}
+td .dash{color:var(--line)}
+.note{font-size:10.5px;color:var(--muted);line-height:1.6;margin-top:10px}
+.note b{color:var(--ink)}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <b id="ttl">코오롱오토옥션 주간 보고</b>
+  <div class="m"><span class="smp">8월 W1~W4</span><span id="conf">[대외비]</span></div>
+  <div class="m" id="meta"></div>
+</div>
+
+<main class="wrap" id="app"></main>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>
+/* ══════════════════════════════════════════════════════════════
+   DATA — 이 블록만 매주 갈아끼우면 표·차트·전망·판정이 전부 재계산됩니다.
+   · w:[W1,W2,W3,W4,W5]  · 미입력은 null (합계·전망에서 제외, 화면엔 -)
+   · actual:2 → W1~W2 실적, W3~ 추정 (파란 글씨)
+   · stock:true → 시점 지표 (월 전망 = 마지막 값, 합산 아님)
+   · inv:true → 역지표 (낮을수록 좋음, 판정 반전)
+   ※ 본 파일의 실적 수치는 전부 예시값입니다.
+   ══════════════════════════════════════════════════════════════ */
+const DATA = {
+  rankBy:"value",          /* 팀 순위 기준 — "value" 실적 / "ach" 달성률 */
+  period:"2026년 8월 4주차",
+  asOf:"2026-08-27",
+  weeks:["W1","W2","W3","W4","W5"],
+  actual:4,                /* W1~W4 실적 확정 · W5 없음 */
+
+  /* Part 1 ─ 출품대수 (대) */
+  listing:[
+    {g:"자사 매입", rows:[
+      {nm:"법인영업", ds:"자체", ow:"김지훈", t:100,  w:[39,32,26,17,null]},
+      {nm:"플랫폼매입", ds:"매입 출품",        ow:"조성익", t:200,  w:[71,52,43,58,null]},
+      {nm:"출품영업", ds:"출품전문점ㆍ인",     ow:"최현우", t:2721, w:[635,582,498,527,null]},
+      {nm:"경매운영(FC)", ds:"FC+클레임",          ow:"정경태", t:838,  w:[276,220,163,225,null]}
+    ]},
+    {g:"출품 유도", rows:[
+      {nm:"법인영업", ds:"제휴ㆍ협력점",       ow:"김지훈", t:915,  w:[467,478,302,330,null]},
+      {nm:"출품영업", ds:"출품전문점ㆍ인",     ow:"최현우", t:1189, w:[294,261,276,262,null]},
+      {nm:"경매운영(FC)", ds:"FC+기타",            ow:"정경태", t:1487, w:[388,300,308,311,null]}
+    ]}
+  ],
+
+  /* Part 1 ─ 낙찰대수 (대) */
+  won:[
+    {g:"자사 낙찰", rows:[
+      {nm:"법인영업", ds:"자체", ow:"김지훈", t:111,  w:[20,14,13,6,null]},
+      {nm:"플랫폼매입", ds:"매입 출품",        ow:"조성익", t:136,  w:[43,33,27,42,null]},
+      {nm:"출품영업", ds:"출품전문점ㆍ인",     ow:"최현우", t:1351, w:[313,317,253,301,null]},
+      {nm:"경매운영(FC)", ds:"FC+클레임",          ow:"정경태", t:434,  w:[146,115,86,147,null]}
+    ]},
+    {g:"유도 낙찰", rows:[
+      {nm:"법인영업", ds:"제휴ㆍ협력점",       ow:"김지훈", t:571,  w:[208,255,121,175,null]},
+      {nm:"출품영업", ds:"출품전문점ㆍ인",     ow:"최현우", t:570,  w:[130,120,128,128,null]},
+      {nm:"경매운영(FC)", ds:"FC+기타",            ow:"정경태", t:779,  w:[206,174,176,171,null]}
+    ]}
+  ],
+
+  /* Part 1 ─ 매출액 (원) */
+  rev:[
+    {nm:"법인영업", ds:"상품 매출+중개ㆍ서비스 수수료", ow:"김지훈", t:2938974227,
+     w:[359020690,164161270,237676900,224346840,null],
+     why:"매출액 985백만 / 목표 2,939백만",
+     act:"자체 매입 파이프라인 점검"},
+    {nm:"플랫폼매입", ds:"상품 매출",                   ow:"조성익", t:1823976000,
+     w:[483090911,363363639,431681817,530681819,null]},
+    {nm:"출품영업", ds:"상품 매출+중개 수수료",         ow:"최현우", t:11369164070,
+     w:[2517245218,2849373720,2144789743,2518187310,null],
+     why:"재경매 물량 감소 (1,648대 / 목표 2,151대) 및 재출품 낙찰률 43.2%",
+     act:"재출품 3회차 이상 차량 시작가 인하 룰 적용"},
+    {nm:"경매운영(FC)", ds:"상품 매출+중개 수수료",         ow:"정경태", t:5931455468,
+     w:[1710470394,1455919419,1215403624,1563910223,null]}
+  ],
+
+  /* Part 1 ─ 매출이익 (원) */
+  gp:[
+    {nm:"법인영업", ds:"상품 매출익+중개ㆍ서비스 수수료", ow:"김지훈", t:227700258,
+     w:[49970010,44889994,51207736,45542707,null],
+     why:"매출액 미달에 연동 (전망 192백만 / 목표 228백만)",
+     act:"자체 매입 수익성 점검"},
+    {nm:"플랫폼매입", ds:"상품 매출익",                   ow:"조성익", t:34584640,
+     w:[9503328,19324009,15444246,33755451,null]},
+    {nm:"출품영업", ds:"중개 수수료",                     ow:"최현우", t:451594678,
+     w:[108667280,114698653,97083092,106869759,null],
+     why:"재출품 수수료 168백만 (목표 270백만, 62%)",
+     act:"인센티브(매출에누리) 미반영분 월말 정산 후 재집계"},
+    {nm:"경매운영(FC)", ds:"상품 매출익+중개 수수료",         ow:"정경태", t:427995518,
+     w:[124155383,108058176,76848603,142201562,null]}
+  ],
+
+  /* 레버 산출용 ─ 중개 수수료 합 (Part 2 총계, 원) */
+  fee:{nm:"중개 수수료 합", ds:"출품영업팀 기준", t:490212914,
+       w:[103729119,104755471,93027469,99871602,null]},
+
+  /* 레버 목표 (시트 G51:G54 / 대당 수수료는 D75ㆍD77 목표 적용) */
+  leverT:{ownWin:0.50, indWin:0.50, feePer:258000, expCvr:0.15},
+
+  /* Part 2 ─ 출품영업팀 상세 */
+  p2:{
+    list:[
+      {nm:"신규 경매 대수", ds:"대", t:1759.5, w:[445,409,400,433,null]},
+      {nm:"재경매 대수",    ds:"대", t:2150.5, w:[484,434,374,356,null]}
+    ],
+    win:[
+      {nm:"신규 경매 낙찰", ds:"대", t:864,  w:[239,239,230,272,null]},
+      {nm:"재경매 낙찰",    ds:"대", t:1056, w:[204,198,151,159,null]}
+    ],
+    price:[
+      {nm:"신규 출품 낙찰가", ds:"원", t:7404867025,
+       w:[1996550000,2082350000,2088550000,2195950000,null]},
+      {nm:"재출품 낙찰가",    ds:"원", t:9050393031,
+       w:[1553650000,1680250000,1366000000,1403700000,null]}
+    ],
+    fee:[
+      {nm:"신규 출품 수수료", ds:"원", t:220595811.3,
+       w:[57294785,57447810,55712412,62863188,null]},
+      {nm:"재출품 수수료",    ds:"원", t:269617102.7,
+       w:[46434334,47307661,37315057,37008414,null]}
+    ],
+    acct:[
+      {nm:"활성 출품처 수", ds:"회차 출품 실적 보유", ow:"최현우", t:120, stock:true, f:"num",
+       w:[112,114,117,120,null]},
+      {nm:"신규 출품처",    ds:"신규 계약",           ow:"최현우", t:4,   f:"num",
+       w:[1,1,1,1,null]},
+      {nm:"상위 10개처 비중", ds:"집중 리스크 · 주 평균", ow:"최현우", t:0.45, avg:true, inv:true, f:"pct",
+       w:[0.47,0.46,0.46,0.45,null]}
+    ]
+  },
+
+  /* Part 3 ─ 재무회계팀 (재무 확정 기준, Part 1 과 집계 범위 상이) */
+  p3:[
+    {nm:"매출액",      ds:"8/27~ 추정치 포함", ow:"황지은", t:22259986511, f:"mil",
+     w:[5263447068,5041746712.727273,4252898856.545454,5172301141.227273,null]},
+    {nm:"매출 이익",   ds:"8/27~ 추정치 포함", ow:"황지은", t:1252815661,  f:"mil",
+     w:[323955993,304134500.727273,263719222.54545403,319294012.227273,null]},
+    {nm:"영업 이익",   ds:"8/27~ 추정치 포함", ow:"황지은", t:284336595,   f:"mil",
+     w:[81836226.25,62014733.97727299,21599455.795454025,77174245.47727299,null],
+     why:"W3 영업이익 22백만으로 급락 — 매출총이익 감소 + 판관비 정액",
+     act:"9월 판관비 집행 순연 항목 선별"},
+    {nm:"재고 평가액", ds:"매주 수요일 기준 · W4 월말", ow:"황지은", t:null, f:"mil",
+     stock:true, inv:true,
+     w:[7865028664,7390279807,6586657922,9251127190,null],
+     why:"W4 월말 재고 9,251백만 — 전주 대비 +2,664백만",
+     act:"60일 초과 재고 도매 처분 라인 가동"}
+  ],
+
+  /* Part 4 ─ 경매운영팀 (FC/기타 회차 기준) */
+  p4:[
+    {nm:"출품 대수", ds:"회차 전체", ow:"정경태", t:2325, f:"num", w:[664,520,471,536,null]},
+    {nm:"낙찰 대수", ds:"회차 전체", ow:"정경태", t:1213, f:"num", w:[352,289,262,318,null]}
+  ],
+
+  /* Part 5 ─ 회원운영팀 (활동량ㆍ낙찰 목표 = 시트 주평균 × 4주) */
+  p5:{
+    mem:[
+      {g:"기존", rows:[
+        {nm:"내수 회원", ds:"시점값", ow:"최동근", t:1283, stock:true,
+         w:[1237,1240,1248,1257,null]},
+        {nm:"수출 회원", ds:"시점값", ow:"최동근", t:853,  stock:true,
+         w:[823,826,837,842,null]}
+      ]},
+      {g:"신규", rows:[
+        {nm:"내수 회원", ds:"월 누계", ow:"최동근", t:16, w:[3,8,4,5,null]},
+        {nm:"수출 회원", ds:"월 누계", ow:"최동근", t:16, w:[3,11,5,1,null]}
+      ]}
+    ],
+    win:[
+      {g:"회원 활동량", rows:[
+        {nm:"내수 회원", ds:"주 평균", ow:"최동근", t:488, avg:true, w:[452,423,392,435,null]},
+        {nm:"수출 회원", ds:"주 평균", ow:"최동근", t:294, avg:true, w:[250,253,248,254,null]}
+      ]},
+      {g:"낙찰 대수", rows:[
+        {nm:"내수 회원", ds:"주 평균", ow:"최동근", t:440, avg:true, w:[457,491,376,467,null]},
+        {nm:"수출 회원", ds:"주 평균", ow:"최동근", t:537, avg:true, w:[609,537,428,508,null]}
+      ]}
+    ]
+  },
+
+  /* Part 6 ─ 경매지원팀 */
+  p6:[
+    {nm:"정산 대수", ds:"낙찰 대비", ow:"남윤정", t:3873, rt:1.0,
+     w:[1066,1028,794,462,null],
+     why:"8/26 경매 10대 미수 — 외화송금 지연",
+     act:"8/27~28 정산 예정"},
+    {nm:"반출 대수", ds:"낙찰 대비", ow:"남윤정", t:3873, rt:1.0,
+     w:[1066,1027,791,341,null],
+     why:"정산 지연분이 반출로 순차 전이 (W4 반출률 73.8%)",
+     act:"정산 완료 즉시 반출 알림 자동화"}
+  ],
+
+  /* Part 7 ─ 디지털혁신실 */
+  p7:[
+    {nm:"공매시스템 (홈페이지ㆍERP)", ow:"최종호", due:"2026-10-01", st:"정상", pr:0.83,
+     wk:"총 175건 중 145건 완료, 30건 진행 중", dec:"경매ㆍ공매 중복 로그인 허용 여부 상충"},
+    {nm:"전기차 배터리 점검", ow:"최종호", due:"2026-09-14", st:"정상", pr:0.40,
+     wk:"피엠그로우 API 연동 (3/3건 완료)", dec:"OBD 단자 확보 필요 — 현재 테스트 불가"},
+    {nm:"출품리스트 UI/UX 리뉴얼", ow:"최종호", due:"2026-10-01", st:"정상", pr:1.00,
+     wk:"QA 진행 중", dec:"-"},
+    {nm:"협력점 정산관리", ow:"최종호", due:"2026-09-01", st:"정상", pr:0.90,
+     wk:"등급 성장 인센티브", dec:"-"},
+    {nm:"경매 실시간 응찰앱 (PCㆍ모바일)", ow:"최종호", due:"미정", st:"정상", pr:0.40,
+     wk:"디자인 진행 중 (8/24)", dec:"오픈일 미정 — 목표일 확정 필요"},
+    {nm:"경매 홈페이지 다국어 적용", ow:"최종호", due:"2026-10-30", st:"지연", pr:0.90,
+     wk:"공매시스템 완료 대기", dec:"공매시스템 완료 후 적용"}
+  ],
+
+  /* Part 8 ─ 수출사업팀 */
+  p8:[
+    {nm:"신규 문의", ds:"건", ow:"이규진", t:40, f:"num", w:[12,14,4,2,null],
+     why:"광고 미집행", act:"아웃바운드 개발"},
+    {nm:"성약",      ds:"건 · 주차별 미입력", ow:"이규진", t:10, f:"num", mo:1,
+     w:[null,null,null,null,null],
+     why:"현행 사업 모델 판매 한계", act:"기존 거래 바이어 추가 성약 유도"}
+  ],
+
+  /* ── 원인ㆍ대안 (집계 행 기준) ── */
+  NOTE:{
+    'rev.total'   :{why:'출품영업 매출액 -1,340백만, 법인영업 -1,954백만이 부족분의 대부분',
+                    act:'출품 소스별 목표 재정렬 필요 — 매출액ㆍ매출이익 목표 재배분 협의'},
+    'gp.total'    :{why:'총계는 목표 달성(100.6%) — 팀 간 편차가 큼',
+                    act:'플랫폼매입 초과분(226%)이 법인ㆍ출품영업 부족분 상쇄'},
+    'won.total'   :{why:'유도 낙찰 98.7%, 자사 낙찰 소계 93.7%',
+                    act:'자사 매입 물량 자체가 목표 미달 — 매입 파이프라인 점검'},
+    'list.total'  :{why:'자사 매입 3,464대(89.8%) 부족, 출품 유도 3,977대(110.7%)로 상쇄',
+                    act:'출품 소스 믹스 변화 — 월 목표 재배분 검토'},
+    'list.own'    :{why:'출품영업 2,242대(82.4%)가 자사 매입 소계 미달의 주원인',
+                    act:'자체 매입 채널 재점검'},
+    'lever.indWin':{why:'출품유도 낙찰률 49.4% — 목표 50% 근접',
+                    act:'현행 유지'},
+    'lever.feePer':{why:'대당 중개 수수료 237천원 (목표 258천원)',
+                    act:'재출품 수수료율 조정안 검토'},
+    'p2.list'     :{why:'재경매 대수 1,648대(76.6%)가 총계 미달의 주원인',
+                    act:'재출품 회전 주기 단축 — 유찰 차량 재등록 자동화'},
+    'p2.won'      :{why:'재경매 낙찰 712대(67.4%), 낙찰률 43.2%',
+                    act:'재출품 시작가 인하 룰 적용'},
+    'p2.fee'      :{why:'재출품 수수료 168백만(62.3%)',
+                    act:'재출품 낙찰 회복 시 자동 개선 — 별도 조치 불요'},
+    'p4.rate'     :{why:'회차 낙찰률 55.7% — 목표 52.2% 초과 달성',
+                    act:'현행 유지'},
+    'p6.settleRate':{why:'W4 정산률 47.5% — 월말 미수 및 외화송금 지연',
+                    act:'8/27~28 정산 완료 후 재집계'},
+    'p6.releaseRate':{why:'W4 반출률 73.8%', act:'정산 완료분 즉시 반출 처리'},
+    'p8.cvr'      :{why:'전환율 3.1% (목표 15%) — 성약 1건',
+                    act:'현행 사업 모델 한계, 바이어 기반 확대'},
+    'p7.0'        :{why:'경매ㆍ공매 중복 로그인 허용 여부 상충',
+                    act:'정책 확정 필요 — 9월 첫 주 결정'},
+    'p7.1'        :{why:'OBD 단자 미확보로 테스트 불가',
+                    act:'단자 구매 승인 요청'},
+    'p7.5'        :{why:'공매시스템 완료 대기로 착수 지연',
+                    act:'공매시스템 오픈 후 순차 적용'}
+  }
+};
+
+/* ══════════════════════ 계산 유틸 ══════════════════════ */
+const NW = DATA.weeks.length;
+const isEst = i => i >= DATA.actual;
+
+const nz = v => (v === null || v === undefined || isNaN(v)) ? null : v;
+function addA(a, b){ const o = []; for(let i=0;i<NW;i++){
+  const x=nz(a?a[i]:null), y=nz(b?b[i]:null);
+  o[i] = (x===null && y===null) ? null : (x||0)+(y||0); } return o; }
+function sumRows(rows){ return rows.reduce((a,r)=>addA(a, r.w), new Array(NW).fill(null)); }
+/* mode: false=합계 · true=시점(마지막 주) · 'avg'=주 평균 — 시트 M열 규칙과 동일 */
+function fcast(w, mode){ const v = w.filter(x=>nz(x)!==null);
+  if(!v.length) return null;
+  if(mode === 'avg') return v.reduce((a,b)=>a+b,0) / v.length;
+  return mode ? v[v.length-1] : v.reduce((a,b)=>a+b,0); }
+function fmode(r){ return r.avg ? 'avg' : (r.stock ? true : false); }
+function fcRow(r){ return (r.mo !== undefined && r.mo !== null)
+  ? r.mo : fcast(r.w, fmode(r)); }
+function ratio(a, b){ const o=[]; for(let i=0;i<NW;i++){
+  o[i] = (nz(a[i])===null || !b[i]) ? null : a[i]/b[i]; } return o; }
+function pace(w){ let c=0,o=[]; for(let i=0;i<NW;i++){
+  if(nz(w[i])===null){ o[i]=null; } else { c+=w[i]; o[i]=c; } } return o; }
+
+function grade(ach, inv){
+  if(ach===null) return {k:'na', s:'-'};
+  const v = inv ? (2 - ach) : ach;
+  return (v >= 1) ? {k:'ok', s:'달성'} : {k:'bad', s:'미달'};
+}
+
+/* 표기 */
+const cm = n => n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+function fmt(v, f){
+  if(nz(v)===null) return '-';
+  switch(f){
+    case 'pct': return (v*100).toFixed(1)+'%';
+    case 'mil': return cm(Math.round(v/1e6));
+    case 'man': return cm(Math.round(v/1e4));
+    case 'won': return cm(Math.round(v));
+    case 'dec': return v.toFixed(1);
+    default:    return cm(Math.round(v));
+  }
+}
+const eok = v => (v/1e8).toFixed(1);
+
+/* ══════════════════════ 파생 집계 ══════════════════════ */
+const L = {}; // listing
+L.own  = sumRows(DATA.listing[0].rows);
+L.ind  = sumRows(DATA.listing[1].rows);
+L.tot  = addA(L.own, L.ind);
+L.ownT = DATA.listing[0].rows.reduce((a,r)=>a+r.t,0);
+L.indT = DATA.listing[1].rows.reduce((a,r)=>a+r.t,0);
+L.totT = L.ownT + L.indT;
+
+const W = {};
+W.own  = sumRows(DATA.won[0].rows);
+W.ind  = sumRows(DATA.won[1].rows);
+W.tot  = addA(W.own, W.ind);
+W.ownT = DATA.won[0].rows.reduce((a,r)=>a+r.t,0);
+W.indT = DATA.won[1].rows.reduce((a,r)=>a+r.t,0);
+W.totT = W.ownT + W.indT;
+
+const R = { w:sumRows(DATA.rev), t:DATA.rev.reduce((a,r)=>a+r.t,0) };
+const G = { w:sumRows(DATA.gp),  t:DATA.gp.reduce((a,r)=>a+r.t,0) };
+
+const FC = {
+  list:fcast(L.tot), listOwn:fcast(L.own), listInd:fcast(L.ind),
+  won:fcast(W.tot),  wonOwn:fcast(W.own),  wonInd:fcast(W.ind),
+  rev:fcast(R.w),    gp:fcast(G.w),        fee:fcast(DATA.fee.w)
+};
+
+/* ══════════════════════ 헤더 ══════════════════════ */
+document.getElementById('meta').insertAdjacentHTML('afterbegin',
+  DATA.period + ' · 기준일 ' + DATA.asOf + ' · W1~W' + DATA.actual + ' 실적 확정');
+
+/* ══════════════════════ 표 렌더러 ══════════════════════ */
+let CURF = 'num';
+let NOTECOL = false;
+
+const NT = k => DATA.NOTE[k] || null;
+function anyNote(rows, keys){
+  const a = (rows||[]).some(r => r.why || r.act);
+  const b = (keys||[]).some(k => NT(k));
+  return a || b;
+}
+function noteCells(o){
+  if(!NOTECOL) return '';
+  o = o || {};
+  return '<td class="l tx">'+(o.why || '<span class="dash">–</span>')+'</td>'+
+         '<td class="l tx">'+(o.act || '<span class="dash">–</span>')+'</td>';
+}
+function head(){
+  let h = '<tr><th class="l">구분</th><th>월 목표</th>';
+  for(let i=0;i<NW;i++) h += '<th'+(isEst(i)?' class="est"':'')+'>'+DATA.weeks[i]+
+    (isEst(i)?' 추정':' 실적')+'</th>';
+  h += '<th>월 전망</th><th>달성</th>';
+  if(NOTECOL) h += '<th class="l">원인</th><th class="l">대안ㆍ의사결정</th>';
+  return h + '</tr>';
+}
+function cells(w){
+  let h='';
+  for(let i=0;i<NW;i++) h += '<td class="n'+(isEst(i)?' est':'')+'">'+fmt(w[i], CURF)+'</td>';
+  return h;
+}
+function bg(ach, inv){
+  const g = grade(ach, inv);
+  return '<span class="bg '+g.k+'">'+(ach===null?'-':(ach*100).toFixed(0)+'%')+'</span>';
+}
+function row(r, cls){
+  const w = r.w, tgt = (r.t===undefined?null:r.t);
+  const fc = fcRow(r);
+  const ach = (tgt && fc!==null) ? fc/tgt : null;
+  const f = r.f || CURF;
+  const save = CURF; CURF = f;
+  const body = '<tr class="'+(cls||'')+'">'+
+    '<td class="l"><span class="nm">'+r.nm+'</span>'+
+    (r.ds||r.ow ? '<span class="ds">'+[r.ds,r.ow].filter(Boolean).join(' · ')+'</span>' : '')+'</td>'+
+    '<td class="n">'+fmt(tgt, f)+'</td>'+ cells(w) +
+    '<td class="n"><b>'+fmt(fc, f)+'</b></td>'+
+    '<td>'+bg(ach, r.inv)+'</td>'+ noteCells(r) +'</tr>';
+  CURF = save;
+  return body;
+}
+function aggRow(label, desc, tgt, w, cls, stock, inv, f, key){
+  const fc = fcast(w, stock);
+  const ach = (tgt && fc!==null) ? fc/tgt : null;
+  const save = CURF; if(f) CURF = f;
+  const body = '<tr class="'+cls+'">'+
+    '<td class="l"><span class="nm">'+label+'</span>'+
+    (desc?'<span class="ds">'+desc+'</span>':'')+'</td>'+
+    '<td class="n">'+fmt(tgt, CURF)+'</td>'+ cells(w) +
+    '<td class="n"><b>'+fmt(fc, CURF)+'</b></td>'+
+    '<td>'+bg(ach, inv)+'</td>'+ noteCells(NT(key)) +'</tr>';
+  CURF = save;
+  return body;
+}
+function derRow(label, w, f, tgt, inv, key, mo){
+  const save = CURF; CURF = f;
+  const vals = w.filter(x=>nz(x)!==null);
+  const last = (mo !== undefined && mo !== null && isFinite(mo))
+    ? mo : (vals.length ? vals[vals.length-1] : null);
+  const ach = (tgt && last!==null) ? last/tgt : null;
+  const body = '<tr class="der"><td class="l">'+label+'</td>'+
+    '<td class="n">'+fmt(tgt, f)+'</td>'+ cells(w) +
+    '<td class="n"><b>'+fmt(last, f)+'</b></td>'+
+    '<td>'+bg(ach, inv)+'</td>'+ noteCells(NT(key)) +'</tr>';
+  CURF = save;
+  return body;
+}
+function tbl(inner){ return '<div class="tw"><table>'+head()+inner+'</table></div>'; }
+function part(t, sub){ return '<div class="pt">'+t+(sub?'<em>'+sub+'</em>':'')+'</div>'; }
+function card(title, unit, inner){
+  return '<div class="card"><div class="hd"><h2>'+title+'</h2>'+
+    (unit?'<span class="u">'+unit+'</span>':'')+'</div>'+inner+'</div>';
+}
+function cv(id, cls){ return '<div class="'+(cls||'cw')+'"><canvas id="'+id+'"></canvas></div>'; }
+/* 접이식 Part */
+function fold(title, sub, worst, inner){
+  return '<details class="fold"><summary>'+title+
+    '<em>'+sub+'</em>'+
+    '<span class="ar">▾</span></summary><div class="fbody">'+inner+'</div></details>';
+}
+
+/* ══════════════════════ 레버 (요약 바로 아래) ══════════════════════ */
+const LV = {
+  ownWin : ratio(W.own, L.own),
+  indWin : ratio(W.ind, L.ind),
+  feePer : ratio(DATA.fee.w, sumRows(DATA.p2.win)),
+  expCvr : ratio(pace(sumRows([DATA.p8[1]])), pace(sumRows([DATA.p8[0]])))
+};
+const lvFc = {
+  ownWin : FC.wonOwn/FC.listOwn,
+  indWin : FC.wonInd/FC.listInd,
+  feePer : fcast(DATA.fee.w)/fcast(sumRows(DATA.p2.win)),
+  expCvr : fcRow(DATA.p8[1])/fcRow(DATA.p8[0])
+};
+
+/* ── Part 2ㆍ6 집계 (표에서 사용) ── */
+const P2 = DATA.p2;
+const p2L = sumRows(P2.list), p2W = sumRows(P2.win),
+      p2P = sumRows(P2.price), p2F = sumRows(P2.fee);
+const p2Lt = P2.list.reduce((a,r)=>a+r.t,0), p2Wt = P2.win.reduce((a,r)=>a+r.t,0),
+      p2Pt = P2.price.reduce((a,r)=>a+r.t,0), p2Ft = P2.fee.reduce((a,r)=>a+r.t,0);
+const p6S = sumRows([DATA.p6[0]]), p6R = sumRows([DATA.p6[1]]);
+
+/* ══════════════════════ 팀 집계 ══════════════════════ */
+const TN = ['법인영업','플랫폼매입','출품영업','경매운영(FC)'];
+function teamAgg(sec){
+  const map = {};
+  TN.forEach(n => map[n] = {fc:0, t:0, w:new Array(NW).fill(null)});
+  sec.forEach(g => g.rows.forEach(r=>{
+    const m = map[r.nm]; m.t += r.t; m.fc += (fcast(r.w) || 0); m.w = addA(m.w, r.w);
+  }));
+  return map;
+}
+const TL = teamAgg(DATA.listing), TW = teamAgg(DATA.won);
+const TR = {}; DATA.rev.forEach(r => TR[r.nm] = {fc:fcast(r.w), t:r.t, w:r.w});
+const TG = {}; DATA.gp.forEach(r  => TG[r.nm] = {fc:fcast(r.w), t:r.t, w:r.w});
+
+/* ══════════════════════ ① 5대 핵심 지표 (숫자 + 전주 대비) ══════════════════════ */
+function lastTwo(w){                       /* 마지막 실적 2개 주차 */
+  const idx = [];
+  for(let i=0;i<DATA.actual;i++) if(nz(w[i])!==null) idx.push(i);
+  if(idx.length < 2) return null;
+  return {cur:w[idx[idx.length-1]], prv:w[idx[idx.length-2]],
+          cw:DATA.weeks[idx[idx.length-1]], pw:DATA.weeks[idx[idx.length-2]]};
+}
+function deltaHTML(d, f, pp, un){
+  if(!d) return '<span class="dl flat">전주 대비 –</span>';
+  const diff = d.cur - d.prv;
+  const k = diff > 0 ? 'up' : (diff < 0 ? 'dn' : 'flat');
+  const ar = diff > 0 ? '▲' : (diff < 0 ? '▼' : '–');
+  const v = pp ? (Math.abs(diff)*100).toFixed(1)+'%p' : fmt(Math.abs(diff), f)+(un||'');
+  return '<span class="dl '+k+'">'+ar+' '+v+'<em>전주 대비</em></span>';
+}
+const RATEW = ratio(W.tot, L.tot);
+/* 매출액ㆍ매출이익ㆍ영업이익 = Part 3 재무회계 확정 기준 */
+const FIN = {rev:fcast(DATA.p3[0].w), gp:fcast(DATA.p3[1].w), op:fcast(DATA.p3[2].w)};
+const KPI5 = [
+  {t:'출품 대수', v:cm(FC.list), u:'대', ach:FC.list/L.totT,
+   tg:'8월 목표 '+cm(L.totT)+'대', d:deltaHTML(lastTwo(L.tot),'num',0,'대')},
+  {t:'낙찰 대수', v:cm(FC.won), u:'대', ach:FC.won/W.totT,
+   tg:'8월 목표 '+cm(W.totT)+'대', d:deltaHTML(lastTwo(W.tot),'num',0,'대')},
+  {t:'낙찰률', v:(FC.won/FC.list*100).toFixed(1), u:'%',
+   ach:(FC.won/FC.list)/(W.totT/L.totT),
+   tg:'8월 목표 '+(W.totT/L.totT*100).toFixed(1)+'%',
+   d:deltaHTML(lastTwo(RATEW),'pct',true)},
+  {t:'매출 이익', v:eok(FIN.gp), u:'억원', ach:FIN.gp/DATA.p3[1].t,
+   tg:'8월 목표 '+eok(DATA.p3[1].t)+'억원',
+   d:deltaHTML(lastTwo(DATA.p3[1].w),'mil',0,'백만')},
+  {t:'영업 이익', v:eok(FIN.op), u:'억원', ach:FIN.op/DATA.p3[2].t,
+   tg:'8월 목표 '+eok(DATA.p3[2].t)+'억원',
+   d:deltaHTML(lastTwo(DATA.p3[2].w),'mil',0,'백만')}
+];
+let K = part('핵심 지표',
+  '월 전망 · 전주 대비 실적 주차 비교 · 매출이익ㆍ영업이익 = 재무회계 확정 기준');
+K += '<div class="kpi5">' + KPI5.map(function(x){
+  const g = grade(x.ach);
+  return '<div class="k5 '+g.k+'"><div class="t">'+x.t+'</div>'+
+    '<div class="v">'+x.v+'<em>'+x.u+'</em></div>'+
+    '<div class="d">'+x.d+'</div>'+
+    '<div class="s">'+x.tg+' ·<br>목표대비 달성률 <b class="'+g.k+'">'+(x.ach*100).toFixed(1)+'%</b></div></div>';
+}).join('') + '</div>';
+
+/* ══════════════════════ ② 지표별 팀 순위 (왕관) ══════════════════════ */
+const METRICS = [
+  {id:'m1', grp:'경매 관점', ttl:'출품 대수', unit:'대', f:'num', div:1,
+   rows:TN.map(n=>({nm:n, t:TL[n].t, fc:TL[n].fc}))},
+  {id:'m2', grp:'경매 관점', ttl:'낙찰 대수', unit:'대', f:'num', div:1,
+   rows:TN.map(n=>({nm:n, t:TW[n].t, fc:TW[n].fc}))},
+  {id:'m3', grp:'경매 관점', ttl:'낙찰률', unit:'%', suf:'', f:'pct', div:1, rate:true,
+   rows:TN.map(n=>({nm:n, t:TW[n].t/TL[n].t, fc:TW[n].fc/TL[n].fc}))},
+  {id:'m4', grp:'수익 관점', ttl:'매출액', unit:'백만원', f:'mil', div:1e6,
+   rows:TN.map(n=>({nm:n, t:TR[n].t, fc:TR[n].fc}))},
+  {id:'m5', grp:'수익 관점', ttl:'매출 이익', unit:'백만원', f:'mil', div:1e6,
+   rows:TN.map(n=>({nm:n, t:TG[n].t, fc:TG[n].fc}))},
+  {id:'m6', grp:'수익 관점', ttl:'대당 매출 이익', unit:'만원/대', f:'dec', div:1,
+   rows:TN.map(n=>({nm:n, t:TG[n].t/TW[n].t/1e4, fc:TG[n].fc/TW[n].fc/1e4}))}
+];
+METRICS.forEach(m=>{
+  if(m.suf === undefined) m.suf = m.unit;
+  m.rows.forEach(r=>{
+    r.ach  = r.t ? r.fc/r.t : null;
+    r.diff = r.fc - r.t;
+    r.ok   = r.diff >= 0;
+  });
+  m.rows.sort((a,b)=> b.fc - a.fc);
+  m.rows.forEach((r,i)=>{ r.rank = i+1; r.pt = 5 - i; });   /* 1등 5점 → 4등 2점 */
+  m.miss = m.rows.filter(r=>!r.ok);
+  m.worst = m.rows.slice().sort((a,b)=> a.ach - b.ach)[0];
+});
+function diffTxt(r, m, unit){
+  const s = r.ok ? '+' : '−';
+  if(m.rate) return s + (Math.abs(r.diff)*100).toFixed(1) + '%p';
+  return s + fmt(Math.abs(r.diff), m.f) + (unit ? m.suf : '');
+}
+function metricChartFmt(v, m){
+  if(v===null || v===undefined || !isFinite(v)) return '-';
+  if(m.rate) return v.toFixed(1)+'%';
+  if(m.f === 'dec') return v.toFixed(1);
+  return cm(Math.round(v));
+}
+function metricChartFmtUnit(v, m){
+  return metricChartFmt(v, m) + (m.rate ? '' : (m.unit ? ' ' + m.unit : ''));
+}
+function metricValText(r, m, kind){
+  const raw = kind === 'target' ? r.t : r.fc;
+  const v = m.rate ? raw*100 : raw/m.div;
+  return metricChartFmtUnit(v, m);
+}
+function metricDiffText(r, m, withUnit){
+  const diff = m.rate ? (r.fc*100 - r.t*100) : (r.fc/m.div - r.t/m.div);
+  const s = diff >= 0 ? '+' : '−';
+  const body = m.rate ? Math.abs(diff).toFixed(1)+'%p'
+    : (m.f === 'dec' ? Math.abs(diff).toFixed(1) : cm(Math.round(Math.abs(diff))));
+  return s + body + ((withUnit && !m.rate && m.unit) ? ' ' + m.unit : '');
+}
+function metricCard(m){
+  const top = m.rows[0];
+  let rows = '';
+  m.rows.forEach(function(r){
+    const g = grade(r.ach);
+    rows += '<tr class="'+(r.rank===1?'top':'')+'">'+
+      '<td class="l tmc"><span class="rn">'+r.rank+'</span>'+
+      (r.rank===1?'<span class="cw">👑</span>':'')+
+      '<span class="tmn">'+r.nm+'</span></td>'+
+      '<td class="n tg">'+fmt(r.t, m.f)+'</td>'+
+      '<td class="n ac">'+fmt(r.fc, m.f)+'</td>'+
+      '<td class="n '+(r.ok?'pos':'neg')+'">'+metricDiffText(r, m, false)+'</td>'+
+      '<td><span class="bg '+g.k+'">'+(r.ok?'초과':'미달')+' '+
+        Math.abs((r.ach-1)*100).toFixed(0)+'%</span></td></tr>';
+  });
+  const ai = m.miss.length === 0
+    ? '4개 팀 전원 목표 달성. 1등 '+top.nm+' '+metricValText(top,m,'actual')+'.'
+    : '1등 '+top.nm+' '+metricValText(top,m,'actual')+'(목표 대비 '+metricDiffText(top,m,false)+'). '+
+      m.miss.length+'개 팀 미달, 최저 '+m.worst.nm+' 목표 대비 '+
+      Math.abs((m.worst.ach-1)*100).toFixed(0)+'% 미달('+metricDiffText(m.worst,m,false)+').';
+  return '<div class="card mcard"><div class="hd"><h2>'+m.ttl+'</h2>'+
+    '<span class="u">주간 누적 · '+m.unit+'</span></div>'+
+    cv(m.id, 'cw sm') +
+    '<div class="lg"><span><i style="background:#cdd6de"></i>목표</span>'+
+    '<span><i style="background:#0e7c66"></i>실적</span></div>'+
+    '<div class="tw"><table class="mt">'+
+      '<tr><th class="l">순위ㆍ팀</th><th>목표</th><th>실적</th><th>차이</th><th>판정</th></tr>'+
+      rows + '</table></div>'+
+    '<div class="ai" title="'+ai+'"><span>해석</span>'+ai+'</div></div>';
+}
+/* ══════════════════════ 주간 팀별 성적표 (지표별 상세 요약) ══════════════════════ */
+const OWN = {};
+DATA.listing[0].rows.forEach(function(r){ OWN[r.nm] = r.ow; });
+
+const SC = [
+  {key:'m1', ttl:'출품',     u:'대',   dec:0, pp:false},
+  {key:'m2', ttl:'낙찰',     u:'대',   dec:0, pp:false},
+  {key:'m3', ttl:'낙찰률',   u:'%',    dec:1, pp:true},
+  {key:'m5', ttl:'매출이익', u:'백만', dec:0, pp:false},
+  {key:'m6', ttl:'대당이익', u:'만원', dec:1, pp:false}
+];
+const MBY = {};
+METRICS.forEach(function(m){ MBY[m.id] = m; });
+function scVal(k, r){
+  if(k === 'm3') return {fc:r.fc*100, t:r.t*100};
+  if(k === 'm5') return {fc:r.fc/1e6, t:r.t/1e6};
+  /* m6 는 이미 만원/대 단위 */
+  return {fc:r.fc, t:r.t};
+}
+const SCROWS = TN.map(function(n){
+  const cells = SC.map(function(c){
+    const r = MBY[c.key].rows.find(function(x){ return x.nm === n; });
+    const v = scVal(c.key, r), d = v.fc - v.t;
+    return {c:c, fc:v.fc, t:v.t, d:d, ok:d >= 0};
+  });
+  return {nm:n, ow:OWN[n] || '', cells:cells,
+    hit:cells.filter(function(x){ return x.ok; }).length,
+    avg:cells.reduce(function(a,b){ return a + (b.t ? b.fc/b.t : 0); }, 0) / cells.length};
+}).sort(function(a,b){ return (b.hit - a.hit) || (b.avg - a.avg); });
+
+function scNum(v, c){ return c.dec ? v.toFixed(c.dec) : cm(Math.round(v)); }
+function scDiff(d, c){
+  return (d >= 0 ? '+' : '−') +
+    (c.dec ? Math.abs(d).toFixed(c.dec) : cm(Math.round(Math.abs(d)))) + (c.pp ? '%p' : '');
+}
+let SCT = '<div class="tw"><table class="sct"><tr><th class="l">팀</th>'+
+  SC.map(function(c){ return '<th>'+c.ttl+'<em>'+c.u+'</em></th>'; }).join('')+'</tr>';
+SCROWS.forEach(function(t, ti){
+  SCT += '<tr class="'+(ti===0?'top':'')+'">'+
+    '<td class="l tm"><span class="rk">'+(ti===0?'👑':(ti+1))+'</span>'+
+    '<span class="nmw"><span class="nm">'+t.nm+'</span>'+
+    '<span class="ow">'+t.ow+'</span></span>'+
+    '<span class="hit '+(t.hit >= 3 ? 'g' : 'r')+'">'+t.hit+'/'+SC.length+'</span></td>'+
+    t.cells.map(function(x){
+      return '<td class="c"><div class="cell '+(x.ok?'g':'r')+'">'+
+        '<span class="v">'+scNum(x.fc, x.c)+(x.c.pp?'%':'')+'</span>'+
+        '<span class="d">'+scDiff(x.d, x.c)+'</span></div></td>';
+    }).join('')+'</tr>';
+});
+SCT += '</table></div>';
+
+const bTop = SCROWS[0], wTop = SCROWS[SCROWS.length - 1];
+const BESTS  = SCROWS.filter(function(t){ return t.hit === bTop.hit; })
+  .sort(function(a,b){ return b.avg - a.avg; });
+const WORSTS = SCROWS.filter(function(t){ return t.hit === wTop.hit; })
+  .sort(function(a,b){ return a.avg - b.avg; });
+const volOver = SCROWS.filter(function(t){ return t.cells[0].ok; })
+  .sort(function(a,b){ return b.cells[0].d - a.cells[0].d; })[0];
+const ONE = (volOver && !volOver.cells[2].ok && !volOver.cells[4].ok)
+  ? volOver.nm+'이 물량을 '+cm(Math.round(volOver.cells[0].d))+'대 더 가져왔으나 '+
+    '낙찰률 '+Math.abs(volOver.cells[2].d).toFixed(1)+'%p 낮고 '+
+    '대당이익 '+Math.abs(volOver.cells[4].d).toFixed(1)+'만원 미달.'
+  : bTop.nm+'이 '+SC.length+'개 중 '+bTop.hit+'개 달성, '+wTop.nm+'은 '+wTop.hit+'개.';
+
+function sfBlock(kind, list){
+  const head = list[0];
+  const pick = head.cells.slice().sort(function(a,b){
+    const ra = a.t ? a.fc/a.t : 0, rb = b.t ? b.fc/b.t : 0;
+    return kind === 'g' ? rb - ra : ra - rb;
+  })[0];
+  return '<div class="sf '+kind+'"><b>'+(kind==='g'?'잘한 팀':'못한 팀')+'</b>'+
+    list.map(function(t, i){
+      return '<span class="tn">'+t.nm+'</span>'+ (i === 0
+        ? '<span class="ds">'+pick.c.ttl+' '+scNum(pick.fc, pick.c)+
+          (pick.c.pp?'%':pick.c.u)+' · 목표 대비 '+scDiff(pick.d, pick.c)+'</span>' : '');
+    }).join('')+'</div>';
+}
+const SCORECARD = part('주간 팀별 성적표',
+  '8월 주간 누적 · 목표 대비 · 매출액 제외 · 지표별 상세 요약') +
+  '<div class="card sccard">'+ SCT +
+  '<div class="sfoot">'+ sfBlock('g', BESTS) + sfBlock('r', WORSTS) +'</div>'+
+  '<div class="oneline"><b>이번 주 한 줄</b><span>'+ONE+'</span></div></div>';
+
+let DTL = '<div class="grid3">'+
+  METRICS.filter(function(m){return m.grp==='경매 관점';}).map(metricCard).join('')+'</div>';
+DTL += '<div class="grid3">'+
+  METRICS.filter(function(m){return m.grp==='수익 관점';}).map(metricCard).join('')+'</div>';
+let RK = '';
+
+/* ══════════════════════ 추이 상세 ══════════════════════ */
+let TRB = card('주차별 손익', '단위: 백만원 · 좌축 = 매출액 / 우축 = 매출이익 · 영업이익',
+  cv('c17','cw tall'));
+TRB += '<div class="grid2">'+
+  card('주차별 출품ㆍ낙찰ㆍ낙찰률',
+    '막대 = 출품 · 낙찰 / 선 = 낙찰률 · 점선 = 목표 '+(W.totT/L.totT*100).toFixed(1)+'%',
+    cv('c1c','cw tall'))+
+  card('대당 중개 수수료 추이', '원/대 · 점선 = 목표 258,000원', cv('c12','cw tall'))+
+'</div>';
+let H = fold('추이', '주차별 손익 · 출품ㆍ낙찰ㆍ낙찰률 · 대당 중개 수수료',
+  FC.won/W.totT, TRB);
+
+/* ══════════════════════ Part 1 (접기) ══════════════════════ */
+let P1B = '';
+P1B += '<div class="grid2">'+
+  card('팀별 출품 구성', '월 전망 기준 · 단위: 대', cv('c5'))+
+  card('팀별 낙찰 구성', '월 전망 기준 · 단위: 대', cv('c6'))+
+'</div>';
+P1B += card('주차별 팀 기여 — 출품 대수', '누적 막대 · 단위: 대', cv('c7'));
+P1B += '<div class="note">표는 제외하고 핵심 차트만 유지했습니다.</div>';
+H += fold('Part 1. 통합', '법인영업 · 플랫폼매입 · 출품영업 · 경매운영',
+  FC.gp/G.t, P1B);
+
+/* ══════════════════════ Part 2 (접기) ══════════════════════ */
+let B = '';
+B += '<div class="grid2">'+
+  card('신규 vs 재출품 — 출품 대수', '누적 막대 · 단위: 대', cv('c13','cw tall'))+
+  card('신규 vs 재출품 — 낙찰률', '점선 = 목표 '+
+    ((DATA.p2.win[0].t+DATA.p2.win[1].t)/(DATA.p2.list[0].t+DATA.p2.list[1].t)*100).toFixed(1)+'%',
+    cv('c13b','cw tall'))+
+'</div>';
+B += '<div class="grid2">'+
+  card('대당 낙찰가 추이', '단위: 만원 · 월 목표 1,316만', cv('c14'))+
+  card('대당 수수료 추이', '단위: 천원 · 월 목표 392천', cv('c15'))+
+'</div>';
+B += '<div class="grid2">'+
+  card('활성 출품처 수', '단위: 개 · 점선 = 목표 '+cm(DATA.p2.acct[0].t)+'개', cv('c16'))+
+  card('상위 10개처 출품 비중', '집중 리스크 · 점선 = 상한', cv('c16b'))+
+'</div>';
+H += fold('Part 2. 출품영업팀 상세', '최현우 · 출품/낙찰/수수료 중심',
+  fcast(p2W)/p2Wt, B);
+
+/* ══════════════════════ Part 3 (접기) ══════════════════════ */
+B = card('재고 평가액 추이', '단위: 백만원 · 낮을수록 양호', cv('c18'));
+H += fold('Part 3. 재무회계팀', '황지은',
+  fcast(DATA.p3[2].w)/DATA.p3[2].t, B);
+
+/* ══════════════════════ Part 4 (접기) ══════════════════════ */
+B = card('FC+기타 출품ㆍ낙찰ㆍ낙찰률',
+    '막대 = 출품 · 낙찰 / 선 = 낙찰률 · 점선 = 목표 '+
+    (DATA.p4[1].t/DATA.p4[0].t*100).toFixed(1)+'%', cv('c19c','cw tall'))+
+    '<div class="note">회차 전체 출품/낙찰과 낙찰률을 하나의 그래프로 통합했습니다.</div>';
+H += fold('Part 4. 경매운영팀', '정경태 · FC+기타',
+  fcast(DATA.p4[1].w)/DATA.p4[1].t, B);
+
+/* ══════════════════════ Part 5 (접기) ══════════════════════ */
+B = '<div class="grid2">'+
+  card('회원 구성 — 기존/신규 × 내수/수출', '월말 전망 기준 · 단위: 명', cv('c20'))+
+  card('회원 활동량 vs 낙찰 대수', '내수/수출 주 평균 · 단위: 건/대', cv('c21x'))+
+'</div>';
+B += card('주차별 낙찰 대수 — 내수 vs 수출', '주 평균 기준 · 단위: 대', cv('c22x','cw tall'));
+B += '<div class="note"><b>검토 결과</b> 기존 버전의 ‘낙찰 대수 회원 구성’은 신규/기존 라벨과 실제 원데이터(회원 활동량/낙찰 대수) 매핑이 달라 구조적으로 잘못 연결되어 있었습니다. 이번 버전은 원시트 기준으로 회원 구성은 기존/신규, 낙찰 데이터는 내수/수출 기준으로 분리해 재구성했습니다.</div>';
+H += fold('Part 5. 회원운영팀', '최동근',
+  (fcRow(DATA.p5.win[1].rows[0]) + fcRow(DATA.p5.win[1].rows[1])) /
+  (DATA.p5.win[1].rows.reduce((a,r)=>a+r.t,0)), B);
+
+/* ══════════════════════ Part 6 (접기) ══════════════════════ */
+B = card('정산률ㆍ반출률 추이', '낙찰 대비 · 점선 = 정산 목표 95%', cv('c23','cw tall'))+
+    '<div class="note">정산/반출 세부 표는 제외하고 추이만 유지했습니다.</div>';
+H += fold('Part 6. 경매지원팀', '남윤정 · 낙찰 대수 대비',
+  fcast(p6R)/DATA.p6[1].t, B);
+
+/* ══════════════════════ Part 7 (접기) ══════════════════════ */
+B = card('과제별 진척률', '점선 = 완료 100%', cv('c24'))+
+    '<div class="note">개발 요건 상세 표는 제외했습니다.</div>';
+H += fold('Part 7. 디지털혁신실', '최종호',
+  Math.min.apply(null, DATA.p7.map(r=>r.pr)), B);
+
+/* ══════════════════════ 각주 ══════════════════════ */
+H += '<div class="note">'+
+  '<b>주간 정의</b> 경매 익일~금주 경매일 · 마감 수요일 → 재무 조정 → 보고 목요일 14:00 · 마지막 주는 말일까지<br>'+
+  '<b>판정</b> 달성 = 목표 100% 이상(녹색) / 미달 = 100% 미만(빨강) · 핵심지표 하단 달성률도 동일 기준으로 표시<br>'+
+  '<b>핵심 지표</b> 출품ㆍ낙찰ㆍ낙찰률은 Part 1 영업 집계 기준, 매출액ㆍ매출이익ㆍ영업이익은 재무회계 확정 기준<br>'+
+  '<b>회원운영팀 검토</b> 기존 대시보드의 낙찰 회원 구성 차트는 데이터 매핑 오류가 있어 수정했습니다. 이번 버전은 회원 구성과 낙찰 데이터를 분리해 표기합니다.<br>'+
+  '<b>표 제거</b> 이번 버전은 차트 중심 대시보드로 재구성하여 상세 표는 모두 제외했습니다.'+
+'</div>';
+
+RK = SCORECARD + fold('지표별 상세', '지표별 팀 순위 차트 · 목표 vs 실적',
+  Math.min.apply(null, METRICS.map(function(m){ return m.rows[0].ach; })), DTL);
+document.getElementById('app').innerHTML = K + RK + H;
+
+/* ══════════════════════ 차트 ══════════════════════ */
+const NX = DATA.weeks.filter((_,i)=>L.tot[i]!==null || W.tot[i]!==null).length;
+const cut = a => a.slice(0, NX);
+const WL  = cut(DATA.weeks).map((w,i)=> w + (isEst(i)?' 추정':''));
+const C = {ink:'#0f1a24', ok:'#0e7c66', base:'#1f6feb', warn:'#b47800', bad:'#c0392b',
+           muted:'#6b7c8c', line:'#e3e8ed', slate:'#5c7d99'};
+const TEAM = [C.ink, C.base, C.ok, C.warn];
+const FONT = '"Pretendard Variable",Pretendard,sans-serif';
+const alpha = (i,c)=> isEst(i) ? c+'59' : c;
+const M = a => cut(a).map(v => v===null ? null : v/1e6);
+const P = a => cut(a).map(v => v===null ? null : v*100);
+const NARROW = (typeof window !== 'undefined' && window.innerWidth)
+  ? window.innerWidth < 620 : false;
+const RPAD = NARROW ? 10 : 86;   /* 목표 칩을 놓을 우측 여백 — 데이터와 물리적으로 분리 */
+
+if(window.Chart){
+  Chart.defaults.font.family = FONT;
+  Chart.defaults.font.size = 10;
+  Chart.defaults.color = C.muted;
+  Chart.defaults.animation = false;
+}
+function mk(id, cfg){
+  const el = document.getElementById(id);
+  if(!el || !window.Chart) return;
+  const d = el.closest ? el.closest('details') : null;
+  if(d && !d.open){                     /* 접힌 영역은 폭이 0이라 펼칠 때 생성 */
+    (d._pend = d._pend || []).push(()=>{ new Chart(el, cfg); });
+    if(!d._bound){
+      d._bound = true;
+      d.addEventListener('toggle', ()=>{
+        if(d.open && d._pend){ d._pend.forEach(f=>f()); d._pend = null; }
+      });
+    }
+    return;
+  }
+  new Chart(el, cfg);
+}
+
+/* ── 라벨ㆍ기준선 플러그인 ──────────────────────────
+   1) 기준선의 픽셀 위치를 ch._ty 에 등록
+   2) 값 라벨은 ch._ty 및 이미 그린 라벨과 겹치면 자동으로 밀어냄
+   3) 기준선 라벨(칩)은 플롯 바깥 여백에만 그림 → 데이터와 절대 안 겹침 */
+const resetTY = { id:'resetTY', beforeDraw(ch){ ch._ty = []; } };
+
+function halo(x, txt, px, py){
+  x.lineWidth = 3.4; x.lineJoin = 'round';
+  x.strokeStyle = 'rgba(255,255,255,.95)';
+  x.strokeText(txt, px, py);
+  x.fillText(txt, px, py);
+}
+function haloDark(x, txt, px, py){
+  x.lineWidth = 3.2; x.lineJoin = 'round';
+  x.strokeStyle = 'rgba(15,26,36,.62)';
+  x.strokeText(txt, px, py);
+  x.fillStyle = '#fff';
+  x.fillText(txt, px, py);
+}
+function chip(x, label, px, py, col){
+  x.font = '700 ' + (NARROW ? 8 : 9) + 'px ' + FONT;
+  const w = x.measureText(label).width + 9;
+  x.fillStyle = 'rgba(255,255,255,.97)';
+  x.fillRect(px, py, w, 13);
+  x.strokeStyle = col; x.lineWidth = 1;
+  x.strokeRect(px + .5, py + .5, w - 1, 12);
+  x.fillStyle = col; x.textAlign = 'left'; x.textBaseline = 'middle';
+  x.fillText(label, px + 4.5, py + 7);
+}
+
+const barLabel = {
+  id:'barLabel',
+  afterDatasetsDraw(ch, a, o){
+    o = o || {};
+    const x = ch.ctx, ta = ch._ty || [], ca = ch.chartArea;
+    if(!ca) return;
+    const used = [];
+    x.save(); x.font = '700 ' + (NARROW ? 8.5 : 9.5) + 'px ' + FONT;
+    ch.data.datasets.forEach((ds, di)=>{
+      if(ds._nolab) return;
+      const m = ch.getDatasetMeta(di);
+      if(m.hidden) return;
+      m.data.forEach((el, i)=>{
+        const v = ds.data[i]; if(v===null||v===undefined) return;
+        const txt = (o.fmt ? o.fmt(v, di) : cm(Math.round(v)));
+        x.fillStyle = ds._lab || C.ink;
+
+        /* 가로 막대 — 오른쪽에 쓰되 잘릴 것 같으면 막대 안쪽 흰 글씨 */
+        if(ch.options.indexAxis === 'y'){
+          const tw = x.measureText(txt).width;
+          if(el.x + 7 + tw > ch.width - 2){
+            x.textAlign = 'right'; x.textBaseline = 'middle';
+            haloDark(x, txt, el.x - 6, el.y);
+          }else{
+            x.textAlign = 'left'; x.textBaseline = 'middle';
+            halo(x, txt, el.x + 7, el.y);
+          }
+          return;
+        }
+        /* 누적 막대 — 구간 안쪽 흰 글씨 */
+        if(ds._pos === 'inbar'){
+          const top = Math.max(el.y, ca.top);
+          const bot = Math.min(el.base !== undefined ? el.base : el.y + (el.height||0),
+                               ca.bottom);
+          if(bot - top > 17){
+            x.textAlign='center'; x.textBaseline='middle';
+            haloDark(x, txt, el.x, (top + bot) / 2);
+          }
+          return;
+        }
+        /* 세로 막대ㆍ선 — 기준선ㆍ다른 라벨과 겹치면 자동 회피 */
+        const dir = (ds._pos === 'below') ? 1 : -1;
+        const tw2 = x.measureText(txt).width;
+        const lx = Math.max(ca.left + tw2/2 + 2,
+                   Math.min(el.x, ca.right - tw2/2 - 2));
+        const x1 = lx - tw2/2, x2 = lx + tw2/2;
+        let y = el.y + dir * 12 + (ds._dy || 0);
+        /* 기준선ㆍ이미 그린 라벨과 사각형이 겹치면 밀어냄 */
+        const clash = function(yy){
+          if(ta.some(function(t){ return Math.abs(t - yy) < 14; })) return true;
+          return used.some(function(d){
+            return !(x2 < d.x1 - 2 || x1 > d.x2 + 2) && Math.abs(d.y - yy) < 13;
+          });
+        };
+        let guard = 0;
+        while(clash(y) && guard < 10){ y += dir * 13; guard++; }
+        y = Math.max(8, Math.min(y, ch.height - 8));
+        used.push({x1:x1, x2:x2, y:y});
+        x.textAlign='center'; x.textBaseline='middle';
+        halo(x, txt, lx, y);
+      });
+    });
+    x.restore();
+  }
+};
+
+/* 지표 차트 상단의 팀별 판정 (목표 대비 초과ㆍ미달 %) */
+const verdict = {
+  id:'verdict',
+  afterDatasetsDraw(ch, a, o){
+    if(!o || !o.rows) return;
+    const ca = ch.chartArea; if(!ca) return;
+    const m0 = ch.getDatasetMeta(0), m1 = ch.getDatasetMeta(1), x = ch.ctx;
+    x.save(); x.font = '700 9.5px ' + FONT;
+    x.textAlign = 'center'; x.textBaseline = 'top';
+    o.rows.forEach(function(r, i){
+      if(!m0.data[i] || !m1.data[i] || r.ach === null) return;
+      const cx = (m0.data[i].x + m1.data[i].x) / 2;
+      const txt = (r.ok ? '초과 ' : '미달 ') +
+        Math.abs((r.ach - 1) * 100).toFixed(0) + '%';
+      x.fillStyle = r.ok ? C.ok : C.bad;
+      halo(x, txt, cx, ca.top - 15);
+    });
+    x.restore();
+  }
+};
+
+/* 가로 기준선 — 칩은 우측 여백(RPAD) 안에 */
+function hline(val, label, ax, col){
+  const A = ax || 'y';
+  return {
+    id:'hl_'+label+A,
+    beforeDatasetsDraw(ch){
+      const sc = ch.scales[A], a = ch.chartArea; if(!sc || !a) return;
+      const py = sc.getPixelForValue(val);
+      if(isFinite(py) && py >= a.top && py <= a.bottom)
+        (ch._ty = ch._ty || []).push(py);
+    },
+    afterDraw(ch){
+      const a = ch.chartArea, sc = ch.scales[A]; if(!a || !sc) return;
+      const py = sc.getPixelForValue(val); if(!isFinite(py)) return;
+      const x = ch.ctx, c = col || C.base;
+      const out = (py < a.top) ? 'up' : (py > a.bottom ? 'down' : null);
+      x.save();
+      if(!out){
+        x.setLineDash([4,3]); x.lineWidth = 1.4; x.strokeStyle = c;
+        x.beginPath(); x.moveTo(a.left, py); x.lineTo(a.right, py); x.stroke();
+        x.setLineDash([]);
+      }
+      const txt = out ? (label + (out==='up' ? ' ↑' : ' ↓')) : label;
+      x.font = '700 9px ' + FONT;
+      const w = x.measureText(txt).width + 9;
+      let px;
+      if(NARROW){                       /* 좁은 화면은 플롯 안쪽 우측 */
+        px = a.right - w - 3;
+        if(px < a.left + 2) px = a.left + 2;
+      }else{
+        px = a.right + 5;
+        if(px + w > ch.width - 2) px = ch.width - w - 2;
+      }
+      const ty = out === 'up' ? a.top + 2
+               : out === 'down' ? a.bottom - 15
+               : Math.max(2, Math.min(py - 6.5, ch.height - 15));
+      chip(x, txt, px, ty, c);
+      x.restore();
+    }
+  };
+}
+/* 세로 기준선(가로 막대용) — 칩은 상단 여백에 */
+function vline(val, label){
+  return { id:'vl_'+label, afterDraw(ch){
+    const a = ch.chartArea, sc = ch.scales.x; if(!a || !sc) return;
+    const px = sc.getPixelForValue(val); if(!isFinite(px)) return;
+    const x = ch.ctx;
+    x.save(); x.setLineDash([4,3]); x.lineWidth=1.4; x.strokeStyle=C.base;
+    x.beginPath(); x.moveTo(px, a.top); x.lineTo(px, a.bottom); x.stroke();
+    x.setLineDash([]);
+    x.font = '700 9px ' + FONT;
+    const w = x.measureText(label).width + 9;
+    let cx = px - w/2;
+    cx = Math.max(2, Math.min(cx, ch.width - w - 2));
+    chip(x, label, cx, Math.max(2, a.top - 18), C.base);
+    x.restore();
+  }};
+}
+
+const LEG = {display:false};
+function legendFor(id, items){
+  const cv = document.getElementById(id); if(!cv) return;
+  const box = cv.parentNode, card = box.parentNode;
+  if(card.querySelector('.lg.auto')) return;
+  const d = document.createElement('div');
+  d.className = 'lg auto';
+  d.innerHTML = items.map(s =>
+    '<span><i style="background:'+s.c+(s.dash?';opacity:.85':'')+'"></i>'+s.label+'</span>'
+  ).join('');
+  card.appendChild(d);
+}
+
+/* ── 공통 빌더 ────────────────────────────────────── */
+function span(arrs, extra){
+  const v = [].concat.apply([], arrs).filter(x=>x!==null && isFinite(x))
+              .concat(extra || []);
+  const mn = Math.min.apply(null, v), mx = Math.max.apply(null, v);
+  const pad = Math.max((mx - mn) * 0.60, Math.abs(mx) * 0.02, 0.6);
+  return {min: mn - pad, max: mx + pad};
+}
+/* 선 차트 — 목표선 있으면 우측 여백 확보 */
+function lineChart(id, series, o){
+  o = o || {};
+  const rg = o.range || span(series.map(s=>s.data), (o.tgt!==undefined ? [o.tgt] : []));
+  const hasT = (o.tgt !== undefined);
+  mk(id, {
+    type:'line',
+    data:{labels:WL, datasets:series.map((s,i)=>({
+      label:s.label, data:s.data, borderColor:s.c, backgroundColor:s.fill ? s.c+'18' : s.c,
+      borderWidth:2.4, pointRadius:3.6, pointBackgroundColor:s.c, tension:.25,
+      borderDash: s.dash ? [5,3] : undefined, fill: !!s.fill,
+      _lab:s.c, _pos: s.pos || (i === 0 ? 'above' : 'below')
+    }))},
+    options:{maintainAspectRatio:false,
+      layout:{padding:{top:26, bottom:14, left:6, right: hasT ? RPAD : 16}},
+      plugins:{legend: series.length > 1 ? LEG : {display:false},
+        barLabel:{fmt: o.fmt || (v=>v.toFixed(1)+'%')}},
+      scales:{
+        y:{grid:{color:C.line}, suggestedMin:rg.min, suggestedMax:rg.max,
+           ticks:{maxTicksLimit:6, callback: o.tick || (v=>v.toFixed(0)+'%')}},
+        x:{grid:{display:false}}}},
+    plugins:[resetTY].concat(hasT ? [hline(o.tgt, o.tgtLabel)] : []).concat([barLabel])
+  });
+  if(series.length > 1) legendFor(id, series);
+}
+/* 세로 막대 차트 */
+function barChart(id, series, o){
+  o = o || {};
+  const hasT = (o.tgt !== undefined);
+  const mx = Math.max.apply(null, [].concat.apply([], series.map(s=>s.data))
+    .filter(v=>v!==null && isFinite(v)));
+  mk(id, {
+    type:'bar',
+    data:{labels: o.labels || WL, datasets:series.map(s=>({
+      label:s.label, data:s.data,
+      backgroundColor: s.flat ? s.c : s.data.map((_,i)=>alpha(i, s.c)),
+      borderRadius:3, barPercentage: o.bp || .78, _lab:s.c, _pos:s.pos,
+      stack: s.stack, yAxisID: s.ax
+    }))},
+    options:{maintainAspectRatio:false,
+      layout:{padding:{top:20, bottom:6, left:4, right: hasT ? RPAD : 12}},
+      plugins:{legend: series.length > 1 ? LEG : {display:false},
+        barLabel:{fmt: o.fmt || (v=>cm(Math.round(v)))}},
+      scales:{
+        x:{grid:{display:false}, stacked:!!o.stacked, ticks:{font:{size:9.5}}},
+        y:{grid:{color:C.line}, stacked:!!o.stacked,
+           beginAtZero: o.min === undefined, min:o.min,
+           suggestedMax: o.max || mx * 1.22, ticks:{callback: o.tick || (v=>cm(v))}}}},
+    plugins:[resetTY].concat(hasT ? [hline(o.tgt, o.tgtLabel)] : []).concat([barLabel])
+  });
+  if(series.length > 1) legendFor(id, series);
+}
+/* 가로 막대 차트 — 목표 100% 세로선 */
+function hbarChart(id, labels, series, o){
+  o = o || {};
+  mk(id, {
+    type:'bar',
+    data:{labels:labels, datasets:series.map(s=>({
+      label:s.label, data:s.data, backgroundColor:s.bg || s.c, borderRadius:3,
+      barPercentage:.76, _lab:s.c || C.ink}))},
+    options:{indexAxis:'y', maintainAspectRatio:false,
+      layout:{padding:{top:26, bottom:4, right:NARROW?44:52, left:2}},
+      plugins:{legend: series.length > 1 ? LEG : {display:false},
+        barLabel:{fmt: o.fmt || (v=>v.toFixed(1)+'%')}},
+      scales:{x:{beginAtZero:true, max:o.max || 140, grid:{color:C.line},
+          ticks:{stepSize:NARROW?50:40, maxRotation:0, font:{size:NARROW?9:10},
+                 callback:v=>v+'%'}},
+        y:{grid:{display:false},
+           ticks:{font:{size:NARROW?9:10.5, weight:'700'}, autoSkip:false, padding:2,
+                  crossAlign:'far'},
+           afterFit:function(sc){ sc.width = Math.min(sc.width, NARROW?92:150); }}}},
+    plugins:[resetTY, barLabel, vline(100, o.tgtLabel || '목표 100%')]
+  });
+  if(series.length > 1) legendFor(id, series);
+}
+/* 도넛 */
+const donutLabel = {
+  id:'donutLabel',
+  afterDatasetsDraw(ch, a, o){
+    o = o || {};
+    const x = ch.ctx, m = ch.getDatasetMeta(0), ds = ch.data.datasets[0];
+    const tot = ds.data.reduce((s,v)=>s+(v||0), 0);
+    const ca = ch.chartArea; if(!ca) return;
+    x.save(); x.textAlign='center'; x.textBaseline='middle';
+    x.font = '700 9.5px ' + FONT;
+    m.data.forEach((el, i)=>{
+      const v = ds.data[i]; if(!v) return;
+      const p = v/tot*100; if(p < 6) return;
+      const c = el.getCenterPoint();
+      x.fillStyle = '#fff';
+      x.fillText(p.toFixed(1)+'%', c.x, c.y);
+    });
+    if(o.center){
+      const cx = (ca.left+ca.right)/2, cy = (ca.top+ca.bottom)/2;
+      x.fillStyle = C.ink; x.font = '800 15px ' + FONT;
+      x.fillText(o.center, cx, cy - 7);
+      x.fillStyle = C.muted; x.font = '600 9.5px ' + FONT;
+      x.fillText(o.sub || '', cx, cy + 9);
+    }
+    x.restore();
+  }
+};
+function donutChart(id, labels, vals, colors, sub, unit){
+  const tot = vals.reduce((a,b)=>a+b, 0);
+  mk(id, {
+    type:'doughnut',
+    data:{labels:labels, datasets:[{data:vals, backgroundColor:colors,
+      borderWidth:2, borderColor:'#fff'}]},
+    options:{maintainAspectRatio:false, cutout:'58%',
+      layout:{padding:{top:6, bottom:2}},
+      plugins:{legend:{display:false},
+        tooltip:{callbacks:{label:c=>c.label+' '+cm(c.parsed)+unit}},
+        donutLabel:{center:cm(Math.round(tot)), sub:sub}}},
+    plugins:[donutLabel]
+  });
+  legendFor(id, labels.map((l,i)=>({label:l, c:colors[i]})));
+}
+
+/* ══════ 상단 대시보드 ══════ */
+/* C1 주차별 출품ㆍ낙찰 (막대만) */
+barChart('c1', [
+  {label:'출품', data:cut(L.tot), c:C.ink},
+  {label:'낙찰', data:cut(W.tot), c:C.ok}
+], {});
+
+/* C1B 전체 낙찰률 추이 */
+const wrT = W.totT / L.totT * 100;
+lineChart('c1b', [
+  {label:'낙찰률', data:P(ratio(W.tot, L.tot)), c:C.base, fill:true}
+], {tgt:wrT, tgtLabel:'목표 '+wrT.toFixed(1)+'%'});
+
+/* C1C 주차별 출품ㆍ낙찰 + 낙찰률 */
+mk('c1c', {
+  type:'bar',
+  data:{labels:WL, datasets:[
+    {type:'bar', label:'출품', data:cut(L.tot), backgroundColor:cut(L.tot).map((_,i)=>alpha(i,C.ink)), borderRadius:3, yAxisID:'y', _lab:C.ink},
+    {type:'bar', label:'낙찰', data:cut(W.tot), backgroundColor:cut(W.tot).map((_,i)=>alpha(i,C.ok)), borderRadius:3, yAxisID:'y', _lab:C.ok},
+    {type:'line', label:'낙찰률', data:P(ratio(W.tot, L.tot)), borderColor:C.base, backgroundColor:C.base+'18', borderWidth:2.4, pointRadius:3.5, tension:.24, yAxisID:'y1', _lab:C.base, _pos:'above'}
+  ]},
+  options:{maintainAspectRatio:false,
+    layout:{padding:{top:24, bottom:6, left:4, right:RPAD}},
+    plugins:{legend:LEG, barLabel:{fmt:(v,di)=> di===2 ? v.toFixed(1)+'%' : cm(Math.round(v))}},
+    scales:{
+      y:{beginAtZero:true, grid:{color:C.line},
+         suggestedMax:Math.max.apply(null, cut(L.tot).filter(v=>v!==null))*1.62,
+         ticks:{callback:v=>cm(v), font:{size:NARROW?8.5:10}, maxTicksLimit:NARROW?5:7},
+         title:{display:!NARROW, text:'출품/낙찰 대수', font:{size:9.5, weight:'600'}}},
+      /* 비율선이 막대와 겹치지 않도록 우축 하한을 낮춰 상단 구간에 배치 */
+      y1:{position:'right', min:20, max:60, grid:{display:false},
+         ticks:{callback:v=>v+'%', stepSize:10, font:{size:NARROW?8.5:10}},
+         title:{display:!NARROW, text:'낙찰률', font:{size:9.5, weight:'600'}}},
+      x:{grid:{display:false},
+         ticks:{maxRotation:0, minRotation:0, autoSkip:false, font:{size:NARROW?9:10}}}
+    }
+  },
+  plugins:[resetTY, barLabel, hline(wrT, '목표 '+wrT.toFixed(1)+'%', 'y1', C.base)]
+});
+
+/* C2 항목별 달성률 */
+const ACH = [
+  ['출품대수',    FC.list/L.totT],
+  ['낙찰대수',    FC.won/W.totT],
+  ['매출액',      FC.rev/R.t],
+  ['매출이익',    FC.gp/G.t],
+  ['대당 수수료', lvFc.feePer/DATA.leverT.feePer],
+  ['활성 출품처', fcast(DATA.p2.acct[0].w, true)/DATA.p2.acct[0].t]
+];
+const gc = v => v>=100 ? C.ok : (v>=90 ? C.warn : C.bad);
+hbarChart('c2', ACH.map(function(a){
+    return NARROW && a[0].length > 8 ? a[0].slice(0,7)+'…' : a[0]; }),
+  [{data:ACH.map(a=>a[1]*100), bg:ACH.map(a=>gc(a[1]*100)), c:C.ink}], {});
+
+/* M1~M6 지표별 팀 순위 — 세로 막대 (1등이 왼쪽) */
+METRICS.forEach(function(m){
+  const rows = m.rows;
+  const val  = r => m.rate ? r.fc*100 : r.fc/m.div;
+  const tgt  = r => m.rate ? r.t*100  : r.t/m.div;
+  const lab  = v => metricChartFmt(v, m);
+  const mx   = Math.max.apply(null, rows.map(r=>Math.max(val(r), tgt(r))));
+  mk(m.id, {
+    type:'bar',
+    data:{labels:rows.map((r,i)=>(i===0?'👑':'')+r.nm), datasets:[
+      {label:'목표', data:rows.map(tgt), backgroundColor:'#cdd6de', borderRadius:3,
+       barPercentage:.9, categoryPercentage:.82, _lab:'#7a8b99', _dy:-15},
+      {label:'실적', data:rows.map(val), borderRadius:3, barPercentage:.9,
+       categoryPercentage:.82, backgroundColor:C.ok, _lab:C.ink}
+    ]},
+    options:{maintainAspectRatio:false,
+      layout:{padding:{top:38, bottom:2, left:2, right:4}},
+      plugins:{legend:{display:false}, barLabel:{fmt:lab}, verdict:{rows:rows},
+        tooltip:{callbacks:{
+          title:items=> items && items.length ? rows[items[0].dataIndex].nm : '',
+          label:ctx=> ctx.dataset.label+': '+metricChartFmtUnit(ctx.parsed.y, m),
+          afterBody:items=> items && items.length ? ['차이: '+metricDiffText(rows[items[0].dataIndex], m, true)] : []
+        }}},
+      scales:{
+        x:{grid:{display:false}, ticks:{font:{size:9.5, weight:'700'}, maxRotation:0,
+           minRotation:0, autoSkip:false, padding:2}},
+        y:{beginAtZero:true, grid:{color:C.line}, suggestedMax:mx*1.34,
+           ticks:{maxTicksLimit:5, font:{size:9},
+                  callback:v=> metricChartFmt(v, m)}}}},
+    plugins:[resetTY, barLabel, verdict]
+  });
+});
+
+/* C3 매출액ㆍ매출이익 누적 (좌우축 분리) */
+mk('c3', {
+  type:'line',
+  data:{labels:WL, datasets:[
+    {label:'매출액 누적 (좌축)', data:M(pace(DATA.p3[0].w)), borderColor:C.ink,
+     backgroundColor:C.ink+'14', borderWidth:2.4, pointRadius:3.6, tension:.2,
+     fill:true, _lab:C.ink, _pos:'above'},
+    {label:'매출이익 누적 (우축)', data:M(pace(DATA.p3[1].w)), borderColor:C.ok,
+     backgroundColor:C.ok, borderWidth:2.4, pointRadius:3.6, tension:.2,
+     borderDash:[5,3], yAxisID:'y1', _lab:C.ok, _pos:'below'}
+  ]},
+  options:{maintainAspectRatio:false,
+    layout:{padding:{top:24, bottom:8, left:4, right:10}},
+    plugins:{legend:LEG, barLabel:{fmt:v=>cm(Math.round(v))}},
+    scales:{
+      y:{beginAtZero:true, grid:{color:C.line}, ticks:{callback:v=>cm(v)},
+         suggestedMax:(DATA.p3[0].t/1e6)*1.08,
+         title:{display:true, text:'매출액(백만원)', font:{size:9.5, weight:'600'}}},
+      y1:{position:'right', beginAtZero:true, grid:{display:false},
+          ticks:{callback:v=>cm(v)}, suggestedMax:(DATA.p3[1].t/1e6)*1.75,
+          title:{display:true, text:'매출이익(백만원)', font:{size:9.5, weight:'600'}}},
+      x:{grid:{display:false}}}},
+  plugins:[resetTY, barLabel]
+});
+legendFor('c3', [{label:'매출액 누적 (좌축)', c:C.ink},
+                 {label:'매출이익 누적 (우축)', c:C.ok}]);
+
+/* ══════ Part 1 ══════ */
+donutChart('c5', TN, TN.map(n=>TL[n].fc), TEAM, '출품 전망(대)', '대');
+donutChart('c6', TN, TN.map(n=>TW[n].fc), TEAM, '낙찰 전망(대)', '대');
+
+barChart('c7', TN.map((n,i)=>({label:n, data:cut(TL[n].w), c:TEAM[i],
+  flat:true, stack:'s', pos:'inbar'})), {stacked:true});
+
+const gpTgt = G.t / R.t * 100;
+lineChart('c10', [
+  {label:'매출이익률', data:P(ratio(G.w, R.w)), c:C.ok, fill:true}
+], {tgt:gpTgt, tgtLabel:'목표 '+gpTgt.toFixed(2)+'%',
+    fmt:v=>v.toFixed(2)+'%', tick:v=>v.toFixed(1)+'%'});
+
+/* ══════ 레버 ══════ */
+lineChart('c11', [
+  {label:'자사매입 낙찰률', data:P(LV.ownWin), c:C.ink},
+  {label:'출품유도 낙찰률', data:P(LV.indWin), c:C.ok, dash:true}
+], {tgt:DATA.leverT.ownWin*100, tgtLabel:'목표 50%'});
+
+const feeVals = cut(LV.feePer).filter(v=>v!==null && v!==undefined && isFinite(v));
+const feeMin = Math.min.apply(null, feeVals.concat([DATA.leverT.feePer]));
+const feeMax = Math.max.apply(null, feeVals.concat([DATA.leverT.feePer]));
+barChart('c12', [
+  {label:'대당 수수료', data:cut(LV.feePer), c:C.slate}
+], {tgt:DATA.leverT.feePer, tgtLabel:'목표 258천원', bp:.6,
+    min:Math.floor((feeMin - 4000)/1000)*1000,
+    max:Math.ceil((feeMax + 4000)/1000)*1000,
+    fmt:v=>cm(Math.round(v))});
+
+/* ══════ Part 2 ══════ */
+barChart('c13', [
+  {label:'신규 출품', data:cut(DATA.p2.list[0].w), c:C.ink, flat:true, stack:'s', pos:'inbar'},
+  {label:'재출품',   data:cut(DATA.p2.list[1].w), c:C.slate, flat:true, stack:'s', pos:'inbar'}
+], {stacked:true});
+
+const p2wrT = (DATA.p2.win[0].t + DATA.p2.win[1].t) /
+              (DATA.p2.list[0].t + DATA.p2.list[1].t) * 100;
+lineChart('c13b', [
+  {label:'신규 출품 낙찰률', data:P(ratio(DATA.p2.win[0].w, DATA.p2.list[0].w)), c:C.ink},
+  {label:'재출품 낙찰률',   data:P(ratio(DATA.p2.win[1].w, DATA.p2.list[1].w)), c:C.warn, dash:true}
+], {tgt:p2wrT, tgtLabel:'목표 '+p2wrT.toFixed(1)+'%'});
+
+function unitLine(id, num, den, div, tgt, suffix){
+  const s0 = cut(ratio(num[0].w, den[0].w)).map(v=>v===null?null:v/div);
+  const s1 = cut(ratio(num[1].w, den[1].w)).map(v=>v===null?null:v/div);
+  lineChart(id, [
+    {label:'신규 출품', data:s0, c:C.ink},
+    {label:'재출품',   data:s1, c:C.slate, dash:true}
+  ], {fmt:v=>cm(Math.round(v)), tick:v=>cm(Math.round(v))});
+}
+unitLine('c14', DATA.p2.price, DATA.p2.win, 1e4,
+  (DATA.p2.price[0].t + DATA.p2.price[1].t) / (DATA.p2.win[0].t + DATA.p2.win[1].t), '만');
+unitLine('c15', DATA.p2.fee, DATA.p2.win, 1e3,
+  (DATA.p2.fee[0].t + DATA.p2.fee[1].t) / (DATA.p2.win[0].t + DATA.p2.win[1].t), '천');
+
+barChart('c16', [
+  {label:'활성 출품처', data:cut(DATA.p2.acct[0].w), c:C.ok}
+], {tgt:DATA.p2.acct[0].t, tgtLabel:'목표 120개', min:0, max:150});
+
+lineChart('c16b', [
+  {label:'상위 10개처 비중', data:P(DATA.p2.acct[2].w), c:C.bad, fill:true}
+], {tgt:DATA.p2.acct[2].t*100, tgtLabel:'상한 45%'});
+
+/* ══════ Part 3 ══════ */
+mk('c17', {
+  type:'bar',
+  data:{labels:WL, datasets:[
+    {label:'매출액 (좌축)', data:M(DATA.p3[0].w),
+     backgroundColor:cut(DATA.p3[0].w).map((_,i)=>alpha(i,C.ink)), borderRadius:3, _lab:C.ink},
+    {label:'매출이익 (우축)', data:M(DATA.p3[1].w),
+     backgroundColor:cut(DATA.p3[1].w).map((_,i)=>alpha(i,C.ok)), borderRadius:3,
+     yAxisID:'y1', _lab:C.ok},
+    {label:'영업이익 (우축)', data:M(DATA.p3[2].w),
+     backgroundColor:cut(DATA.p3[2].w).map((_,i)=>alpha(i,C.warn)), borderRadius:3,
+     yAxisID:'y1', _lab:C.warn}
+  ]},
+  options:{maintainAspectRatio:false, layout:{padding:{top:20, bottom:4}},
+    plugins:{legend:LEG, barLabel:{fmt:v=>cm(Math.round(v))}},
+    scales:{y:{beginAtZero:true, grid:{color:C.line}, ticks:{callback:v=>cm(v)},
+        suggestedMax:Math.max.apply(null, M(DATA.p3[0].w).filter(v=>v!==null))*1.22},
+      y1:{position:'right', beginAtZero:true, grid:{display:false},
+          ticks:{callback:v=>cm(v)},
+          suggestedMax:Math.max.apply(null, M(DATA.p3[1].w).filter(v=>v!==null))*1.35},
+      x:{grid:{display:false}}}},
+  plugins:[resetTY, barLabel]
+});
+legendFor('c17', [{label:'매출액 (좌축)', c:C.ink},
+                  {label:'매출이익 (우축)', c:C.ok},
+                  {label:'영업이익 (우축)', c:C.warn}]);
+
+lineChart('c18', [
+  {label:'재고 평가액', data:M(DATA.p3[3].w), c:C.bad, fill:true}
+], {fmt:v=>cm(Math.round(v)), tick:v=>cm(Math.round(v))});
+
+/* ══════ Part 4 ══════ */
+barChart('c19', [
+  {label:'출품', data:cut(DATA.p4[0].w), c:C.slate},
+  {label:'낙찰', data:cut(DATA.p4[1].w), c:C.ok}
+], {});
+
+const p4T = DATA.p4[1].t / DATA.p4[0].t * 100;
+lineChart('c19b', [
+  {label:'회차 낙찰률', data:P(ratio(DATA.p4[1].w, DATA.p4[0].w)), c:C.base, fill:true}
+], {tgt:p4T, tgtLabel:'목표 '+p4T.toFixed(1)+'%'});
+
+mk('c19c', {
+  type:'bar',
+  data:{labels:WL, datasets:[
+    {type:'bar', label:'출품', data:cut(DATA.p4[0].w), backgroundColor:cut(DATA.p4[0].w).map((_,i)=>alpha(i,C.slate)), borderRadius:3, yAxisID:'y', _lab:C.slate},
+    {type:'bar', label:'낙찰', data:cut(DATA.p4[1].w), backgroundColor:cut(DATA.p4[1].w).map((_,i)=>alpha(i,C.ok)), borderRadius:3, yAxisID:'y', _lab:C.ok},
+    {type:'line', label:'낙찰률', data:P(ratio(DATA.p4[1].w, DATA.p4[0].w)), borderColor:C.base, backgroundColor:C.base+'18', borderWidth:2.4, pointRadius:3.5, tension:.24, yAxisID:'y1', _lab:C.base, _pos:'above'}
+  ]},
+  options:{maintainAspectRatio:false,
+    layout:{padding:{top:24, bottom:6, left:4, right:RPAD}},
+    plugins:{legend:LEG, barLabel:{fmt:(v,di)=> di===2 ? v.toFixed(1)+'%' : cm(Math.round(v))}},
+    scales:{
+      y:{beginAtZero:true, grid:{color:C.line},
+         suggestedMax:Math.max.apply(null, cut(DATA.p4[0].w).filter(v=>v!==null))*1.62,
+         ticks:{callback:v=>cm(v), font:{size:NARROW?8.5:10}, maxTicksLimit:NARROW?5:7},
+         title:{display:!NARROW, text:'회차 대수', font:{size:9.5, weight:'600'}}},
+      y1:{position:'right', min:20, max:65, grid:{display:false},
+         ticks:{callback:v=>v+'%', stepSize:10, font:{size:NARROW?8.5:10}},
+         title:{display:!NARROW, text:'낙찰률', font:{size:9.5, weight:'600'}}},
+      x:{grid:{display:false},
+         ticks:{maxRotation:0, minRotation:0, autoSkip:false, font:{size:NARROW?9:10}}}
+    }
+  },
+  plugins:[resetTY, barLabel, hline(p4T, '목표 '+p4T.toFixed(1)+'%', 'y1', C.base)]
+});
+
+/* ══════ Part 5 ══════ */
+const mem = DATA.p5.mem, mwin = DATA.p5.win;
+donutChart('c20', ['기존 내수','기존 수출','신규 내수','신규 수출'],
+  [fcast(mem[0].rows[0].w,true), fcast(mem[0].rows[1].w,true),
+   fcast(mem[1].rows[0].w), fcast(mem[1].rows[1].w)],
+  [C.ink, C.base, C.ok, C.warn], '회원 전망(명)', '명');
+donutChart('c21', ['기존 내수','기존 수출','신규 내수','신규 수출'],
+  [fcast(mwin[0].rows[0].w), fcast(mwin[0].rows[1].w),
+   fcast(mwin[1].rows[0].w), fcast(mwin[1].rows[1].w)],
+  [C.ink, C.base, C.ok, C.warn], '낙찰 전망(대)', '대');
+
+barChart('c22', [
+  {label:'기존 내수', data:cut(mwin[0].rows[0].w), c:C.ink,  flat:true, stack:'s', pos:'inbar'},
+  {label:'기존 수출', data:cut(mwin[0].rows[1].w), c:C.base, flat:true, stack:'s', pos:'inbar'},
+  {label:'신규 내수', data:cut(mwin[1].rows[0].w), c:C.ok,   flat:true, stack:'s', pos:'inbar'},
+  {label:'신규 수출', data:cut(mwin[1].rows[1].w), c:C.warn, flat:true, stack:'s', pos:'inbar'}
+], {stacked:true});
+
+barChart('c21x', [
+  {label:'회원 활동량', data:[fcRow(DATA.p5.win[0].rows[0]), fcRow(DATA.p5.win[0].rows[1])], c:C.base},
+  {label:'낙찰 대수', data:[fcRow(DATA.p5.win[1].rows[0]), fcRow(DATA.p5.win[1].rows[1])], c:C.ok}
+], {labels:['내수','수출'], bp:.56, fmt:v=>cm(Math.round(v))});
+
+barChart('c22x', [
+  {label:'내수 낙찰', data:cut(DATA.p5.win[1].rows[0].w), c:C.base},
+  {label:'수출 낙찰', data:cut(DATA.p5.win[1].rows[1].w), c:C.ok}
+], {bp:.62, fmt:v=>cm(Math.round(v))});
+
+/* ══════ Part 6 ══════ */
+lineChart('c23', [
+  {label:'정산률', data:P(ratio(DATA.p6[0].w, W.tot)), c:C.ink},
+  {label:'반출률', data:P(ratio(DATA.p6[1].w, W.tot)), c:C.ok, dash:true, pos:'above'}
+], {tgt:DATA.p6[0].rt*100, tgtLabel:'정산 목표 95%',
+    range:{min:76, max:100}});
+
+/* ══════ Part 7 ══════ */
+const P7MAX = NARROW ? 8 : 13;
+hbarChart('c24',
+  DATA.p7.map(function(r){
+    return r.nm.length > P7MAX ? r.nm.slice(0, P7MAX-1)+'…' : r.nm; }),
+  [{data:DATA.p7.map(r=>r.pr*100),
+    bg:DATA.p7.map(r=> r.st==='정상' ? C.ok : (r.pr>=0.5 ? C.warn : C.bad)), c:C.ink}],
+  {max:140, tgtLabel:'완료 100%', fmt:v=>v.toFixed(0)+'%'});
+
+/* ══════ Part 8 ══════ */
+barChart('c25', [
+  {label:'신규 문의', data:cut(DATA.p8[0].w), c:C.slate},
+  {label:'성약',      data:cut(DATA.p8[1].w), c:C.ok}
+], {});
+
+lineChart('c25b', [
+  {label:'수출 전환율', data:P(LV.expCvr), c:C.base, fill:true}
+], {tgt:DATA.leverT.expCvr*100, tgtLabel:'목표 15%'});
+
+</script>
+</body>
+</html>
