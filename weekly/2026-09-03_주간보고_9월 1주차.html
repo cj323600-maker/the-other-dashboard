@@ -1,0 +1,2080 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>코오롱오토옥션 주간 보고</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+:root{
+  --ink:#0f1a24; --muted:#6b7c8c; --line:#e3e8ed; --canvas:#f2f4f7; --surface:#fff;
+  --ok:#0e7c66; --warn:#b47800; --bad:#c0392b; --base:#1f6feb; --est:#7f9bb5;
+  --sans:"Pretendard Variable",Pretendard,-apple-system,system-ui,"Malgun Gothic",sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{font-family:var(--sans);background:var(--canvas);color:var(--ink);
+  font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+h2{margin:0;font-size:14px;font-weight:700;letter-spacing:-.02em}
+
+.top{background:var(--ink);color:#fff;padding:14px 16px;border-bottom:3px solid var(--ok)}
+.top b{font-size:16px;letter-spacing:-.03em}
+.top .m{display:flex;align-items:center;gap:8px;margin-top:4px;font-size:11.5px;color:#9fb3c4}
+.top .m span{margin-left:auto;color:#ffb4ac;border:1px solid rgba(255,180,172,.4);
+  padding:2px 7px;border-radius:4px;font-weight:700;font-size:10.5px}
+.top .m span.smp{margin-left:auto;color:#ffd79a;border-color:rgba(255,215,154,.45)}
+.top .m span+span{margin-left:6px}
+
+.wrap{max-width:520px;margin:0 auto;padding:14px 14px 48px}
+@media(min-width:900px){.wrap{max-width:1080px}}
+
+.kpis{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+@media(min-width:900px){.kpis{grid-template-columns:repeat(4,1fr)}}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:11px 12px}
+.kpi .t{font-size:11px;color:var(--muted);font-weight:600;letter-spacing:-.01em}
+.kpi .v{font-size:21px;font-weight:800;letter-spacing:-.04em;margin-top:2px;line-height:1.15}
+.kpi .v em{font-size:12px;font-weight:600;font-style:normal;color:var(--muted);margin-left:2px}
+.kpi .s{font-size:11px;color:var(--muted);margin-top:3px}
+.kpi .s b{font-weight:700}
+.kpi.ok{border-left:3px solid var(--ok)} .kpi.warn{border-left:3px solid var(--warn)}
+.kpi.bad{border-left:3px solid var(--bad)}
+.kpi .s b.ok{color:var(--ok)} .kpi .s b.warn{color:var(--warn)} .kpi .s b.bad{color:var(--bad)}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;
+  padding:12px;margin-bottom:12px}
+.card .hd{display:flex;align-items:baseline;gap:6px;margin-bottom:8px;flex-wrap:wrap}
+.card .hd h2{white-space:nowrap;flex:0 0 auto}
+.card .hd .u{margin-left:auto;font-size:10.5px;color:var(--muted);
+  white-space:normal;text-align:right;flex:1 1 auto;min-width:0;line-height:1.35}
+@media(max-width:620px){
+  .card .hd .u{margin-left:0;text-align:left;flex-basis:100%;font-size:10px}
+}
+.cw{position:relative;height:230px}
+.cw.tall{height:300px}
+@media(max-width:620px){
+  .cw{height:250px}
+  .cw.tall{height:320px}
+  .cw.sm{height:190px}
+}
+.cw.mid{height:210px}
+@media(min-width:900px){.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .grid2 .card{margin-bottom:0}.grid2{margin-bottom:12px}}
+@media(min-width:860px){.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  .grid3 .card{margin-bottom:0}.grid3{margin-bottom:12px}}
+
+.pt{margin:20px 0 8px;font-size:12px;font-weight:800;letter-spacing:-.02em;color:var(--ink);
+  border-left:3px solid var(--ink);padding-left:8px}
+.pt em{font-style:normal;font-weight:600;color:var(--muted);margin-left:5px;font-size:11px}
+
+.tw{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 -12px;padding:0 12px}
+table{border-collapse:collapse;width:100%;font-size:11.5px;white-space:nowrap}
+th,td{border-bottom:1px solid var(--line);padding:6px 6px;text-align:right}
+th{font-weight:700;color:var(--muted);font-size:10.5px;background:#f8fafb;
+  border-bottom:1px solid #cfd8e0}
+th.l,td.l{text-align:left}
+td.n{font-variant-numeric:tabular-nums}
+th:first-child,td:first-child{position:sticky;left:0;background:var(--surface);z-index:1;
+  min-width:104px;max-width:130px;white-space:normal}
+th:first-child{background:#f8fafb}
+tr.sub td{background:#f6f8fa;font-weight:700}
+tr.sub td:first-child{background:#f6f8fa}
+tr.tot td{background:#eef2f5;font-weight:800;border-bottom:1px solid #cfd8e0}
+tr.tot td:first-child{background:#eef2f5}
+tr.der td{color:var(--muted);font-size:10.5px}
+td .nm{font-weight:600;display:block;line-height:1.25}
+td .ds{color:var(--muted);font-size:10px;display:block;line-height:1.25}
+.est{color:var(--est)}
+.bg{display:inline-block;padding:1px 6px;border-radius:9px;font-size:10px;font-weight:800;
+  border:1px solid}
+.bg.ok{color:var(--base);border-color:#bcd4f6;background:#eef4fd}
+.bg.warn{color:var(--warn);border-color:#f0dca8;background:#fdf7e8}
+.bg.bad{color:var(--bad);border-color:#f2c4bd;background:#fdeeec}
+.bg.na{color:var(--muted);border-color:var(--line);background:#f6f8fa}
+
+.lg{display:flex;flex-wrap:wrap;gap:10px;font-size:10.5px;color:var(--muted);margin-top:8px}
+.lg i{width:9px;height:9px;border-radius:2px;display:inline-block;margin-right:4px;
+  vertical-align:-1px}
+/* 5대 핵심 지표 */
+.kpi5{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:14px}
+@media(min-width:820px){.kpi5{grid-template-columns:repeat(5,1fr)}}
+.k5{background:var(--surface);border:1px solid var(--line);border-radius:10px;
+  padding:11px 12px}
+.k5.ok{border-left:3px solid var(--base)} .k5.warn{border-left:3px solid var(--warn)}
+.k5.bad{border-left:3px solid var(--bad)}
+.k5{display:flex;flex-direction:column}
+.k5 .t{font-size:11.5px;color:var(--ink);font-weight:800;letter-spacing:-.02em;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.k5 .kb{display:inline-block;align-self:flex-start;margin-top:4px;font-size:9.5px;
+  font-weight:800;padding:2px 6px;border-radius:9px;white-space:nowrap}
+.k5 .kb.ok{background:#eef4fd;color:var(--base);border:1px solid #bcd4f6}
+.k5 .kb.bad{background:#fdecea;color:var(--bad);border:1px solid #f5c9c3}
+.k5 .kb.na{background:#f6f8fa;color:var(--muted);border:1px solid var(--line)}
+.k5 .v .sl{font-size:15px;font-weight:600;color:#b9c4ce;margin:0 3px}
+.k5 .v .tv{font-size:15px;font-weight:700;color:var(--muted)}
+.k5 .v{font-size:23px;font-weight:800;letter-spacing:-.045em;line-height:1.12;margin-top:6px;
+  font-variant-numeric:tabular-nums}
+.k5 .v em{font-size:11.5px;font-weight:600;font-style:normal;color:var(--muted);margin-left:2px}
+.k5 .d{margin-top:3px}
+.dl{font-size:11px;font-weight:800;font-variant-numeric:tabular-nums}
+.dl em{font-style:normal;font-weight:600;font-size:9.5px;color:var(--muted);margin-left:4px}
+.dl.up{color:var(--base)} .dl.dn{color:var(--bad)} .dl.flat{color:var(--muted)}
+.k5 .s{font-size:10.5px;color:var(--muted);margin-top:auto;padding-top:6px;
+  border-top:1px dashed var(--line)}
+.k5 .s b.ok{color:var(--ok)} .k5 .s b.warn{color:var(--warn)} .k5 .s b.bad{color:var(--bad)}
+/* 지표별 순위 카드 */
+/* 모바일 전용 전치 표 */
+.only-mob{display:block}
+.only-desk{display:none}
+@media(min-width:760px){.only-mob{display:none}.only-desk{display:block}}
+table.rkm.mob{min-width:0;width:100%;table-layout:fixed}
+table.rkm.mob th,table.rkm.mob td{padding:6px 2px;font-size:10px}
+table.rkm.mob th:first-child,table.rkm.mob td:first-child{width:56px;min-width:56px;
+  position:static}
+table.rkm.mob .mn{font-size:9.5px;font-weight:700;color:var(--muted);
+  white-space:normal;line-height:1.25;letter-spacing:-.04em}
+table.rkm.mob .ct{font-size:9.5px;letter-spacing:-.06em;overflow:hidden;
+  text-overflow:ellipsis;white-space:nowrap}
+table.rkm.mob .cv{font-size:8.5px;letter-spacing:-.04em}
+table.rkm.mob .cw{font-size:9px;margin-right:0}
+table.rkm.mob tr.tot td{background:#f0f3f6;font-weight:800}
+table.rkm.mob td.sum{font-size:11px}
+table.rkm.mob .bg{font-size:8.5px;padding:1px 3px}
+/* 가로 스크롤 표에 끝 표시 */
+.card:not(.mcard) .tw{background:linear-gradient(90deg,transparent 92%,
+  rgba(15,26,36,.05));background-attachment:local}
+/* 순위 매트릭스 */
+table.rkm{width:100%;min-width:560px;border-collapse:collapse}
+table.rkm th{font-size:9.5px;padding:6px 5px;white-space:nowrap;text-align:center}
+table.rkm th.l{text-align:left}
+table.rkm td{padding:7px 5px;text-align:center;white-space:nowrap;
+  border-bottom:1px solid var(--line);font-size:11px}
+table.rkm td.l{text-align:left}
+table.rkm th:first-child,table.rkm td:first-child{position:sticky;left:0;
+  background:var(--surface);z-index:1;min-width:60px;width:60px}
+table.rkm th:first-child{background:#f8fafb}
+table.rkm tr.top td{background:#fdf7e8}
+table.rkm tr.top td:first-child{background:#fdf7e8}
+table.rkm td.c1{background:#fdf7e8}
+table.rkm .ct{display:block;font-weight:700;letter-spacing:-.03em;font-size:11px}
+table.rkm tr.top .ct{font-weight:800;color:#8a5c00}
+table.rkm .cv{display:block;font-size:9.5px;color:var(--muted);margin-top:1px;
+  font-variant-numeric:tabular-nums}
+table.rkm tr.top .cv{color:#a08245}
+table.rkm .cw{margin-right:2px}
+table.rkm .rn{display:inline-block;width:16px;height:16px;line-height:16px;
+  border-radius:50%;background:#e7ecf1;color:var(--muted);font-size:9.5px;
+  font-weight:800;text-align:center}
+table.rkm tr.top .rn{background:#b47800;color:#fff}
+table.rkm .rl{display:none}
+table.rkm .tmn{font-weight:700;letter-spacing:-.02em}
+table.rkm td.sum{font-weight:800;font-variant-numeric:tabular-nums;font-size:12px;
+  color:var(--ink)}
+table.rkm tr.top td.sum{color:#8a5c00}
+table.rkm .tmn{color:var(--ink)}
+table.rkm tr.top .tmn{color:#8a5c00;font-weight:800}
+table.rkm tr.top td{color:#8a5c00}
+table.rkm.sc .ct{font-size:10.5px;color:var(--muted);font-weight:700}
+table.rkm.sc tr.top .ct{color:#8a5c00}
+table.rkm.sc .cv{font-weight:800;color:var(--ink);font-size:11px}
+/* 주간 팀별 성적표 — 매출이익 기준 순위 */
+.headline{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--ink);
+  border-radius:10px;padding:11px 14px;margin-bottom:14px;font-size:13.5px;font-weight:800;
+  letter-spacing:-.02em;line-height:1.45}
+.headline b.pos{color:var(--base)} .headline b.neg{color:var(--bad)}
+.sccard{padding:0;overflow:hidden}
+.sccard .tw{margin:0;padding:0}
+table.sct{width:100%;border-collapse:separate;border-spacing:0;min-width:610px;
+  table-layout:fixed}
+table.sct th{font-size:9.5px;font-weight:800;color:#fff;padding:8px 4px;text-align:center;
+  background:var(--ink);white-space:nowrap;letter-spacing:-.03em}
+table.sct th.l{text-align:left;padding-left:6px} table.sct th.c{text-align:center}
+table.sct th em{display:block;font-style:normal;font-size:8px;font-weight:600;
+  color:#9fb3c4;margin-top:1px;letter-spacing:-.04em}
+table.sct td{padding:9px 4px;border-bottom:1px solid var(--line);vertical-align:middle;
+  text-align:center;white-space:nowrap;font-size:11.5px;background:var(--surface)}
+table.sct td.l{text-align:left;padding-left:6px} table.sct td.c{text-align:center}
+table.sct col.w1{width:28px} table.sct col.w2{width:74px} table.sct col.wbar{width:52px}
+table.sct col.wv{width:60px} table.sct col.wt{width:46px} table.sct col.wd{width:48px}
+table.sct col.wa{width:50px} table.sct col.wr{width:63px}
+table.sct .rk{display:inline-block;width:17px;height:17px;line-height:17px;border-radius:50%;
+  color:#fff;font-size:9.5px;font-weight:800;text-align:center}
+table.sct .rk.g{background:var(--base)} table.sct .rk.r{background:var(--bad)}
+table.sct .nm{display:block;font-size:11px;font-weight:800;letter-spacing:-.055em;
+  color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+table.sct .ow{display:block;font-size:8.5px;color:var(--muted);line-height:1.2;margin-top:0}
+table.sct td.big{font-size:16px;font-weight:800;letter-spacing:-.05em;
+  font-variant-numeric:tabular-nums;background:#f4f7fb}
+table.sct tr.tot td.big{background:#e9eff7}
+table.sct td.sub{color:var(--muted);font-variant-numeric:tabular-nums;font-size:11px}
+table.sct td.pos{color:var(--base);font-weight:800;font-variant-numeric:tabular-nums}
+table.sct td.neg{color:var(--bad);font-weight:800;font-variant-numeric:tabular-nums}
+table.sct td.ach{font-size:12.5px}
+table.sct th.colref{background:#26374a;font-size:10px}
+table.sct td.colref{background:#fafbfc}
+table.sct tr.tot td.colref{background:#f1f4f7}
+table.sct .rv{display:block;font-size:13px;font-weight:800;letter-spacing:-.04em;
+  font-variant-numeric:tabular-nums;line-height:1.15}
+table.sct .rv.pos{color:var(--base)} table.sct .rv.neg{color:var(--bad)}
+table.sct .rt2{display:block;font-size:10px;color:#8b98a5;font-weight:600;
+  font-variant-numeric:tabular-nums;line-height:1.25;margin-top:1px}
+table.sct .rd{display:inline-block;margin-top:2px;font-size:9.5px;font-weight:800;
+  font-variant-numeric:tabular-nums;letter-spacing:-.04em;padding:0 4px;border-radius:8px}
+table.sct .rd.pos{color:#14539e;background:#dbe8fb}
+table.sct .rd.neg{color:#a5301f;background:#f9d5cf}
+table.sct td.colbar{padding:9px 5px}
+table.sct tr.tot td{border-top:2px solid var(--ink);border-bottom:0;background:#f6f8fa;
+  font-weight:800}
+.pb{position:relative;height:13px;border-radius:7px;background:#eef1f4;overflow:hidden}
+.pf{position:absolute;left:0;top:0;bottom:0;border-radius:8px}
+.pf.g{background:linear-gradient(90deg,#4a90f0,#1f6feb)}
+.pf.r{background:linear-gradient(90deg,#e08074,#c0392b)}
+.pk{position:absolute;top:1px;bottom:1px;width:2px;background:var(--ink);border-radius:1px}
+.only-mob{display:block} .only-desk{display:none}
+@media(min-width:721px){.only-mob{display:none}.only-desk{display:block}}
+.sccards{padding:10px}
+.scc{border:1px solid var(--line);border-radius:9px;padding:9px 10px;margin-bottom:8px}
+.scc:last-child{margin-bottom:0}
+.scc.tot{background:#f6f8fa;border-color:#cfd8e0}
+.scc-h{display:flex;align-items:center;gap:5px}
+.scc-h .rk{display:inline-block;width:18px;height:18px;line-height:18px;border-radius:50%;
+  color:#fff;font-size:9.5px;font-weight:800;text-align:center;flex:0 0 auto}
+.scc-h .rk.g{background:var(--base)} .scc-h .rk.r{background:var(--bad)}
+.scc-h .nm{font-size:12.5px;font-weight:800;letter-spacing:-.03em}
+.scc-h .ow{font-size:9.5px;color:var(--muted)}
+.scc-h .ach{margin-left:auto;font-size:13px;font-weight:800;
+  font-variant-numeric:tabular-nums}
+.scc-h .ach.pos{color:var(--base)} .scc-h .ach.neg{color:var(--bad)}
+.scc-m{display:flex;align-items:baseline;gap:5px;margin-top:4px;padding-bottom:7px;
+  border-bottom:1px dashed var(--line)}
+.scc-m b{font-size:19px;font-weight:800;letter-spacing:-.05em;
+  font-variant-numeric:tabular-nums}
+.scc-m s{text-decoration:none;font-size:10.5px;color:var(--muted)}
+.scc-m i{margin-left:auto;font-style:normal;font-size:11.5px;font-weight:800;
+  padding:1px 6px;border-radius:9px}
+.scc-m i.pos{color:#14539e;background:#dbe8fb}
+.scc-m i.neg{color:#a5301f;background:#f9d5cf}
+.scc-g{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:7px}
+.sq{background:#f8fafb;border-radius:6px;padding:5px 7px;display:flex;
+  align-items:baseline;gap:4px;flex-wrap:wrap}
+.sq em{font-style:normal;font-size:9.5px;color:var(--muted);font-weight:700;
+  flex:0 0 46px}
+.sq b{font-size:12px;font-weight:800;font-variant-numeric:tabular-nums;
+  letter-spacing:-.03em}
+.sq b.pos{color:var(--base)} .sq b.neg{color:var(--bad)}
+.sq s{text-decoration:none;font-size:9px;color:#8b98a5;font-variant-numeric:tabular-nums}
+.sq i{margin-left:auto;font-style:normal;font-size:9px;font-weight:800;
+  font-variant-numeric:tabular-nums;padding:0 4px;border-radius:8px}
+.sq i.pos{color:#14539e;background:#dbe8fb}
+.sq i.neg{color:#a5301f;background:#f9d5cf}
+.sclg{display:flex;flex-wrap:wrap;gap:10px;font-size:10.5px;color:var(--muted);
+  padding:9px 12px 11px}
+.sclg i{width:9px;height:9px;border-radius:50%;display:inline-block;margin-right:4px;
+  vertical-align:-1px}
+.sclg .rt{margin-left:auto}
+.card.issue ul{margin:0;padding-left:16px}
+.card.issue li{font-size:11.5px;line-height:1.6;color:var(--ink)}
+@media(max-width:720px){
+  /* 모바일: 가로 스크롤 없이 한 화면에 — 10개 열 고정 비율 */
+  .sccard .tw{overflow:hidden}
+  table.sct{min-width:0;width:100%;table-layout:fixed}
+  /* 막대 열은 display:none 대신 폭 0으로 — 셀↔col 1:1 유지 (브라우저별 빈 열 방지) */
+  table.sct .colbar{width:0;padding:0;border:0;overflow:hidden;font-size:0}
+  table.sct .colbar *{display:none}
+  table.sct th{font-size:7.5px;padding:5px 1px;white-space:normal;line-height:1.15}
+  table.sct th em{font-size:6.5px;letter-spacing:-.03em}
+  table.sct td{padding:4px 1px;font-size:9px;letter-spacing:-.04em;white-space:normal;overflow:hidden;line-height:1.2}
+  table.sct th.l,table.sct td.l{padding-left:3px}
+  table.sct col.w1{width:5%} table.sct col.w2{width:14.5%} table.sct col.wbar{width:0}
+  table.sct col.wv{width:8%} table.sct col.wt{width:6.5%} table.sct col.wd{width:8.5%}
+  table.sct col.wa{width:9.5%} table.sct col.wr{width:12%}
+  table.sct td.pos,table.sct td.neg{font-size:9px;letter-spacing:-.06em}
+  table.sct th.colref em{font-size:6px}
+  table.sct td.n{text-align:center}
+  table.sct th:first-child,table.sct td:first-child,
+  table.sct th:nth-child(2),table.sct td:nth-child(2){position:static}
+  table.sct .rk{width:12px;height:12px;line-height:12px;font-size:7.5px}
+  table.sct .nm{font-size:8.5px;letter-spacing:-.08em;white-space:nowrap;line-height:1.15;overflow:visible;text-overflow:clip}
+  table.sct td.tm{overflow:visible}
+  table.sct .ow{display:none}
+  table.sct td.big{font-size:11px} table.sct td.ach{font-size:9.5px;letter-spacing:-.06em}
+  table.sct th:nth-child(7){letter-spacing:-.08em}
+  table.sct td.sub{font-size:8px}
+  table.sct th{padding:4px 1px} table.sct th em{display:block}
+  table.sct .rv{margin:0} table.sct .rt2{margin:0}
+  table.sct .rv{font-size:10px;letter-spacing:-.05em} table.sct .rt2{font-size:7.5px;letter-spacing:-.04em}
+  table.sct .rd{font-size:7.5px;padding:0 2px;margin-top:1px;letter-spacing:-.03em}
+  .headline{font-size:12px;padding:10px 12px}
+  .sclg .rt{margin-left:0;flex-basis:100%}
+}
+b.smpx{color:#b47800;background:#fdf7e8;border:1px solid #f0dca8;border-radius:3px;
+  padding:0 4px;font-size:9.5px}
+/* 지표 카드 — 모든 값이 표 안에서 보이도록 */
+.mcard .lg{margin:2px 0 6px}
+.cw.sm{height:172px}
+table.mt{width:100%;table-layout:fixed}
+table.mt th{font-size:10.5px;padding:6px 3px;white-space:nowrap}
+table.mt td{font-size:12px;padding:7px 3px;white-space:nowrap;color:var(--ink)}
+table.mt{min-width:0;width:100%}
+table.mt th:first-child,table.mt td:first-child{width:33%;min-width:0;
+  position:static;background:transparent}
+table.mt th:nth-child(2),table.mt td:nth-child(2){width:15%}
+table.mt th:nth-child(3),table.mt td:nth-child(3){width:15%}
+table.mt th:nth-child(4),table.mt td:nth-child(4){width:20%}
+table.mt th:last-child,table.mt td:last-child{width:17%}
+table.mt .tmn{font-size:11.5px;letter-spacing:-.05em}
+table.mt td.n{letter-spacing:-.03em}
+table.mt .rn{vertical-align:middle}
+.mcard .tw{margin:0;padding:0;overflow:visible}
+table.mt td.tmc{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+table.mt .tmn{font-weight:700;letter-spacing:-.03em;margin-left:3px}
+table.mt .cw{font-size:11px;line-height:1;margin-left:2px}
+table.mt tr.top td{background:#f2ecfb;font-weight:800}
+table.mt tr.top .tmn{color:#5b3a8c}
+table.mt td.tg{color:var(--muted);font-variant-numeric:tabular-nums;letter-spacing:-.04em;font-size:11px}
+table.mt tr.top td.tg{color:#8b74b3}
+table.mt td.ac{font-weight:800;font-variant-numeric:tabular-nums;font-size:12px;letter-spacing:-.04em}
+table.mt .rn{display:inline-block;width:15px;height:15px;line-height:15px;
+  border-radius:50%;background:#e7ecf1;color:var(--muted);font-size:9px;
+  font-weight:800;text-align:center}
+table.mt tr.top .rn{background:#7c4dbe;color:#fff}
+table.mt td.pos{color:var(--base);font-weight:700;font-variant-numeric:tabular-nums}
+table.mt td.neg{color:var(--bad);font-weight:700;font-variant-numeric:tabular-nums}
+table.mt .bg{font-size:10px;padding:1px 5px;white-space:nowrap}
+table.mt .rk{font-size:9.5px;font-weight:700;color:var(--muted)}
+table.mt .rk.r1{color:#b47800}
+.ai{margin-top:8px;font-size:10.5px;line-height:1.55;color:var(--ink);background:#f6f8fa;
+  border:1px solid var(--line);border-radius:7px;padding:7px 9px}
+.ai span{display:inline-block;font-size:9px;font-weight:800;color:#fff;background:var(--slate,#5c7d99);
+  border-radius:3px;padding:1px 5px;margin-right:5px;vertical-align:1px}
+/* 팀 순위 카드 */
+.rkcard .rkbox{display:grid;grid-template-columns:1fr;gap:10px;align-items:center}
+@media(min-width:820px){.rkcard .rkbox{grid-template-columns:minmax(176px,38%) 1fr}}
+.rkl{margin:0;padding:0;list-style:none}
+.rkl li{display:grid;grid-template-columns:17px minmax(0,1fr) auto auto;gap:7px;
+  align-items:center;padding:7px 5px;border-bottom:1px dashed var(--line);
+  font-size:11.5px;white-space:nowrap}
+.rkl li:last-child{border-bottom:0}
+.rkl li.top{background:#fdf7e8;border-radius:6px;border-bottom-color:transparent}
+.rkl .rn{width:17px;height:17px;border-radius:50%;background:#e7ecf1;color:var(--muted);
+  font-size:9.5px;font-weight:800;display:flex;align-items:center;justify-content:center}
+.rkl li.top .rn{background:#b47800;color:#fff}
+.rkl .tm{font-weight:700;letter-spacing:-.02em;overflow:hidden;text-overflow:ellipsis}
+.rkl li.top .tm{font-weight:800}
+.rkl .vl{font-size:13px;font-weight:800;letter-spacing:-.03em;
+  font-variant-numeric:tabular-nums}
+.lg .rt{margin-left:auto;color:var(--muted)}
+/* 이번 주 볼 것 */
+.watch{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--bad);
+  border-radius:10px;padding:12px;margin-bottom:14px}
+.watch .wh{display:flex;align-items:baseline;gap:6px;font-size:14px;font-weight:800;
+  letter-spacing:-.02em;margin-bottom:6px}
+.watch .wh span{margin-left:auto;font-size:11px;font-weight:600;color:var(--muted)}
+.watch ol{margin:0;padding:0;list-style:none}
+.watch li{padding:9px 0;border-top:1px dashed var(--line)}
+.watch li:first-child{border-top:0}
+.wl1{display:flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;
+  letter-spacing:-.01em}
+.wl1 .nm{flex:1;min-width:0}
+.wl1 b{font-variant-numeric:tabular-nums}
+.wl1 b.ok{color:var(--ok)} .wl1 b.warn{color:var(--warn)} .wl1 b.bad{color:var(--bad)}
+.wl1 .inv{font-size:9.5px;font-weight:700;color:var(--bad);border:1px solid #f2c4bd;
+  background:#fdeeec;border-radius:3px;padding:1px 4px;flex:0 0 auto}
+.wl2{font-size:10.5px;color:var(--muted);margin-top:3px}
+.wl3{font-size:11.5px;line-height:1.45;margin-top:4px;display:flex;gap:6px}
+.wl3 em{font-style:normal;font-weight:700;font-size:10px;color:#fff;background:var(--muted);
+  border-radius:3px;padding:1px 4px;height:15px;line-height:13px;flex:0 0 auto;margin-top:1px}
+.wl3.act em{background:var(--ok)}
+.wmore{font-size:10.5px;color:var(--muted);border-top:1px dashed var(--line);
+  padding-top:8px;margin-top:4px}
+/* 접이식 Part */
+details.fold{border:1px solid var(--line);border-radius:10px;background:var(--surface);
+  margin-bottom:10px;overflow:hidden}
+details.fold>summary{list-style:none;cursor:pointer;padding:12px;font-size:12.5px;
+  font-weight:800;letter-spacing:-.02em;display:flex;align-items:center;gap:6px}
+details.fold>summary::-webkit-details-marker{display:none}
+details.fold>summary em{font-style:normal;font-weight:600;color:var(--muted);font-size:10.5px;
+  flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+details.fold>summary .ar{color:var(--muted);font-size:11px}
+details.fold[open]>summary{border-bottom:1px solid var(--line)}
+details.fold[open]>summary .ar{transform:rotate(180deg);display:inline-block}
+.fbody{padding:10px;background:var(--canvas)}
+.fbody .pt{margin-top:8px}
+td.tx{white-space:normal;min-width:150px;max-width:230px;line-height:1.4;
+  font-size:10.5px;color:var(--ink)}
+td .dash{color:var(--line)}
+.note{font-size:10.5px;color:var(--muted);line-height:1.6;margin-top:10px}
+.note b{color:var(--ink)}
+
+/* 타일형 성적표 */
+table.sct.tiles{min-width:0;table-layout:fixed;border-spacing:0}
+table.sct.tiles col.w2{width:19%} table.sct.tiles col.wx{width:16.2%}
+table.sct.tiles th{padding:9px 4px;text-align:center}
+table.sct.tiles th.l{text-align:left;padding-left:12px}
+table.sct.tiles th em{font-size:9px;color:#9fb3c4}
+table.sct.tiles td{padding:6px 4px;border-bottom:0;text-align:center}
+table.sct.tiles td.l{padding-left:12px;text-align:left;vertical-align:middle}
+table.sct.tiles .tm .rk{margin-right:6px;vertical-align:middle}
+table.sct.tiles .tm .nm{display:inline;vertical-align:middle}
+table.sct.tiles .tm .ow{display:inline;margin-left:5px;vertical-align:middle}
+table.sct.tiles .tl{border:1px solid;border-radius:8px;padding:9px 4px 8px;line-height:1.2}
+table.sct.tiles .tl b{display:block;font-size:13px;font-weight:800;letter-spacing:-.04em;color:var(--ink);
+  white-space:nowrap}
+table.sct.tiles .tl b i{font-style:normal;font-size:11px;font-weight:600;color:#7a8b99;margin-left:4px;
+  letter-spacing:-.02em}
+table.sct.tiles .tl .dl{display:inline-block;margin-top:4px;font-size:11.5px;font-weight:800;
+  padding:1px 8px;border-radius:10px}
+table.sct.tiles th{font-size:12px} table.sct.tiles th em{font-size:10px}
+table.sct.tiles .tm .nm{font-size:15px} table.sct.tiles .tm .ow{font-size:11px}
+table.sct.tiles th em{white-space:normal;line-height:1.2}
+table.sct.tiles .rk{width:20px;height:20px;line-height:20px;font-size:11px}
+table.sct.tiles .tl.pos{background:#eef4fd;border-color:#c5d8f5}
+table.sct.tiles .tl.pos .dl{color:#14539e;background:#d5e4fb}
+table.sct.tiles .tl.neg{background:#fdeeec;border-color:#f2c4bd}
+table.sct.tiles .tl.neg .dl{color:#a5301f;background:#f8d3cd}
+table.sct.tiles tr.tot td{border-top:2px solid var(--ink);background:#f6f8fa;padding-top:8px;padding-bottom:8px}
+table.sct.tiles tr.tot .nm{font-size:15px;font-weight:800}
+@media(max-width:720px){
+  table.sct.tiles col.w2{width:23%} table.sct.tiles col.wx{width:15.4%}
+  table.sct.tiles th{padding:6px 2px;font-size:8.5px} table.sct.tiles th.l{padding-left:6px}
+  table.sct.tiles td{padding:3px 2px} table.sct.tiles td.l{padding-left:6px}
+  table.sct.tiles .tm .nm{display:inline;font-size:10.5px;letter-spacing:-.06em} table.sct.tiles .tm .ow{display:none}
+  table.sct.tiles th em{font-size:7px}
+  table.sct.tiles .tm .rk{width:14px;height:14px;line-height:14px;font-size:8.5px;margin-right:3px;display:inline-block;vertical-align:middle}
+  table.sct.tiles td.tm{white-space:nowrap;overflow:visible}
+  table.sct.tiles tr.tot .nm{font-size:10.5px}
+  table.sct.tiles .tl{padding:5px 1px 4px;border-radius:6px}
+  table.sct.tiles .tl b{font-size:12px;letter-spacing:-.05em}
+  table.sct.tiles .tl b i{display:block;font-size:8px;margin:0}
+  table.sct.tiles .tl .dl{font-size:8.5px;padding:0 4px;margin-top:2px}
+}
+
+/* 잘한 팀 / 못한 팀 */
+.verdict{display:grid;grid-template-columns:1fr;gap:10px;margin-bottom:14px}
+@media(min-width:760px){.verdict{grid-template-columns:1fr 1fr}}
+.vc{border-radius:12px;padding:14px 16px;border:1.5px solid;background:var(--surface)}
+.vc.good{border-color:#9dbdf0;background:linear-gradient(180deg,#f3f7fe,#fff)}
+.vc.bad{border-color:#eba59b;background:linear-gradient(180deg,#fdf1ef,#fff)}
+.vc .vt{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.vc .tag{font-size:12px;font-weight:800;color:#fff;padding:3px 10px;border-radius:12px}
+.vc.good .tag{background:var(--base)} .vc.bad .tag{background:var(--bad)}
+.vc .nm{font-size:22px;font-weight:800;letter-spacing:-.04em}
+.vc.good .nm{color:var(--base)} .vc.bad .nm{color:var(--bad)}
+.vc .ow{font-size:11px;color:var(--muted)}
+.vc .vm{margin-top:8px;font-size:16px;font-weight:600;letter-spacing:-.02em}
+.vc .vm b{font-size:24px;font-weight:800;letter-spacing:-.04em}
+.vc .vm b.pos{color:var(--base);font-size:16px} .vc .vm b.neg{color:var(--bad);font-size:16px}
+.vc .vl{margin:8px 0 0;padding:0;list-style:none;font-size:12.5px;line-height:1.75;color:var(--ink);letter-spacing:-.01em}
+.vc .vl li{white-space:nowrap}
+.vc .vl.sub{margin-top:2px;color:var(--muted);font-size:11.5px}
+.vc .vl em{font-style:normal;font-weight:800;font-size:10.5px;padding:1px 6px;border-radius:4px;margin-right:6px;
+  background:#e7ecf1;color:var(--ink)}
+.vc .vl b.pos{color:var(--base)} .vc .vl b.neg{color:var(--bad)}
+.vc .bg{margin-right:4px;vertical-align:1px} .vc .vm .bg{font-size:11px;padding:2px 7px}
+@media(max-width:720px){
+  .vc{padding:11px 12px} .vc .nm{font-size:18px} .vc .vm{font-size:14px} .vc .vm b{font-size:20px}
+  .vc .vm b.pos,.vc .vm b.neg{font-size:14px} .vc .vl{font-size:11.5px} .vc .vl.sub{font-size:10.5px}
+  /* 성적표 타일 숫자 잘림 방지 */
+  table.sct.tiles .tl b{font-size:11.5px;letter-spacing:-.06em}
+  table.sct.tiles .tl b i{font-size:7.5px}
+  table.sct.tiles .tl .dl{font-size:8px;padding:1px 3px;letter-spacing:-.05em;line-height:1.25;max-width:100%;white-space:nowrap}
+  table.sct.tiles .tl .dl .w{display:block}
+  table.sct.tiles .tl .dl .v{display:block}
+  table.sct.tiles th em{white-space:nowrap} table.sct.tiles th em .un{display:block}
+  table.sct.tiles col.w2{width:19%} table.sct.tiles col.wx{width:16.2%}
+  table.sct.tiles .tm .nm{font-size:10px;letter-spacing:-.08em}
+}
+
+@media(max-width:400px){
+  table.sct.tiles th{font-size:8px} table.sct.tiles th em{font-size:6.5px}
+  table.sct.tiles .tl b{font-size:10.5px} table.sct.tiles .tl b i{font-size:7px}
+  table.sct.tiles .tl .dl{font-size:7.5px;padding:1px 2px}
+  table.sct.tiles .tm .nm{font-size:9px}
+  table.sct.tiles .tl{padding:4px 1px 3px}
+}
+
+.vc .vt .hc{margin-left:auto;font-size:11px;color:var(--muted);font-weight:700}
+.vc .vcols{display:grid;grid-template-columns:minmax(0,max-content) minmax(0,max-content);justify-content:space-between;gap:6px 16px;margin-top:6px}
+.vc .vcols .vl{font-size:11.5px;letter-spacing:-.02em} .vc .vcols .vl li{white-space:normal;padding-left:0}
+.vc .vcols .vl li b{white-space:nowrap}
+.vc .vh{font-size:10.5px;font-weight:800;color:var(--muted);margin-top:4px}
+.vc .vnone{font-size:11.5px;color:var(--muted);margin-top:6px}
+.vc .vcols .vl{margin-top:2px}
+.sumbar{background:var(--ink);color:#fff;border-radius:10px;padding:12px 16px;margin:-4px 0 16px;
+  border-left:4px solid var(--base)}
+.sumbar .sl{font-size:11px;font-weight:800;color:#9fb3c4;margin-bottom:4px}
+.sumbar .st{font-size:13.5px;line-height:1.65;letter-spacing:-.01em;word-break:keep-all}
+.sumbar .st b{color:#fff}
+@media(max-width:720px){
+  .vc .vcols{grid-template-columns:1fr;gap:2px}
+  .vc .vt .hc{margin-left:0;flex-basis:100%}
+  .sumbar{padding:10px 12px} .sumbar .st{font-size:12.5px}
+}
+
+@media(max-width:720px){
+  table.mt th{font-size:9px;padding:5px 2px} table.mt td{font-size:10.5px;padding:6px 2px}
+  table.mt td.ac{font-size:11px} table.mt .bg{font-size:9px;padding:1px 4px}
+  table.mt th:first-child,table.mt td:first-child{width:27%}
+  table.mt th:nth-child(2),table.mt td:nth-child(2){width:17%}
+  table.mt th:nth-child(3),table.mt td:nth-child(3){width:16%}
+  table.mt th:nth-child(4),table.mt td:nth-child(4){width:20%}
+  table.mt th:last-child,table.mt td:last-child{width:20%}
+  table.mt .tmn{font-size:10px;letter-spacing:-.06em;margin-left:2px} table.mt .cw{font-size:9px;margin-left:1px}
+  table.mt .rn{width:13px;height:13px;line-height:13px;font-size:8px}
+  table.mt td.pos,table.mt td.neg{letter-spacing:-.04em}
+  /* 성적표 타일 pill 값 줄 */
+  table.sct.tiles .tl .dl .v{font-size:7.5px;letter-spacing:-.07em}
+  table.sct.tiles .tl{padding-left:0;padding-right:0}
+}
+
+/* 721~960px(태블릿ㆍ좁은 창): 타일 값을 세로 적층 */
+@media(min-width:721px) and (max-width:960px){
+  table.sct.tiles .tl b{font-size:12px;letter-spacing:-.05em}
+  table.sct.tiles .tl b i{display:block;font-size:9px;margin:0}
+  table.sct.tiles .tl .dl{font-size:9px;padding:1px 4px;white-space:nowrap}
+  table.sct.tiles .tl .dl .w,table.sct.tiles .tl .dl .v{display:block}
+  table.sct.tiles .tm .nm{font-size:12px} table.sct.tiles .tm .ow{display:none}
+  table.mt td.tg{letter-spacing:-.05em;font-size:11px}
+}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <b id="ttl">코오롱오토옥션 주간 보고</b>
+  <div class="m"><span class="smp">9월 W1</span><span id="conf">[대외비]</span></div>
+  <div class="m" id="meta"></div>
+</div>
+
+<main class="wrap" id="app"></main>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>
+/* ══════════════════════════════════════════════════════════════
+   DATA — 이 블록만 매주 갈아끼우면 표·차트·전망·판정이 전부 재계산됩니다.
+   · w:[W1,W2,W3,W4,W5]  · 미입력은 null (합계·전망에서 제외, 화면엔 -)
+   · actual:2 → W1~W2 실적, W3~ 추정 (파란 글씨)
+   · stock:true → 시점 지표 (월 전망 = 마지막 값, 합산 아님)
+   · inv:true → 역지표 (낮을수록 좋음, 판정 반전)
+   ※ 9월 경매 4회 → 주차 W1~W4 (2026-09-03 재편)
+   ══════════════════════════════════════════════════════════════ */
+const DATA = {
+  rankBy:"value",
+  period:"2026년 9월 1주차",
+  asOf:"2026-09-03",
+  auctions:4,              /* 9월 경매 4회 (9/2 · 9/9 · 9/16 · 9/22) → 주차 4개 */
+
+  /* ── 전사 총계 = ★주간 보고★ 시트 '총 계' 행 (2026-09-03 수정본: 소계 합과 일치) ── */
+  tot:{
+    list:{t:7834, w:[1861, 1946, 1946, 1946]},   /* 전사 = 주보 시트 총계 그대로 (법인영업 팀 행만 일보 출품유도 기준, 전사에는 미반영) */
+    won: {t:4400, w:[1043, 1207, 1073, 1126]},   /* 전사 = 주보 시트 총계 그대로 */
+    rev: {t:24733162191, w:[5477985096, 6183290548, 6183290548, 6183290548]},
+    gp:  {t:1102359894, w:[284101699, 275589973, 275589973, 275589973]}
+  },
+  weeks:["W1","W2","W3","W4"],
+  actual:1,                /* W1 실적 확정 · W2~W4 추정 */
+
+  /* Part 1 ─ 출품대수 (대) */
+  listing:[
+    {g:"자사 매입", rows:[
+      {nm:"플랫폼매입", ds:"매입 출품", ow:"조성익", t:280, w:[65, 70, 70, 70]},
+      {nm:"출품영업", ds:"출품전문점ㆍ인", ow:"최현우", t:3041, w:[573, 760, 760, 760]},
+      {nm:"경매운영(FC)", ds:"FC+클레임", ow:"정경태", t:764, w:[286, 191, 191, 191]}
+    ]},
+    {g:"출품 유도", rows:[
+      {nm:"법인영업", ds:"출품유도(캐피탈ㆍ렌터카) · 일보 시트 기준", ow:"김지훈", t:823, w:[291, 177.33, 177.33, 177.33]},   /* W2~W4 = 잔여 목표 균등 */
+      {nm:"출품영업", ds:"출품전문점ㆍ인", ow:"최현우", t:1329, w:[288, 332, 332, 332]},
+      {nm:"경매운영(FC)", ds:"FC+기타", ow:"정경태", t:1357, w:[312, 339, 339, 339]}
+    ]}
+  ],
+
+  /* Part 1 ─ 낙찰대수 (대) */
+  won:[
+    {g:"자사 낙찰", rows:[
+      {nm:"플랫폼매입", ds:"매입 출품", ow:"조성익", t:189, w:[45, 47, 47, 47]},
+      {nm:"출품영업", ds:"출품전문점ㆍ인", ow:"최현우", t:1640, w:[336, 410, 410, 410]},
+      {nm:"경매운영(FC)", ds:"FC+클레임", ow:"정경태", t:418, w:[176, 105, 105, 105]}
+    ]},
+    {g:"유도 낙찰", rows:[
+      {nm:"법인영업", ds:"출품유도(캐피탈ㆍ렌터카) · 일보 시트 기준", ow:"김지훈", t:475, w:[133, 114, 114, 114]},   /* W2~W4 = 잔여 목표 균등 */
+      {nm:"출품영업", ds:"출품전문점ㆍ인", ow:"최현우", t:676, w:[141, 169, 169, 169]},
+      {nm:"경매운영(FC)", ds:"FC+기타", ow:"정경태", t:751, w:[191, 188, 188, 188]}
+    ]}
+  ],
+
+  /* Part 1 ─ 매출액 (원) */
+  rev:[
+    {nm:"법인영업", ds:"상품 매출+중개ㆍ서비스 수수료", ow:"김지훈", t:3376148821, w:[233704020, 844037205, 844037205, 844037205],
+     why:"W1 실적 234백만 — 주 목표 844백만의 28% · 월 전망 81.9%", act:"자체ㆍ잔가 물량 인도 일정 앞당기기"},
+    {nm:"플랫폼매입", ds:"상품 매출", ow:"조성익", t:2470090400, w:[581657056, 617522600, 617522600, 617522600]},
+    {nm:"출품영업", ds:"상품 매출+중개 수수료", ow:"최현우", t:13178422132, w:[2651491989, 3294605533, 3294605533, 3294605533]},
+    {nm:"경매운영(FC)", ds:"상품 매출+중개 수수료", ow:"정경태", t:5708500838, w:[2011132031, 1427125210, 1427125210, 1427125210]}
+  ],
+
+  /* Part 1 ─ 매출이익 (원) */
+  gp:[
+    {nm:"법인영업", ds:"상품 매출익+중개ㆍ서비스 수수료", ow:"김지훈", t:234268821, w:[31513534, 58567205, 58567205, 58567205],
+     why:"매출액 부진에 연동 · 월 전망 88.5%", act:"고마진 물량 비중 상향"},
+    {nm:"플랫폼매입", ds:"상품 매출익", ow:"조성익", t:47513856, w:[28150598, 11878464, 11878464, 11878464]},
+    {nm:"출품영업", ds:"중개 수수료", ow:"최현우", t:463682184, w:[116970992, 115920546, 115920546, 115920546]},
+    {nm:"경매운영(FC)", ds:"중개 수수료", ow:"정경태", t:356895033, w:[107466575, 89223758, 89223758, 89223758]}
+  ],
+
+  /* 레버 산출용 ─ 중개 수수료 합 (Part 2 총계, 원) */
+  fee:{nm:"중개 수수료 합", ds:"출품영업팀 기준", t:299491341, w:[68579985, 57447810, 55712412, 62863188]},
+
+  leverT:{ownWin:0.50, indWin:0.50, feePer:253591, expCvr:0.15},
+  /* 대당이익 목표 고정값(원/대) — 팀별 지정 (2026-09-03 법인영업 홀딩) · 미지정 팀은 매출이익 목표 ÷ 낙찰 목표 */
+  upTarget:{"법인영업":292809},
+
+  /* Part 2 ─ 출품영업팀 상세 (시트에 신규 출품만 기재) */
+  p2:{
+    list:[{nm:"신규 출품 대수", ds:"대", ow:"최현우", t:2229, w:[523, 409, 400, 433]}],
+    win:[{nm:"신규 출품 낙찰", ds:"대", ow:"최현우", t:1181, w:[314, 239, 230, 272]}],
+    price:[{nm:"신규 출품 낙찰가", ds:"원", ow:"최현우", t:10113924894, w:[2203000000, 2082350000, 2088550000, 2195950000]}],
+    fee:[{nm:"신규 출품 수수료", ds:"원", ow:"최현우", t:299491341, w:[68579985, 57447810, 55712412, 62863188]}],
+    acct:[
+      {nm:"활성 출품처 수", ds:"회차 출품 실적 보유", ow:"최현우", t:120, stock:true, f:"num", w:[112, 114, 117, 120]},
+      {nm:"신규 출품처", ds:"신규 계약", ow:"최현우", t:4, f:"num", w:[1, 1, 1, 1]},
+      {nm:"상위 10개처 비중", ds:"집중 리스크 · 주 평균", ow:"최현우", t:0.45, avg:true, inv:true, f:"pct", w:[0.47, 0.46, 0.46, 0.45]}
+    ]
+  },
+
+  /* Part 3 ─ 재무회계팀 */
+  p3:[
+    {nm:"매출액", ds:"재무 확정", ow:"황지은", t:25541344771, f:"mil", w:[5521437928.613636, 6385336192.75, 6385336192.75, 6385336192.75]},
+    {nm:"매출 이익", ds:"재무 확정", ow:"황지은", t:1369827755, f:"mil", w:[280765768.61363626, 342456938.75, 342456938.75, 342456938.75]},
+    {nm:"영업 이익", ds:"재무 확정", ow:"황지은", t:407618395, f:"mil", w:[40213428.613636255, 101904598.75, 101904598.75, 101904598.75]},
+    {nm:"재고 평가액", ds:"월말 기재", ow:"황지은", t:null, f:"mil", stock:true, w:[7552821503, null, null, null]}
+  ],
+
+  /* Part 4 ─ 경매운영팀 (회차 전체) */
+  p4:[
+    {nm:"출품 대수", ds:"회차 전체", ow:"정경태", t:7910, f:"num", w:[1861, 1582, 1582, 1582]},
+    {nm:"낙찰 대수", ds:"회차 전체", ow:"정경태", t:4332, f:"num", w:[1043, 866, 866, 866]}
+  ],
+
+  /* Part 5 ─ 회원운영팀 (시트 기입 완료 · 금액은 시트 천원 → 원 환산) */
+  p5:{sample:false, rows:[
+    {g:"회원관리", c:"총회원", nm:"내수 회원",  f:"num", t:1268, stock:true, w:[1262, 1265, 1268, 1274]},
+    {g:"회원관리", c:"총회원", nm:"수출 회원",  f:"num", t:857, stock:true, w:[848, 852, 856, 860]},
+    {g:"회원관리", c:"총회원", nm:"신규 회원",  f:"num", t:40, w:[7, 10, 12, 12]},
+    {g:"회원관리", c:"총회원", nm:"탈퇴 회원",  f:"num", t:8, w:[2, 2, 2, 2], inv:true},
+    {g:"회원관리", c:"수익",   nm:"연회비 수익", f:"mil", t:30050000, w:[7000000, 7750000, 7750000, 7750000]},
+    {g:"회원활동", c:"경매 참여", nm:"실시간 참여",   f:"num", t:750, avg:true, w:[734, 740, 745, 750]},
+    {g:"회원활동", c:"경매 참여", nm:"부재자 (only)", f:"num", t:25, avg:true, w:[22, 25, 25, 25]},
+    {g:"회원활동", c:"경매 참여", nm:"후상담 (only)", f:"num", t:12, avg:true, w:[10, 10, 10, 10]},
+    {g:"회원활동", c:"구분",   nm:"내수 회원",  f:"num", t:493, avg:true, w:[487, 490, 492, 495]},
+    {g:"회원활동", c:"구분",   nm:"수출 회원",  f:"num", t:294, avg:true, w:[279, 285, 288, 290]},
+    {g:"회원활동", c:"누적",   nm:"누적 참여 (月)", f:"num", t:1062, stock:true, w:[766, 850, 960, 1070]},
+    {g:"응찰오류", c:"낙찰취소", nm:"낙찰취소 건수", f:"num", t:40, inv:true, w:[11, 10, 10, 10]},
+    {g:"응찰오류", c:"낙찰취소", nm:"낙찰취소 수익", f:"mil", t:8000000, w:[1299000, 2000000, 2000000, 2000000]},
+    {g:"응찰오류", c:"낙찰취소", nm:"수금 위약금",   f:"mil", t:20000000, w:[5196000, 5000000, 5000000, 5000000]},
+    {g:"응찰오류", c:"낙찰취소", nm:"지급 위로금",   f:"mil", t:12000000, inv:true, w:[3897000, 3000000, 3000000, 3000000]}
+  ]},
+
+  /* Part 6 ─ 경매지원팀 */
+  p6:[
+    {nm:"정산 대수", ds:"낙찰 대비", ow:"남윤정", t:3857, rt:1.0, w:[1066, 1028, 803, 958],
+     base:[1066, 1028, 803, 960]},   /* 분모 = 시트 경매지원팀 낙찰대수 행(회차 처리 기준) */
+    {nm:"반출 대수", ds:"낙찰 대비", ow:"남윤정", t:3857, rt:1.0, w:[1066, 1027, 803, 954],
+     why:"반출 지연 7대 (클레임 1 · 미정산 2 · 정산 후 지연 4)", act:"정산 완료분 즉시 반출 처리"}
+  ],
+
+  /* Part 7 ─ 차세대개발팀 (시트 기준) */
+  p7:[
+    {nm:"공매시스템 (홈페이지ㆍERP)", ow:"최종호", due:"2026-10-01", st:"정상", pr:0.02,
+     wk:"총 184건 중 3건 완료, 181건 진행 중", dec:"개발 완료 · QA 진행사항을 진척률로 표시"},
+    {nm:"전기차 배터리 점검", ow:"최종호", due:"2026-09-14", st:"정상", pr:1.00,
+     wk:"개발 완료", dec:"9/7~9 현장 테스트 후 9/9 운영 배포 예정"},
+    {nm:"출품리스트 UI/UX 리뉴얼", ow:"최종호", due:"2026-10-01", st:"정상", pr:1.00,
+     wk:"QA 진행 중", dec:"-"},
+    {nm:"협력점 정산관리", ow:"최종호", due:"2026-09-01", st:"지연", pr:0.90,
+     wk:"등급 성장 인센티브", dec:"9/7 예정"},
+    {nm:"경매 실시간 응찰앱 (PCㆍ모바일)", ow:"최종호", due:"미정", st:"정상", pr:0.43,
+     wk:"총 23건 중 10건 완료, 13건 진행 중", dec:"오픈일 확정 필요"},
+    {nm:"경매 홈페이지 다국어 적용", ow:"최종호", due:"2026-10-30", st:"지연", pr:0.90,
+     wk:"공매시스템 완료 대기", dec:"공매시스템 완료 후 적용"}
+  ],
+  p7ops:{done:23, wip:10, hold:1, cancel:1, note:"보류는 추후 우선순위에 따라 프로젝트 형태로 진행"},
+
+  /* Part 8 ─ 수출사업팀 */
+  p8:[
+    {nm:"신규 문의", ds:"건", ow:"이대근", t:40, f:"num", w:[12, 14, 4, 2],
+     why:"광고 미집행", act:"아웃바운드 개발"},
+    {nm:"성약", ds:"건 · 주차별 미입력", ow:"이대근", t:10, f:"num", mo:1,
+     w:[null,null,null,null],
+     why:"현행 사업 모델 판매 한계", act:"기존 거래 바이어 추가 성약 유도"}
+  ],
+
+  /* Part 9 ─ 재고관리 (작성 시점 재고 대수) */
+  p9:[
+    {tm:"법인영업", ow:"김지훈", auc:4,  ret:13},
+    {tm:"소매판매", ow:"조성익", auc:39, ret:74}
+  ],
+
+  NOTE:{
+    'list.total' :{why:'월 전망 7,699대 — 목표 7,834대 미달 (98.3%) · 출품영업 자사매입 전망 93.8% · 법인영업 자사 80.0%',
+                   act:'출품전문점 신규 계약 확대 · W2~W4 출품 유도 강화'},
+    'won.total'  :{why:'월 전망 4,449대 — 목표 4,400대 초과 (101.1%)',
+                   act:'현행 유지 · 법인영업 자사 낙찰 전망 109대 (83.2%) 미달은 원인ㆍ대안 기재 필요'},
+    'rev.total'  :{why:'월 전망 24,028백만 — 목표 24,733백만 미달 (97.1%) · 법인영업 81.9%',
+                   act:'법인영업 자체ㆍ잔가 물량 인도 앞당기기'},
+    'gp.total'   :{why:'월 전망 1,111백만 — 목표 1,102백만 초과 (100.8%)',
+                   act:'현행 유지'},
+    'p2.list'    :{why:'W1 523대 · 주 목표 557대의 94% · 월 전망 79.2%',
+                   act:'신규 출품처 유치 · 활성 출품처 120개 달성'},
+    'p6.releaseRate':{why:'반출 지연 7대', act:'클레임ㆍ미정산 건 우선 처리'},
+    'p8.cvr'     :{why:'전환율 3.1% (목표 15%) — 성약 1건',
+                   act:'바이어 기반 확대'},
+    'p7.0'       :{why:'공매시스템 QA 초기 (3/184건)', act:'10/1 오픈 대비 QA 일정 관리'},
+    'p7.3'       :{why:'협력점 정산관리 목표일(9/1) 경과', act:'9/7 완료 예정'},
+    'p7.5'       :{why:'공매시스템 완료 대기', act:'오픈 후 순차 적용'}
+  }
+};
+
+/* ══════════════════════ 계산 유틸 ══════════════════════ */
+const NW = DATA.weeks.length;
+const isEst = i => i >= DATA.actual;
+
+const nz = v => (v === null || v === undefined || isNaN(v)) ? null : v;
+function addA(a, b){ const o = []; for(let i=0;i<NW;i++){
+  const x=nz(a?a[i]:null), y=nz(b?b[i]:null);
+  o[i] = (x===null && y===null) ? null : (x||0)+(y||0); } return o; }
+function sumRows(rows){ return rows.reduce((a,r)=>addA(a, r.w), new Array(NW).fill(null)); }
+/* mode: false=합계 · true=시점(마지막 주) · 'avg'=주 평균 — 시트 M열 규칙과 동일 */
+function fcast(w, mode){ const v = w.filter(x=>nz(x)!==null);
+  if(!v.length) return null;
+  if(mode === 'avg') return v.reduce((a,b)=>a+b,0) / v.length;
+  return mode ? v[v.length-1] : v.reduce((a,b)=>a+b,0); }
+function fmode(r){ return r.avg ? 'avg' : (r.stock ? true : false); }
+function fcRow(r){ return (r.mo !== undefined && r.mo !== null)
+  ? r.mo : fcast(r.w, fmode(r)); }
+function ratio(a, b){ const o=[]; for(let i=0;i<NW;i++){
+  o[i] = (nz(a[i])===null || !b[i]) ? null : a[i]/b[i]; } return o; }
+function pace(w){ let c=0,o=[]; for(let i=0;i<NW;i++){
+  if(nz(w[i])===null){ o[i]=null; } else { c+=w[i]; o[i]=c; } } return o; }
+
+function grade(ach, inv){
+  if(ach===null) return {k:'na', s:'-'};
+  const v = inv ? (2 - ach) : ach;
+  return (v >= 1) ? {k:'ok', s:'달성'} : {k:'bad', s:'미달'};
+}
+
+/* 표기 */
+const cm = n => n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+function fmt(v, f){
+  if(nz(v)===null) return '-';
+  switch(f){
+    case 'pct': return (v*100).toFixed(1)+'%';
+    case 'mil': return cm(Math.round(v/1e6));
+    case 'man': return cm(Math.round(v/1e4));
+    case 'won': return cm(Math.round(v));
+    case 'dec': return v.toFixed(1);
+    default:    return cm(Math.round(v));
+  }
+}
+const eok = v => (v/1e8).toFixed(1);
+
+/* ══════════════════════ 파생 집계 ══════════════════════ */
+const L = {}; // listing
+L.own  = sumRows(DATA.listing[0].rows);
+L.ind  = sumRows(DATA.listing[1].rows);
+L.ownT = DATA.listing[0].rows.reduce((a,r)=>a+r.t,0);
+L.indT = DATA.listing[1].rows.reduce((a,r)=>a+r.t,0);
+/* 전사 총계는 시트 '총 계' 행 우선 (DATA.tot) · 없으면 소계 합 */
+const TOTSRC = (DATA.tot || {});
+L.tot  = TOTSRC.list ? TOTSRC.list.w.slice() : addA(L.own, L.ind);
+L.totT = TOTSRC.list ? TOTSRC.list.t : (L.ownT + L.indT);
+L.sumW = addA(L.own, L.ind);
+
+const W = {};
+W.own  = sumRows(DATA.won[0].rows);
+W.ind  = sumRows(DATA.won[1].rows);
+W.ownT = DATA.won[0].rows.reduce((a,r)=>a+r.t,0);
+W.indT = DATA.won[1].rows.reduce((a,r)=>a+r.t,0);
+W.tot  = TOTSRC.won ? TOTSRC.won.w.slice() : addA(W.own, W.ind);
+W.totT = TOTSRC.won ? TOTSRC.won.t : (W.ownT + W.indT);
+
+const R = { w: TOTSRC.rev ? TOTSRC.rev.w.slice() : sumRows(DATA.rev),
+            t: TOTSRC.rev ? TOTSRC.rev.t : DATA.rev.reduce((a,r)=>a+r.t,0) };
+const G = { w: TOTSRC.gp ? TOTSRC.gp.w.slice() : sumRows(DATA.gp),
+            t: TOTSRC.gp ? TOTSRC.gp.t : DATA.gp.reduce((a,r)=>a+r.t,0) };
+
+const FC = {
+  list:fcast(L.tot), listOwn:fcast(L.own), listInd:fcast(L.ind),
+  won:fcast(W.tot),  wonOwn:fcast(W.own),  wonInd:fcast(W.ind),
+  rev:fcast(R.w),    gp:fcast(G.w),        fee:fcast(DATA.fee.w)
+};
+
+/* ══════════════════════ 헤더 ══════════════════════ */
+document.getElementById('meta').insertAdjacentHTML('afterbegin',
+  DATA.period + ' · 기준일 ' + DATA.asOf + ' · W' + DATA.actual + ' 실적 확정 / W' +
+  (DATA.actual+1) + '~W' + DATA.weeks.length + ' 추정');
+
+/* ══════════════════════ 표 렌더러 ══════════════════════ */
+let CURF = 'num';
+let NOTECOL = false;
+
+const NT = k => DATA.NOTE[k] || null;
+function anyNote(rows, keys){
+  const a = (rows||[]).some(r => r.why || r.act);
+  const b = (keys||[]).some(k => NT(k));
+  return a || b;
+}
+function noteCells(o){
+  if(!NOTECOL) return '';
+  o = o || {};
+  return '<td class="l tx">'+(o.why || '<span class="dash">–</span>')+'</td>'+
+         '<td class="l tx">'+(o.act || '<span class="dash">–</span>')+'</td>';
+}
+function head(){
+  let h = '<tr><th class="l">구분</th><th>월 목표</th>';
+  for(let i=0;i<NW;i++) h += '<th'+(isEst(i)?' class="est"':'')+'>'+DATA.weeks[i]+
+    (isEst(i)?' 추정':' 실적')+'</th>';
+  h += '<th>월 전망</th><th>달성</th>';
+  if(NOTECOL) h += '<th class="l">원인</th><th class="l">대안ㆍ의사결정</th>';
+  return h + '</tr>';
+}
+function cells(w){
+  let h='';
+  for(let i=0;i<NW;i++) h += '<td class="n'+(isEst(i)?' est':'')+'">'+fmt(w[i], CURF)+'</td>';
+  return h;
+}
+function bg(ach, inv){
+  const g = grade(ach, inv);
+  return '<span class="bg '+g.k+'">'+(ach===null?'-':(ach*100).toFixed(0)+'%')+'</span>';
+}
+function row(r, cls){
+  const w = r.w, tgt = (r.t===undefined?null:r.t);
+  const fc = fcRow(r);
+  const ach = (tgt && fc!==null) ? fc/tgt : null;
+  const f = r.f || CURF;
+  const save = CURF; CURF = f;
+  const body = '<tr class="'+(cls||'')+'">'+
+    '<td class="l"><span class="nm">'+r.nm+'</span>'+
+    (r.ds||r.ow ? '<span class="ds">'+[r.ds,r.ow].filter(Boolean).join(' · ')+'</span>' : '')+'</td>'+
+    '<td class="n">'+fmt(tgt, f)+'</td>'+ cells(w) +
+    '<td class="n"><b>'+fmt(fc, f)+'</b></td>'+
+    '<td>'+bg(ach, r.inv)+'</td>'+ noteCells(r) +'</tr>';
+  CURF = save;
+  return body;
+}
+function aggRow(label, desc, tgt, w, cls, stock, inv, f, key){
+  const fc = fcast(w, stock);
+  const ach = (tgt && fc!==null) ? fc/tgt : null;
+  const save = CURF; if(f) CURF = f;
+  const body = '<tr class="'+cls+'">'+
+    '<td class="l"><span class="nm">'+label+'</span>'+
+    (desc?'<span class="ds">'+desc+'</span>':'')+'</td>'+
+    '<td class="n">'+fmt(tgt, CURF)+'</td>'+ cells(w) +
+    '<td class="n"><b>'+fmt(fc, CURF)+'</b></td>'+
+    '<td>'+bg(ach, inv)+'</td>'+ noteCells(NT(key)) +'</tr>';
+  CURF = save;
+  return body;
+}
+function derRow(label, w, f, tgt, inv, key, mo){
+  const save = CURF; CURF = f;
+  const vals = w.filter(x=>nz(x)!==null);
+  const last = (mo !== undefined && mo !== null && isFinite(mo))
+    ? mo : (vals.length ? vals[vals.length-1] : null);
+  const ach = (tgt && last!==null) ? last/tgt : null;
+  const body = '<tr class="der"><td class="l">'+label+'</td>'+
+    '<td class="n">'+fmt(tgt, f)+'</td>'+ cells(w) +
+    '<td class="n"><b>'+fmt(last, f)+'</b></td>'+
+    '<td>'+bg(ach, inv)+'</td>'+ noteCells(NT(key)) +'</tr>';
+  CURF = save;
+  return body;
+}
+function tbl(inner){ return '<div class="tw"><table>'+head()+inner+'</table></div>'; }
+function part(t, sub){ return '<div class="pt">'+t+(sub?'<em>'+sub+'</em>':'')+'</div>'; }
+function card(title, unit, inner){
+  return '<div class="card"><div class="hd"><h2>'+title+'</h2>'+
+    (unit?'<span class="u">'+unit+'</span>':'')+'</div>'+inner+'</div>';
+}
+function cv(id, cls){ return '<div class="'+(cls||'cw')+'"><canvas id="'+id+'"></canvas></div>'; }
+/* 접이식 Part */
+function fold(title, sub, worst, inner){
+  return '<details class="fold"><summary>'+title+
+    '<em>'+sub+'</em>'+
+    '<span class="ar">▾</span></summary><div class="fbody">'+inner+'</div></details>';
+}
+
+/* ══════════════════════ 레버 (요약 바로 아래) ══════════════════════ */
+const LV = {
+  ownWin : ratio(W.own, L.own),
+  indWin : ratio(W.ind, L.ind),
+  feePer : ratio(DATA.fee.w, sumRows(DATA.p2.win)),
+  expCvr : ratio(pace(sumRows([DATA.p8[1]])), pace(sumRows([DATA.p8[0]])))
+};
+const lvFc = {
+  ownWin : FC.wonOwn/FC.listOwn,
+  indWin : FC.wonInd/FC.listInd,
+  feePer : fcast(DATA.fee.w)/fcast(sumRows(DATA.p2.win)),
+  expCvr : fcRow(DATA.p8[1])/fcRow(DATA.p8[0])
+};
+
+/* ── Part 2ㆍ6 집계 (표에서 사용) ── */
+const P2 = DATA.p2;
+const p2L = sumRows(P2.list), p2W = sumRows(P2.win),
+      p2P = sumRows(P2.price), p2F = sumRows(P2.fee);
+const p2Lt = P2.list.reduce((a,r)=>a+r.t,0), p2Wt = P2.win.reduce((a,r)=>a+r.t,0),
+      p2Pt = P2.price.reduce((a,r)=>a+r.t,0), p2Ft = P2.fee.reduce((a,r)=>a+r.t,0);
+const p6S = sumRows([DATA.p6[0]]), p6R = sumRows([DATA.p6[1]]);
+
+/* ══════════════════════ 팀 집계 ══════════════════════ */
+const TN = ['법인영업','플랫폼매입','출품영업','경매운영(FC)'];
+function teamAgg(sec){
+  const map = {};
+  TN.forEach(n => map[n] = {fc:0, t:0, w:new Array(NW).fill(null)});
+  sec.forEach(g => g.rows.forEach(r=>{
+    const m = map[r.nm]; m.t += r.t; m.fc += (fcast(r.w) || 0); m.w = addA(m.w, r.w);
+  }));
+  return map;
+}
+const TL = teamAgg(DATA.listing), TW = teamAgg(DATA.won);
+const TR = {}; DATA.rev.forEach(r => TR[r.nm] = {fc:fcast(r.w), t:r.t, w:r.w});
+const TG = {}; DATA.gp.forEach(r  => TG[r.nm] = {fc:fcast(r.w), t:r.t, w:r.w});
+
+/* ══════════════════════ ① 5대 핵심 지표 (숫자 + 전주 대비) ══════════════════════ */
+function lastTwo(w){                       /* 마지막 실적 2개 주차 */
+  const idx = [];
+  for(let i=0;i<DATA.actual;i++) if(nz(w[i])!==null) idx.push(i);
+  if(idx.length < 2) return null;
+  return {cur:w[idx[idx.length-1]], prv:w[idx[idx.length-2]],
+          cw:DATA.weeks[idx[idx.length-1]], pw:DATA.weeks[idx[idx.length-2]]};
+}
+const AW = DATA.actual;
+const WLBL = DATA.weeks[AW-1] + ' 목표 대비';
+const NW_ALL = DATA.weeks.length;
+/* 실적 − 해당 주 목표 · 플러스 = 파랑 +숫자 / 마이너스 = 빨강 ▼숫자 */
+function deltaHTML(cur, tgt, f, pp, un){
+  if(cur === null || cur === undefined || tgt === null || tgt === undefined
+     || !isFinite(cur) || !isFinite(tgt))
+    return '<span class="dl flat">– <em>'+WLBL+'</em></span>';
+  const diff = cur - tgt;
+  const k = diff >= 0 ? 'up' : 'dn';
+  const sign = diff >= 0 ? '+' : '▼';
+  const v = pp ? (Math.abs(diff)*100).toFixed(1)+'%p' : fmt(Math.abs(diff), f)+(un||'');
+  return '<span class="dl '+k+'">'+sign+v+'<em>'+WLBL+'</em></span>';
+}
+const wkOf = a => (a && a[AW-1] !== undefined) ? a[AW-1] : null;
+const RATEW = ratio(W.tot, L.tot);
+/* 매출액ㆍ매출이익ㆍ영업이익 = Part 3 재무회계 확정 기준 */
+const FIN = {rev:fcast(DATA.p3[0].w), gp:fcast(DATA.p3[1].w), op:fcast(DATA.p3[2].w)};
+/* 주 목표 = 월 목표 ÷ 주차수 · 큰 숫자 = W? 실적 / W? 목표 */
+function kpiItem(t, wk, wt, mfc, mt, f, unit, pp){
+  const ach = (wt ? wk/wt : null);
+  return {t:t, wk:wk, wt:wt, ach:ach, f:f, u:unit, pp:pp,
+    mfc:mfc, mt:mt,
+    d:deltaHTML(wk, wt, f, pp, pp ? '' : unit)};
+}
+const KPI5 = [
+  kpiItem('출품 대수', wkOf(L.tot), L.totT/NW_ALL, FC.list, L.totT, 'num', '대', false),
+  kpiItem('낙찰 대수', wkOf(W.tot), W.totT/NW_ALL, FC.won,  W.totT, 'num', '대', false),
+  kpiItem('낙찰률', wkOf(RATEW), W.totT/L.totT, FC.won/FC.list, W.totT/L.totT,
+    'pct', '%', true),
+  kpiItem('매출 이익', wkOf(DATA.p3[1].w), DATA.p3[1].t/NW_ALL, FIN.gp, DATA.p3[1].t,
+    'mil', '백만', false),
+  kpiItem('영업 이익', wkOf(DATA.p3[2].w), DATA.p3[2].t/NW_ALL, FIN.op, DATA.p3[2].t,
+    'mil', '백만', false)
+];
+let K = part('핵심 지표',
+  DATA.weeks[AW-1]+' 실적 / '+DATA.weeks[AW-1]+' 목표 (월 목표 ÷ '+NW_ALL+'주) · '+
+  '출품ㆍ낙찰ㆍ낙찰률 = Part 1 팀별 집계 · 매출이익ㆍ영업이익 = Part 3 재무회계 확정');
+K += '<div class="kpi5">' + KPI5.map(function(x){
+  const g = grade(x.ach);
+  const nv = function(v){ return x.pp ? (v*100).toFixed(1) : fmt(v, x.f); };
+  return '<div class="k5 '+g.k+'">'+
+    '<div class="t">'+x.t+'</div>'+
+    '<div class="kb '+g.k+'">'+DATA.weeks[AW-1]+' 목표 대비 '+
+      (x.ach===null?'-':(x.ach*100).toFixed(1)+'%')+'</div>'+
+    '<div class="v">'+nv(x.wk)+'<span class="sl">/</span>'+
+      '<span class="tv">'+nv(x.wt)+'</span><em>'+x.u+'</em></div>'+
+    '<div class="d">'+x.d+'</div>'+
+    '</div>';   /* 월 전망 줄 제거 (2026-09-03 · 혼동 방지) */
+}).join('') + '</div>';
+
+/* ══════════════════════ ② 지표별 팀 순위 (왕관) ══════════════════════ */
+/* 지표별 상세 = 월 목표 대비 · 실적은 확정 주차(W1~W'+actual)만 합산, 추정 주차 제외 */
+const actSum = w => { let s = 0; for(let i = 0; i < DATA.actual; i++){ const v = nz(w[i]); if(v !== null) s += v; } return s; };
+const ACTLBL = DATA.actual === 1 ? DATA.weeks[0] : DATA.weeks[0]+'~'+DATA.weeks[DATA.actual-1];
+const MONTH = (DATA.period.match(/(\d+)월/) || [,''])[1];
+const METRICS = [
+  {id:'m1', grp:'경매 관점', ttl:'출품 대수', unit:'대', f:'num', div:1,
+   rows:TN.map(n=>({nm:n, t:TL[n].t, fc:actSum(TL[n].w)}))},
+  {id:'m2', grp:'경매 관점', ttl:'낙찰 대수', unit:'대', f:'num', div:1,
+   rows:TN.map(n=>({nm:n, t:TW[n].t, fc:actSum(TW[n].w)}))},
+  {id:'m3', grp:'경매 관점', ttl:'낙찰률', unit:'%', suf:'', f:'pct', div:1, rate:true,
+   rows:TN.map(n=>({nm:n, t:TW[n].t/TL[n].t, fc:actSum(TW[n].w)/actSum(TL[n].w)}))},
+  {id:'m4', grp:'수익 관점', ttl:'매출액', unit:'백만원', f:'mil', div:1e6,
+   rows:TN.map(n=>({nm:n, t:TR[n].t, fc:actSum(TR[n].w)}))},
+  {id:'m5', grp:'수익 관점', ttl:'매출 이익', unit:'백만원', f:'mil', div:1e6,
+   rows:TN.map(n=>({nm:n, t:TG[n].t, fc:actSum(TG[n].w)}))},
+  {id:'m6', grp:'수익 관점', ttl:'대당 매출 이익', unit:'만원/대', f:'dec', div:1,
+   rows:TN.map(n=>({nm:n, t:(DATA.upTarget && DATA.upTarget[n]) ? DATA.upTarget[n]/1e4 : TG[n].t/TW[n].t/1e4,
+                     fc:actSum(TG[n].w)/actSum(TW[n].w)/1e4}))}
+];
+METRICS.forEach(m=>{
+  if(m.suf === undefined) m.suf = m.unit;
+  m.rows.forEach(r=>{
+    r.ach  = r.t ? r.fc/r.t : null;
+    r.diff = r.fc - r.t;
+    r.ok   = r.diff >= 0;
+  });
+  m.rows.sort((a,b)=> b.fc - a.fc);
+  m.rows.forEach((r,i)=>{ r.rank = i+1; r.pt = 5 - i; });   /* 1등 5점 → 4등 2점 */
+  m.miss = m.rows.filter(r=>!r.ok);
+  m.worst = m.rows.slice().sort((a,b)=> a.ach - b.ach)[0];
+});
+function diffTxt(r, m, unit){
+  const s = r.ok ? '+' : '−';
+  if(m.rate) return s + (Math.abs(r.diff)*100).toFixed(1) + '%p';
+  return s + fmt(Math.abs(r.diff), m.f) + (unit ? m.suf : '');
+}
+function metricChartFmt(v, m){
+  if(v===null || v===undefined || !isFinite(v)) return '-';
+  if(m.rate) return v.toFixed(1)+'%';
+  if(m.f === 'dec') return v.toFixed(1);
+  return cm(Math.round(v));
+}
+function metricChartFmtUnit(v, m){
+  return metricChartFmt(v, m) + (m.rate ? '' : (m.unit ? ' ' + m.unit : ''));
+}
+function metricValText(r, m, kind){
+  const raw = kind === 'target' ? r.t : r.fc;
+  const v = m.rate ? raw*100 : raw/m.div;
+  return metricChartFmtUnit(v, m);
+}
+function metricDiffText(r, m, withUnit){
+  const diff = m.rate ? (r.fc*100 - r.t*100) : (r.fc/m.div - r.t/m.div);
+  const s = diff >= 0 ? '+' : '▲';
+  const body = m.rate ? Math.abs(diff).toFixed(1)+'%p'
+    : (m.f === 'dec' ? Math.abs(diff).toFixed(1) : cm(Math.round(Math.abs(diff))));
+  return s + body + ((withUnit && !m.rate && m.unit) ? ' ' + m.unit : '');
+}
+function metricCard(m){
+  const top = m.rows[0];
+  let rows = '';
+  m.rows.forEach(function(r){
+    const g = grade(r.ach);
+    rows += '<tr class="'+(r.rank===1?'top':'')+'">'+
+      '<td class="l tmc"><span class="rn">'+r.rank+'</span>'+
+      (r.rank===1?'<span class="cw">👑</span>':'')+
+      '<span class="tmn">'+r.nm+'</span></td>'+
+      '<td class="n tg">'+fmt(r.t, m.f)+'</td>'+
+      '<td class="n ac">'+fmt(r.fc, m.f)+'</td>'+
+      '<td class="n '+(r.ok?'pos':'neg')+'">'+metricDiffText(r, m, false)+'</td>'+
+      '<td><span class="bg '+(r.ach>=1?'ok':'na')+'">'+
+        (r.ach*100).toFixed(0)+'%</span></td></tr>';
+  });
+  const ai = '1위 '+top.nm+' '+metricValText(top,m,'actual')+'. '+
+    '최저 '+m.worst.nm+' 달성률 '+(m.worst.ach*100).toFixed(0)+'%.';
+  return '<div class="card mcard"><div class="hd"><h2>'+m.ttl+'</h2>'+
+    '<span class="u">'+MONTH+'월 누적 ('+ACTLBL+' 실적) · '+m.unit+'</span></div>'+
+    cv(m.id, 'cw sm') +
+    '<div class="lg"><span><i style="background:#cdd6de"></i>월 목표</span>'+
+    '<span><i style="background:#1f6feb"></i>실적</span></div>'+
+    '<div class="tw"><table class="mt">'+
+      '<tr><th class="l">순위ㆍ팀</th><th>월 목표</th><th>실적</th><th>차이</th><th>달성률</th></tr>'+
+      rows + '</table></div>'+
+    '<div class="ai" title="'+ai+'"><span>해석</span>'+ai+'</div></div>';
+}
+/* ══════════════════════ 주간 팀별 성적표 (매출이익 기준 순위) ══════════════════════ */
+const OWN = {};
+DATA.listing[0].rows.forEach(function(r){ OWN[r.nm] = r.ow; });
+
+const WK = AW - 1;                      /* 최근 실적 주차 index */
+const WT = 1 / NW_ALL;                  /* 주 목표 비중 = 1/주차수 */
+function teamWeek(rowsArr, n){          /* 팀의 해당 주 실적ㆍ주 목표 */
+  let fc = 0, t = 0;
+  rowsArr.forEach(function(g){
+    (g.rows || g).forEach(function(r){
+      if(r.nm !== n) return;
+      fc += (nz(r.w[WK]) || 0); t += (r.t || 0);
+    });
+  });
+  return {fc:fc, t:t * WT};
+}
+const SCROWS = TN.map(function(n){
+  const gp  = teamWeek([DATA.gp], n);          /* 매출이익 (원) */
+  const lst = teamWeek(DATA.listing, n);       /* 출품 (대) */
+  const won = teamWeek(DATA.won, n);           /* 낙찰 (대) */
+  return {nm:n, ow:OWN[n] || '',
+    gpF:gp.fc/1e6, gpT:gp.t/1e6, gpFr:gp.fc, gpTr:gp.t,
+    lsF:lst.fc, lsT:lst.t, wnF:won.fc, wnT:won.t};
+}).sort(function(a,b){ return b.gpF - a.gpF; });
+function addDerived(r){
+  r.d = r.gpF - r.gpT;
+  r.ach = r.gpT ? r.gpF / r.gpT : null;
+  r.ok = r.d >= 0;
+  r.wrF = r.lsF ? r.wnF / r.lsF * 100 : 0;      /* 낙찰률 % */
+  r.wrT = r.lsT ? r.wnT / r.lsT * 100 : 0;
+  r.upF = r.wnF ? r.gpFr / r.wnF / 1e4 : 0;     /* 대당이익 만원 */
+  r.upT = (DATA.upTarget && DATA.upTarget[r.nm]) ? DATA.upTarget[r.nm] / 1e4
+        : (r.wnT ? r.gpTr / r.wnT / 1e4 : 0);
+}
+SCROWS.forEach(addDerived);
+/* 전사 행 = 매출이익은 Part 3 재무회계 확정 기준 (팀 합과 다름) · 출품ㆍ낙찰은 시트 총계 */
+const TOT = {
+  gpF:(nz(DATA.p3[1].w[WK])||0)/1e6, gpT:DATA.p3[1].t*WT/1e6,
+  lsF:(nz(L.tot[WK])||0),   lsT:L.totT*WT,
+  wnF:(nz(W.tot[WK])||0),   wnT:W.totT*WT
+};
+TOT.gpFr = TOT.gpF * 1e6; TOT.gpTr = TOT.gpT * 1e6;
+addDerived(TOT);
+
+const BARMAX = Math.max.apply(null,
+  SCROWS.map(function(r){ return Math.max(r.gpF, r.gpT); }).concat([1]));
+const n0 = v => cm(Math.round(v));
+const sg = (v, dec) => (v >= 0 ? '+' : '▼') +
+  (dec ? Math.abs(v).toFixed(dec) : cm(Math.round(Math.abs(v))));
+
+function bar(r){
+  const fw = Math.max(2, Math.min(100, r.gpF / BARMAX * 100));
+  const tk = Math.max(0, Math.min(100, r.gpT / BARMAX * 100));
+  return '<div class="pb"><div class="pf '+(r.ok?'g':'r')+'" style="width:'+
+    fw.toFixed(1)+'%"></div><div class="pk" style="left:'+tk.toFixed(1)+'%"></div></div>';
+}
+/* 타일형 성적표 — 5개 지표 동일 비중 · 값 + 주 목표 대비 증감 pill · 초과 파랑 / 미달 빨강 */
+function tile(f, t, dec, sfx, big){
+  const ok = f >= t, d = f - t;
+  const n = function(v){ return dec ? v.toFixed(dec) : cm(Math.round(v)); };
+  const dv = (ok ? '+' : '▼') + n(Math.abs(d)) + (sfx ? '%p' : '');
+  return '<td><div class="tl '+(ok?'pos':'neg')+'">'+
+    '<b>'+n(f)+(sfx||'')+'<i>/ '+n(t)+(sfx||'')+'</i></b>'+
+    '<span class="dl"><span class="w">'+(ok?'초과':'미달')+'</span><span class="v">('+dv+')</span></span></div></td>';
+}
+function scRow(r, rank){
+  return '<tr'+(rank===null?' class="tot"':'')+'>'+
+    '<td class="l tm">'+(rank===null
+      ? '<span class="nm">전 사</span>'
+      : '<span class="rk '+(r.ok?'g':'r')+'">'+rank+'</span>'+
+        '<span class="nm">'+r.nm+'</span><span class="ow">'+r.ow+'</span>')+'</td>'+
+    tile(r.lsF, r.lsT, 0) + tile(r.wnF, r.wnT, 0) + tile(r.wrF, r.wrT, 1, '%') +
+    tile(r.gpF, r.gpT, 0) + tile(r.upF, r.upT, 1) + '</tr>';
+}
+let SCT = '<div class="tw"><table class="sct tiles">'+
+  '<colgroup><col class="w2"><col class="wx"><col class="wx"><col class="wx"><col class="wx"><col class="wx"></colgroup>'+
+  '<tr><th class="l">순위ㆍ팀</th>'+
+  '<th>출품<em>실적 / 주 목표<span class="un"> (대)</span></em></th><th>낙찰<em>실적 / 주 목표<span class="un"> (대)</span></em></th>'+
+  '<th>낙찰률<em>실적 / 주 목표<span class="un"> (%)</span></em></th>'+
+  '<th>매출이익<em>실적 / 주 목표<span class="un"> (백만)</span></em></th><th>대당이익<em>실적 / 주 목표<span class="un"> (만원)</span></em></th></tr>';
+SCROWS.forEach(function(r, i){ SCT += scRow(r, i + 1); });
+SCT += '</table></div>';   /* 전사 행은 핵심지표와 중복이라 제외 (2026-09-03) */
+
+/* 모바일 카드형 — 잘림 없이 한 화면에 */
+function refCard(lb, f, t, dec, sfx){
+  const ok = f >= t, d = f - t;
+  const n = function(v){ return dec ? v.toFixed(dec) : cm(Math.round(v)); };
+  return '<div class="sq"><em>'+lb+'</em>'+
+    '<b class="'+(ok?'pos':'neg')+'">'+n(f)+(sfx||'')+'</b>'+
+    '<s>/ '+n(t)+(sfx||'')+'</s>'+
+    '<i class="'+(ok?'pos':'neg')+'">'+(ok?'+':'▼')+n(Math.abs(d))+(sfx?'%p':'')+'</i></div>';
+}
+function scCard(r, rank){
+  return '<div class="scc'+(rank===null?' tot':'')+'">'+
+    '<div class="scc-h">'+(rank===null ? '<span class="nm">전 사</span>' :
+      '<span class="rk '+(r.ok?'g':'r')+'">'+rank+'</span>'+
+      '<span class="nm">'+r.nm+'</span><span class="ow">'+r.ow+'</span>')+
+      '<span class="ach '+(r.ok?'pos':'neg')+'">'+
+      (r.ach===null?'-':(r.ach*100).toFixed(0)+'%')+'</span></div>'+
+    '<div class="scc-m"><b>'+n0(r.gpF)+'</b><s>/ '+n0(r.gpT)+' 백만</s>'+
+      '<i class="'+(r.ok?'pos':'neg')+'">'+sg(r.d)+'</i></div>'+
+    '<div class="scc-g">'+
+      refCard('출품', r.lsF, r.lsT, 0) + refCard('낙찰', r.wnF, r.wnT, 0) +
+      refCard('낙찰률', r.wrF, r.wrT, 1, '%') + refCard('대당이익', r.upF, r.upT, 1) +
+    '</div></div>';
+}
+let SCC = '<div class="sccards">';
+SCROWS.forEach(function(r, i){ SCC += scCard(r, i + 1); });
+SCC += scCard(TOT, null) + '</div>';
+
+/* 잘한 팀 = 5개 지표(출품·낙찰·낙찰률·매출이익·대당이익) 중 초과 개수 최다(동률이면 매출이익 달성률) ·
+   못한 팀 = 미달 개수 최다(동률이면 매출이익 부족액) · 미달 지표가 없는 팀뿐이면 생략 (성적표 순위는 매출이익 금액순 그대로) */
+function hitCount(r){
+  return [r.lsF>=r.lsT, r.wnF>=r.wnT, r.wrF>=r.wrT, r.gpF>=r.gpT, r.upF>=r.upT].filter(Boolean).length;
+}
+SCROWS.forEach(function(r){ r.hits = hitCount(r); });
+const BEST = SCROWS.slice().sort(function(a,b){ return (b.hits - a.hits) || (b.ach - a.ach); })[0];
+const WORST = SCROWS.filter(function(r){ return r.hits < 5; })
+  .sort(function(a,b){ return (a.hits - b.hits) || (a.d - b.d); })[0] || null;
+const HEAD = DATA.weeks[WK]+' 매출이익 '+n0(TOT.gpF)+'백만 (주 목표 '+n0(TOT.gpT)+
+  '백만, <b class="'+(TOT.ok?'pos':'neg')+'">'+sg(TOT.d)+'</b>) · 잘한 팀 <b class="pos">'+
+  BEST.nm+' '+(BEST.ach*100).toFixed(0)+'% ('+sg(BEST.d)+'백만)</b>';
+
+const ISSUE = [
+  BEST.nm+' 매출이익 '+n0(BEST.gpF)+'백만 — 주 목표 대비 '+
+    (BEST.ach*100).toFixed(0)+'% ('+sg(BEST.d)+'백만)',
+  WORST ? WORST.nm+' 매출이익 '+n0(WORST.gpF)+'백만 — 주 목표 대비 '+
+    (WORST.ach*100).toFixed(0)+'% ('+sg(WORST.d)+'백만)' : '전 팀 매출이익 주 목표 초과'
+];
+
+/* ── 잘한 팀 / 못한 팀 요약 (핵심지표와 성적표 사이) ── */
+function teamFacts(r){
+  /* 단위 명시: 대 · % · 만원 — 값과 차이 모두에 붙임 */
+  const f = function(lb, a, b, dec, sfx, unit){
+    const ok = a >= b, d = a - b;
+    const n = function(v){ return dec ? v.toFixed(dec) : cm(Math.round(v)); };
+    const u = sfx || unit || '';
+    return {lb:lb, ok:ok, txt:'<span class="bg '+(ok?'ok':'bad')+'">'+(ok?'초과':'미달')+'</span>'+lb+' '+n(a)+u+' / '+n(b)+u+
+      ' <b class="'+(ok?'pos':'neg')+'">('+(ok?'+':'▼')+n(Math.abs(d))+(sfx?'%p':u)+')</b>'};
+  };
+  return [f('매출이익', r.gpF, r.gpT, 0, '', '백만'), f('출품', r.lsF, r.lsT, 0, '', '대'), f('낙찰', r.wnF, r.wnT, 0, '', '대'),
+          f('낙찰률', r.wrF, r.wrT, 1, '%'), f('대당이익', r.upF, r.upT, 1, '', '만원')];
+}
+function verdictCard(r, good){
+  const facts = teamFacts(r), hit = facts.filter(x=>x.ok), miss = facts.filter(x=>!x.ok);
+  const main = '<span class="bg '+(r.ok?'ok':'bad')+'">'+(r.ok?'초과':'미달')+'</span>매출이익 <b>'+n0(r.gpF)+'</b>백만 / '+n0(r.gpT)+'백만 <b class="'+(r.ok?'pos':'neg')+'">('+
+    sg(r.d)+'백만 · '+(r.ach*100).toFixed(0)+'%)</b>';
+  const col = function(arr, lb){
+    return '<div class="vcol"><div class="vh">'+lb+' '+arr.length+'</div>'+
+      (arr.length ? '<ul class="vl">'+arr.map(x=>'<li>'+x.txt+'</li>').join('')+'</ul>' : '<div class="vnone">없음</div>')+'</div>';
+  };
+  return '<div class="vc '+(good?'good':'bad')+'">'+
+    '<div class="vt"><span class="tag">'+(good?'잘한 팀':'못한 팀')+'</span><b class="nm">'+r.nm+'</b>'+
+    '<span class="ow">'+r.ow+'</span><span class="hc">5개 지표 중 초과 '+r.hits+' · 미달 '+(5-r.hits)+'</span></div>'+
+    '<div class="vcols">'+col(hit,'초과')+col(miss,'미달')+'</div>'+
+    '</div>';
+}
+const VERDICT = '<div class="verdict">'+verdictCard(BEST, true)+
+  (WORST ? verdictCard(WORST, false) : '')+'</div>';
+
+/* ── 이번 주 총평 (잘한/못한 팀 바로 아래) ── */
+const R_ = {}; SCROWS.forEach(function(r){ R_[r.nm] = r; });
+function tf(r){  /* 팀 수치 문구용 */
+  const s = function(a,b,dec,sfx){ const d=a-b; return (d>=0?'+':'▼')+(dec?Math.abs(d).toFixed(dec):cm(Math.round(Math.abs(d))))+(sfx||''); };
+  return {ls:cm(Math.round(r.lsF))+'대('+s(r.lsF,r.lsT)+')', wn:cm(Math.round(r.wnF))+'대('+s(r.wnF,r.wnT)+')',
+          wr:r.wrF.toFixed(1)+'%(목표 '+r.wrT.toFixed(1)+'%, '+s(r.wrF,r.wrT,1,'%p')+')',
+          gp:n0(r.gpF)+'/'+n0(r.gpT)+'백만('+s(r.gpF,r.gpT)+')', up:r.upF.toFixed(1)+'만원('+s(r.upF,r.upT,1)+')',
+          gpa:(r.ach*100).toFixed(0)+'%'};
+}
+const A = tf(R_['경매운영(FC)']), Bt = tf(R_['출품영업']), Cc = tf(R_['법인영업']);
+/* 총평 톤앤매너(2026-09-03 확정): 잘한 팀 '견인' → 초과 지표 나열 → 미달 소폭 언급 / 2위 팀 초과·미달 대비 / 줄바꿈 후 못한 팀 */
+const SUMMARY =
+  '<b>'+DATA.weeks[WK]+' 실적은 경매운영팀 견인.</b> 출품 · 낙찰 · 낙찰률 · 매출이익 1주차 목표 초과 달성, 대당이익 소폭 미달. '+
+  '<b>출품영업팀</b>의 경우 낙찰률, 매출이익, 대당이익 1주차 목표 초과 달성이나, 출품대수, 낙찰대수 1주차 목표 대비 미달'+
+  '<br><b>법인영업팀</b>은 출품대수, 낙찰대수 1주차 목표 초과 달성 했으나 낙찰률, 매출이익, 대당이익 1주차 목표 대비 미달';
+const SUMBAR = '<div class="sumbar"><div class="sl">이번 주 총평</div><div class="st">'+SUMMARY+'</div></div>';
+
+const SCORECARD =
+  VERDICT+SUMBAR+
+  part('팀별 성적표 — 매출이익 기준',
+    DATA.weeks[WK]+' 실적 · 순위 = 매출이익 · 각 칸 = 실적 / 주 목표 (차이)') +
+  '<div class="card sccard">'+
+  SCT+   /* 모바일도 표 유지 (가로 스크롤 · 순위ㆍ팀 열 고정) */
+  '<div class="sclg"><span><i style="background:#1f6feb"></i>목표 초과 (파랑)</span>'+
+  '<span><i style="background:#c0392b"></i>목표 미달 (빨강)</span>'+
+  '<span class="rt">주 목표 = 월 목표 ÷ '+NW_ALL+'주 · 팀별 매출이익 = Part 1 팀별 집계 (전사는 상단 핵심지표 · Part 3 재무회계 기준)</span></div>'+
+  '</div>';   /* '이번 주 이슈와 조치' 카드 제거 — 잘한 팀/못한 팀 블록과 중복 (2026-09-03) */
+
+let DTL = '<div class="grid3">'+
+  METRICS.filter(function(m){return m.grp==='경매 관점';}).map(metricCard).join('')+'</div>';
+DTL += '<div class="grid3">'+
+  METRICS.filter(function(m){return m.grp==='수익 관점';}).map(metricCard).join('')+'</div>';
+let RK = '';
+
+/* ══════════════════════ 추이 상세 ══════════════════════ */
+let TRB = card('주차별 손익', '단위: 백만원 · 좌축 = 매출액 / 우축 = 매출이익 · 영업이익',
+  cv('c17','cw tall'));
+TRB += '<div class="grid2">'+
+  card('주차별 출품ㆍ낙찰ㆍ낙찰률',
+    '막대 = 출품 · 낙찰 / 선 = 낙찰률 · 점선 = 목표 '+(W.totT/L.totT*100).toFixed(1)+'%',
+    cv('c1c','cw tall'))+
+  card('대당 중개 수수료 추이', '원/대 · 점선 = 목표 '+cm(DATA.leverT.feePer)+'원', cv('c12','cw tall'))+
+'</div>';
+let H = fold('추이', '주차별 손익 · 출품ㆍ낙찰ㆍ낙찰률 · 대당 중개 수수료',
+  FC.won/W.totT, TRB);
+
+/* ══════════════════════ Part 1 (접기) ══════════════════════ */
+let P1B = '';
+P1B += '<div class="grid2">'+
+  card('팀별 출품 구성', '월 전망 기준 · 단위: 대', cv('c5'))+
+  card('팀별 낙찰 구성', '월 전망 기준 · 단위: 대', cv('c6'))+
+'</div>';
+P1B += card('주차별 팀 기여 — 출품 대수', '누적 막대 · 단위: 대', cv('c7'));
+P1B += '<div class="note">표는 제외하고 핵심 차트만 유지했습니다.</div>';
+H += fold('Part 1. 통합', '법인영업 · 플랫폼매입 · 출품영업 · 경매운영',
+  FC.gp/G.t, P1B);
+
+/* ══════════════════════ Part 2 (접기) ══════════════════════ */
+let B = '';
+B += '<div class="grid2">'+
+  card('신규 출품 — 출품ㆍ낙찰 대수', '단위: 대', cv('c13','cw tall'))+
+  card('신규 출품 낙찰률', '점선 = 목표 '+
+    (DATA.p2.win[0].t/DATA.p2.list[0].t*100).toFixed(1)+'%', cv('c13b','cw tall'))+
+'</div>';
+B += '<div class="grid2">'+
+  card('대당 낙찰가 추이', '단위: 만원 · 월 목표 '+
+    cm(Math.round(DATA.p2.price[0].t/DATA.p2.win[0].t/1e4))+'만', cv('c14'))+
+  card('대당 수수료 추이', '단위: 천원 · 월 목표 '+
+    cm(Math.round(DATA.p2.fee[0].t/DATA.p2.win[0].t/1e3))+'천', cv('c15'))+
+'</div>';
+B += '<div class="grid2">'+
+  card('활성 출품처 수', '단위: 개 · 점선 = 목표 '+cm(DATA.p2.acct[0].t)+'개', cv('c16'))+
+  card('상위 10개처 출품 비중', '집중 리스크 · 점선 = 상한', cv('c16b'))+
+'</div>';
+H += fold('Part 2. 출품영업팀 상세', '최현우 · 출품/낙찰/수수료 중심',
+  fcast(p2W)/p2Wt, B);
+
+/* ══════════════════════ Part 3 (접기) ══════════════════════ */
+B = '<div class="note">주차별 손익 차트는 상단 <b>추이</b> 섹션에 있습니다 · '+
+  '9월 시트에 재고 평가액 실적이 아직 없어 해당 차트는 제외했습니다.</div>';
+H += fold('Part 3. 재무회계팀', '황지은',
+  fcast(DATA.p3[2].w)/DATA.p3[2].t, B);
+
+/* ══════════════════════ Part 4 (접기) ══════════════════════ */
+B = card('FC+기타 출품ㆍ낙찰ㆍ낙찰률',
+    '막대 = 출품 · 낙찰 / 선 = 낙찰률 · 점선 = 목표 '+
+    (DATA.p4[1].t/DATA.p4[0].t*100).toFixed(1)+'%', cv('c19c','cw tall'))+
+    '<div class="note">회차 전체 출품/낙찰과 낙찰률을 하나의 그래프로 통합했습니다.</div>';
+H += fold('Part 4. 경매운영팀', '정경태 · FC+기타',
+  fcast(DATA.p4[1].w)/DATA.p4[1].t, B);
+
+/* ══════════════════════ Part 5. 회원운영팀 (접기) ══════════════════════ */
+let P5B = '<div class="grid2">'+
+  card('총회원 구성 — 내수 vs 수출', '월말 전망 기준 · 단위: 명', cv('c30'))+
+  card('경매 참여 구분', '월 목표 vs 월 전망 · 단위: 건', cv('c31'))+
+'</div>';
+P5B += card('주차별 회원 활동 — 내수 vs 수출', '단위: 건', cv('c32','cw tall'));
+P5B += '<div class="grid2">'+
+  card('회원 증감ㆍ낙찰취소 건수', '월 목표 vs 월 전망 · 단위: 명 / 건', cv('c33'))+
+  card('연회비ㆍ응찰오류 금액', '월 목표 vs 월 전망 · 단위: 백만원', cv('c34'))+
+'</div>';
+P5B += '<div class="note">경매 참여 계열은 회차당 목표라 월 전망 = 주 평균 · 누적 참여(月)ㆍ총회원은 시점값(마지막 주) · '+
+  '건수ㆍ금액은 합계 · 금액은 시트 천원 단위를 원으로 환산</div>';
+H += fold('Part 5. 회원운영팀', '최동근 · 회원관리 · 회원활동 · 응찰오류', null, P5B);
+
+/* ══════════════════════ Part 6 (접기) ══════════════════════ */
+B = card('정산률ㆍ반출률 추이', '경매지원팀 낙찰대수 대비 · 점선 = 정산 목표 100%', cv('c23','cw tall'))+
+    '<div class="note">W4 정산 958 / 960 (99.8%) · 반출 954 / 960 (99.4%) — '+DATA.p6[1].why+' → '+DATA.p6[1].act+'</div>';
+H += fold('Part 6. 경매지원팀', '남윤정 · 낙찰 대수 대비',
+  fcast(p6R)/DATA.p6[1].t, B);
+
+/* ══════════════════════ Part 7 (접기) ══════════════════════ */
+B = card('과제별 진척률', '점선 = 완료 100%', cv('c24','cw tall'))+
+    '<div class="note">운영(개선ㆍ오류사항 개발) 누적: 완료 '+DATA.p7ops.done+'건 · 진행 중 '+DATA.p7ops.wip+
+    '건 · 보류 '+DATA.p7ops.hold+'건 · 취소 '+DATA.p7ops.cancel+'건 — '+DATA.p7ops.note+'</div>';
+H += fold('Part 7. 디지털혁신실', '최종호',
+  Math.min.apply(null, DATA.p7.map(r=>r.pr)), B);
+
+/* Part 8. 수출사업팀 — 주보 화면에서 제외 (2026-09-03 지시) · DATA.p8 는 유지 */
+
+/* Part 9. 재고관리 — 주보 화면에서 제외 (2026-09-03 지시) · DATA.p9 는 유지 */
+
+/* ══════════════════════ 각주 ══════════════════════ */
+H += '<div class="note">'+
+  '<b>주간 정의</b> 경매 익일~금주 경매일 · 마감 수요일 → 재무 조정 → 보고 목요일 14:00<br>'+
+  '<b>기준</b> W1 실적 확정 · W2~W'+NW_ALL+' 는 시트 추정치 · 주 목표 = 월 목표 ÷ '+NW_ALL+'주<br>'+
+  '<b>색상</b> 목표 초과 = 파랑 <b>+</b>숫자 · 목표 미달 = 빨강 <b>▼</b>숫자<br>'+
+  '<b>전사 총계</b> ★주간 보고★ 시트의 <b>총 계</b> 행을 그대로 사용합니다 — '+
+  '출품 월 목표 7,834 · W1 1,861 · 월 전망 7,699 (소계 합과 일치, 2026-09-03 시트 수정 반영) · '+
+  '9월 경매 4회(9/2ㆍ9/9ㆍ9/16ㆍ9/22) → 주차 W1~W4, 주 목표 = 월 목표 ÷ 4<br>'+
+  '<b>기준 통일</b> 매출액ㆍ매출이익ㆍ영업이익은 Part 3 재무회계 확정 기준 고정(월 목표 25,541 · 1,370 · 408백만) — '+
+  '핵심지표ㆍ성적표 전사 행에 적용 · 팀별 순위ㆍ성적표 팀 행만 Part 1 팀별 집계(매출이익 월 목표 1,102백만) 사용<br>'+
+  '<b>Part 5 회원운영</b> 시트 기입 완료 — 경매 참여 계열은 회차당 목표라 주 평균으로 전망, 금액은 천원→원 환산<br>'+
+  '<b>Part 2</b> 시트에 신규 출품만 기재되어 재출품 계열은 표시하지 않았습니다'+
+'</div>';
+
+RK = SCORECARD + fold('지표별 상세', '월 목표 대비 기준 · 실적 = '+ACTLBL+' 확정치만 (추정 미포함) · 순위 = 실적순',
+  Math.min.apply(null, METRICS.map(function(m){ return m.rows[0].ach; })), DTL);
+document.getElementById('app').innerHTML = K + RK + H;
+
+/* ══════════════════════ 차트 ══════════════════════ */
+const NX = DATA.weeks.filter((_,i)=>L.tot[i]!==null || W.tot[i]!==null).length;
+const cut = a => a.slice(0, NX);
+const WL  = cut(DATA.weeks).map((w,i)=> w + (isEst(i)?' 추정':''));
+const C = {ink:'#0f1a24', ok:'#0e7c66', base:'#1f6feb', warn:'#b47800', bad:'#c0392b',
+           muted:'#6b7c8c', line:'#e3e8ed', slate:'#5c7d99'};
+const TEAM = [C.ink, C.base, C.ok, C.warn];
+const FONT = '"Pretendard Variable",Pretendard,sans-serif';
+const alpha = (i,c)=> isEst(i) ? c+'59' : c;
+const M = a => cut(a).map(v => v===null ? null : v/1e6);
+const P = a => cut(a).map(v => v===null ? null : v*100);
+/* iframeㆍ분할 패널에서도 정확하도록 실제 콘텐츠 폭으로 판정 */
+function narrowNow(){
+  const el = document.getElementById('app');
+  const w = (el && el.clientWidth) ? el.clientWidth
+          : ((typeof window !== 'undefined' && window.innerWidth) || 0);
+  return w > 0 && w < 620;
+}
+let NARROW = narrowNow();
+const RPAD = 86;                 /* 목표 칩 우측 여백(PC) — 생성 시점 폭에 따라 10/86 으로 치환 */
+const rpadNow = () => (NARROW ? 10 : 86);
+
+if(window.Chart){
+  Chart.defaults.font.family = FONT;
+  Chart.defaults.font.size = 10;
+  Chart.defaults.color = C.muted;
+  Chart.defaults.animation = false;
+}
+/* 차트 레지스트리 — 화면 폭이 620px 경계를 넘나들면(PC 패널 축소ㆍ회전) 우측 여백을 바꿔 다시 그림 */
+const CHARTS = [];
+function build(el, cfg){
+  const pad = cfg.options && cfg.options.layout && cfg.options.layout.padding;
+  if(pad && (pad.right === RPAD || cfg._rp)){ cfg._rp = true; pad.right = rpadNow(); }
+  const ch = new Chart(el, cfg);
+  CHARTS.push({el:el, cfg:cfg, ch:ch});
+}
+function mk(id, cfg){
+  const el = document.getElementById(id);
+  if(!el || !window.Chart) return;
+  const d = el.closest ? el.closest('details') : null;
+  if(d && !d.open){                     /* 접힌 영역은 폭이 0이라 펼칠 때 생성 */
+    (d._pend = d._pend || []).push(()=>{ build(el, cfg); });
+    if(!d._bound){
+      d._bound = true;
+      d.addEventListener('toggle', ()=>{
+        if(d.open && d._pend){ d._pend.forEach(f=>f()); d._pend = null; }
+      });
+    }
+    return;
+  }
+  build(el, cfg);
+}
+(function(){
+  let t = null;
+  window.addEventListener('resize', function(){
+    clearTimeout(t);
+    t = setTimeout(function(){
+      const n = narrowNow();
+      if(n === NARROW) return;
+      NARROW = n;
+      CHARTS.forEach(function(c){
+        try{ c.ch.destroy(); }catch(e){}
+        const pad = c.cfg.options && c.cfg.options.layout && c.cfg.options.layout.padding;
+        if(pad && c.cfg._rp) pad.right = rpadNow();
+        c.ch = new Chart(c.el, c.cfg);
+      });
+    }, 150);
+  });
+})();
+
+/* ── 라벨ㆍ기준선 플러그인 ──────────────────────────
+   1) 기준선의 픽셀 위치를 ch._ty 에 등록
+   2) 값 라벨은 ch._ty 및 이미 그린 라벨과 겹치면 자동으로 밀어냄
+   3) 기준선 라벨(칩)은 플롯 바깥 여백에만 그림 → 데이터와 절대 안 겹침 */
+const resetTY = { id:'resetTY', beforeDraw(ch){ ch._ty = []; } };
+
+function halo(x, txt, px, py){
+  x.lineWidth = 3.4; x.lineJoin = 'round';
+  x.strokeStyle = 'rgba(255,255,255,.95)';
+  x.strokeText(txt, px, py);
+  x.fillText(txt, px, py);
+}
+function haloDark(x, txt, px, py){
+  x.lineWidth = 3.2; x.lineJoin = 'round';
+  x.strokeStyle = 'rgba(15,26,36,.62)';
+  x.strokeText(txt, px, py);
+  x.fillStyle = '#fff';
+  x.fillText(txt, px, py);
+}
+function chip(x, label, px, py, col){
+  x.font = '700 ' + (NARROW ? 8 : 9) + 'px ' + FONT;
+  const w = x.measureText(label).width + 9;
+  x.fillStyle = 'rgba(255,255,255,.97)';
+  x.fillRect(px, py, w, 13);
+  x.strokeStyle = col; x.lineWidth = 1;
+  x.strokeRect(px + .5, py + .5, w - 1, 12);
+  x.fillStyle = col; x.textAlign = 'left'; x.textBaseline = 'middle';
+  x.fillText(label, px + 4.5, py + 7);
+}
+
+const barLabel = {
+  id:'barLabel',
+  afterDatasetsDraw(ch, a, o){
+    o = o || {};
+    const x = ch.ctx, ta = ch._ty || [], ca = ch.chartArea;
+    if(!ca) return;
+    const used = [];
+    x.save(); x.font = '700 ' + (NARROW ? 8.5 : 9.5) + 'px ' + FONT;
+    ch.data.datasets.forEach((ds, di)=>{
+      if(ds._nolab) return;
+      const m = ch.getDatasetMeta(di);
+      if(m.hidden) return;
+      m.data.forEach((el, i)=>{
+        const v = ds.data[i]; if(v===null||v===undefined) return;
+        const txt = (o.fmt ? o.fmt(v, di) : cm(Math.round(v)));
+        x.fillStyle = ds._lab || C.ink;
+
+        /* 가로 막대 — 오른쪽에 쓰되 잘릴 것 같으면 막대 안쪽 흰 글씨 */
+        if(ch.options.indexAxis === 'y'){
+          const tw = x.measureText(txt).width;
+          if(el.x + 7 + tw > ch.width - 2){
+            x.textAlign = 'right'; x.textBaseline = 'middle';
+            haloDark(x, txt, el.x - 6, el.y);
+          }else{
+            x.textAlign = 'left'; x.textBaseline = 'middle';
+            halo(x, txt, el.x + 7, el.y);
+          }
+          return;
+        }
+        /* 누적 막대 — 구간 안쪽 흰 글씨 */
+        if(ds._pos === 'inbar'){
+          const top = Math.max(el.y, ca.top);
+          const bot = Math.min(el.base !== undefined ? el.base : el.y + (el.height||0),
+                               ca.bottom);
+          if(bot - top > 17){
+            x.textAlign='center'; x.textBaseline='middle';
+            haloDark(x, txt, el.x, (top + bot) / 2);
+          }
+          return;
+        }
+        /* 세로 막대ㆍ선 — 기준선ㆍ다른 라벨과 겹치면 자동 회피 */
+        const dir = (ds._pos === 'below') ? 1 : -1;
+        const tw2 = x.measureText(txt).width;
+        const lx = Math.max(ca.left + tw2/2 + 2,
+                   Math.min(el.x, ca.right - tw2/2 - 2));
+        const x1 = lx - tw2/2, x2 = lx + tw2/2;
+        let y = el.y + dir * 12 + (ds._dy || 0);
+        /* 기준선ㆍ이미 그린 라벨과 사각형이 겹치면 밀어냄 */
+        const clash = function(yy){
+          if(ta.some(function(t){ return Math.abs(t - yy) < 14; })) return true;
+          return used.some(function(d){
+            return !(x2 < d.x1 - 2 || x1 > d.x2 + 2) && Math.abs(d.y - yy) < 13;
+          });
+        };
+        let guard = 0;
+        while(clash(y) && guard < 10){ y += dir * 13; guard++; }
+        y = Math.max(8, Math.min(y, ch.height - 8));
+        used.push({x1:x1, x2:x2, y:y});
+        x.textAlign='center'; x.textBaseline='middle';
+        halo(x, txt, lx, y);
+      });
+    });
+    x.restore();
+  }
+};
+
+/* 지표 차트 상단의 팀별 판정 (목표 대비 초과ㆍ미달 %) */
+const verdict = {
+  id:'verdict',
+  afterDatasetsDraw(ch, a, o){
+    if(!o || !o.rows) return;
+    const ca = ch.chartArea; if(!ca) return;
+    const m0 = ch.getDatasetMeta(0), m1 = ch.getDatasetMeta(1), x = ch.ctx;
+    x.save(); x.font = '800 9.5px ' + FONT;
+    x.textAlign = 'center'; x.textBaseline = 'top';
+    o.rows.forEach(function(r, i){
+      if(!m0.data[i] || !m1.data[i] || r.ach === null) return;
+      const cx = (m0.data[i].x + m1.data[i].x) / 2;
+      x.fillStyle = r.ach >= 1 ? C.base : C.ink;
+      if(narrowNow()){
+        x.font = '700 8.5px ' + FONT;  halo(x, '달성률', cx, ca.top - 24);
+        x.font = '800 10.5px ' + FONT; halo(x, (r.ach * 100).toFixed(0) + '%', cx, ca.top - 13);
+      } else {
+        halo(x, '달성률 ' + (r.ach * 100).toFixed(0) + '%', cx, ca.top - 15);
+      }
+    });
+    x.restore();
+  }
+};
+
+/* 가로 기준선 — 칩은 우측 여백(RPAD) 안에 */
+function hline(val, label, ax, col){
+  const A = ax || 'y';
+  return {
+    id:'hl_'+label+A,
+    beforeDatasetsDraw(ch){
+      const sc = ch.scales[A], a = ch.chartArea; if(!sc || !a) return;
+      const py = sc.getPixelForValue(val);
+      if(isFinite(py) && py >= a.top && py <= a.bottom)
+        (ch._ty = ch._ty || []).push(py);
+    },
+    afterDraw(ch){
+      const a = ch.chartArea, sc = ch.scales[A]; if(!a || !sc) return;
+      const py = sc.getPixelForValue(val); if(!isFinite(py)) return;
+      const x = ch.ctx, c = col || C.base;
+      const out = (py < a.top) ? 'up' : (py > a.bottom ? 'down' : null);
+      x.save();
+      if(!out){
+        x.setLineDash([4,3]); x.lineWidth = 1.4; x.strokeStyle = c;
+        x.beginPath(); x.moveTo(a.left, py); x.lineTo(a.right, py); x.stroke();
+        x.setLineDash([]);
+      }
+      const txt = out ? (label + (out==='up' ? ' ↑' : ' ↓')) : label;
+      x.font = '700 9px ' + FONT;
+      const w = x.measureText(txt).width + 9;
+      let px;
+      if(NARROW){                       /* 좁은 화면은 플롯 안쪽 우측 */
+        px = a.right - w - 3;
+        if(px < a.left + 2) px = a.left + 2;
+      }else{
+        px = a.right + 5;
+        if(px + w > ch.width - 2) px = ch.width - w - 2;
+      }
+      const ty = out === 'up' ? a.top + 2
+               : out === 'down' ? a.bottom - 15
+               : Math.max(2, Math.min(py - 6.5, ch.height - 15));
+      chip(x, txt, px, ty, c);
+      x.restore();
+    }
+  };
+}
+/* 세로 기준선(가로 막대용) — 칩은 상단 여백에 */
+function vline(val, label){
+  return { id:'vl_'+label, afterDraw(ch){
+    const a = ch.chartArea, sc = ch.scales.x; if(!a || !sc) return;
+    const px = sc.getPixelForValue(val); if(!isFinite(px)) return;
+    const x = ch.ctx;
+    x.save(); x.setLineDash([4,3]); x.lineWidth=1.4; x.strokeStyle=C.base;
+    x.beginPath(); x.moveTo(px, a.top); x.lineTo(px, a.bottom); x.stroke();
+    x.setLineDash([]);
+    x.font = '700 9px ' + FONT;
+    const w = x.measureText(label).width + 9;
+    let cx = px - w/2;
+    cx = Math.max(2, Math.min(cx, ch.width - w - 2));
+    chip(x, label, cx, Math.max(2, a.top - 18), C.base);
+    x.restore();
+  }};
+}
+
+const LEG = {display:false};
+function legendFor(id, items){
+  const cv = document.getElementById(id); if(!cv) return;
+  const box = cv.parentNode, card = box.parentNode;
+  if(card.querySelector('.lg.auto')) return;
+  const d = document.createElement('div');
+  d.className = 'lg auto';
+  d.innerHTML = items.map(s =>
+    '<span><i style="background:'+s.c+(s.dash?';opacity:.85':'')+'"></i>'+s.label+'</span>'
+  ).join('');
+  card.appendChild(d);
+}
+
+/* 비율선을 막대 위 구간(상단 약 30%)에 배치하는 우축 범위 */
+function rateBand(vals, tgt){
+  const v = vals.filter(function(x){ return x !== null && isFinite(x); }).concat([tgt]);
+  const mn = Math.min.apply(null, v), mx = Math.max.apply(null, v);
+  const sp = Math.max(mx - mn, 3);
+  return {min: Math.max(0, Math.floor((mn - sp * 2.4) / 10) * 10),
+          max: Math.ceil((mx + sp * 0.35) / 5) * 5};
+}
+
+/* ── 공통 빌더 ────────────────────────────────────── */
+function span(arrs, extra){
+  const v = [].concat.apply([], arrs).filter(x=>x!==null && isFinite(x))
+              .concat(extra || []);
+  const mn = Math.min.apply(null, v), mx = Math.max.apply(null, v);
+  const pad = Math.max((mx - mn) * 0.60, Math.abs(mx) * 0.02, 0.6);
+  return {min: mn - pad, max: mx + pad};
+}
+/* 선 차트 — 목표선 있으면 우측 여백 확보 */
+function lineChart(id, series, o){
+  o = o || {};
+  const rg = o.range || span(series.map(s=>s.data), (o.tgt!==undefined ? [o.tgt] : []));
+  const hasT = (o.tgt !== undefined);
+  mk(id, {
+    type:'line',
+    data:{labels:WL, datasets:series.map((s,i)=>({
+      label:s.label, data:s.data, borderColor:s.c, backgroundColor:s.fill ? s.c+'18' : s.c,
+      borderWidth:2.4, pointRadius:3.6, pointBackgroundColor:s.c, tension:.25,
+      borderDash: s.dash ? [5,3] : undefined, fill: !!s.fill,
+      _lab:s.c, _pos: s.pos || (i === 0 ? 'above' : 'below')
+    }))},
+    options:{maintainAspectRatio:false,
+      layout:{padding:{top:26, bottom:14, left:6, right: hasT ? RPAD : 16}},
+      plugins:{legend: series.length > 1 ? LEG : {display:false},
+        barLabel:{fmt: o.fmt || (v=>v.toFixed(1)+'%')}},
+      scales:{
+        y:{grid:{color:C.line}, suggestedMin:rg.min, suggestedMax:rg.max,
+           ticks:{maxTicksLimit:6, callback: o.tick || (v=>v.toFixed(0)+'%')}},
+        x:{grid:{display:false}}}},
+    plugins:[resetTY].concat(hasT ? [hline(o.tgt, o.tgtLabel)] : []).concat([barLabel])
+  });
+  if(series.length > 1) legendFor(id, series);
+}
+/* 세로 막대 차트 */
+function barChart(id, series, o){
+  o = o || {};
+  const hasT = (o.tgt !== undefined);
+  const mx = Math.max.apply(null, [].concat.apply([], series.map(s=>s.data))
+    .filter(v=>v!==null && isFinite(v)));
+  mk(id, {
+    type:'bar',
+    data:{labels: o.labels || WL, datasets:series.map(s=>({
+      label:s.label, data:s.data,
+      backgroundColor: s.flat ? s.c : s.data.map((_,i)=>alpha(i, s.c)),
+      borderRadius:3, barPercentage: o.bp || .78, _lab:s.c, _pos:s.pos,
+      stack: s.stack, yAxisID: s.ax
+    }))},
+    options:{maintainAspectRatio:false,
+      layout:{padding:{top:20, bottom:6, left:4, right: hasT ? RPAD : 12}},
+      plugins:{legend: series.length > 1 ? LEG : {display:false},
+        barLabel:{fmt: o.fmt || (v=>cm(Math.round(v)))}},
+      scales:{
+        x:{grid:{display:false}, stacked:!!o.stacked, ticks:{font:{size:9.5}}},
+        y:{grid:{color:C.line}, stacked:!!o.stacked,
+           beginAtZero: o.min === undefined, min:o.min,
+           suggestedMax: o.max || mx * 1.22, ticks:{callback: o.tick || (v=>cm(v))}}}},
+    plugins:[resetTY].concat(hasT ? [hline(o.tgt, o.tgtLabel)] : []).concat([barLabel])
+  });
+  if(series.length > 1) legendFor(id, series);
+}
+/* 가로 막대 차트 — 목표 100% 세로선 */
+function hbarChart(id, labels, series, o){
+  o = o || {};
+  mk(id, {
+    type:'bar',
+    data:{labels:labels, datasets:series.map(s=>({
+      label:s.label, data:s.data, backgroundColor:s.bg || s.c, borderRadius:3,
+      barPercentage:.76, _lab:s.c || C.ink}))},
+    options:{indexAxis:'y', maintainAspectRatio:false,
+      layout:{padding:{top:26, bottom:4, right:NARROW?44:52, left:2}},
+      plugins:{legend: series.length > 1 ? LEG : {display:false},
+        barLabel:{fmt: o.fmt || (v=>v.toFixed(1)+'%')}},
+      scales:{x:{beginAtZero:true, max:o.max || 140, grid:{color:C.line},
+          ticks:{stepSize:(o.max||140)===100 ? (NARROW?50:25) : (NARROW?50:40), maxRotation:0, font:{size:NARROW?9:10},
+                 callback:v=>v+'%'}},
+        y:{grid:{display:false},
+           ticks:{font:{size:NARROW?9:10.5, weight:'700'}, autoSkip:false, padding:2,
+                  crossAlign:'far'},
+           afterFit:function(sc){ sc.width = Math.min(sc.width, narrowNow()?118:215); }}}},
+    plugins:[resetTY, barLabel, vline(100, o.tgtLabel || '목표 100%')]
+  });
+  if(series.length > 1) legendFor(id, series);
+}
+/* 도넛 */
+const donutLabel = {
+  id:'donutLabel',
+  afterDatasetsDraw(ch, a, o){
+    o = o || {};
+    const x = ch.ctx, m = ch.getDatasetMeta(0), ds = ch.data.datasets[0];
+    const tot = ds.data.reduce((s,v)=>s+(v||0), 0);
+    const ca = ch.chartArea; if(!ca) return;
+    x.save(); x.textAlign='center'; x.textBaseline='middle';
+    x.font = '700 9.5px ' + FONT;
+    m.data.forEach((el, i)=>{
+      const v = ds.data[i]; if(!v) return;
+      const p = v/tot*100; if(p < 6) return;
+      const c = el.getCenterPoint();
+      x.fillStyle = '#fff';
+      x.fillText(p.toFixed(1)+'%', c.x, c.y);
+    });
+    if(o.center){
+      const cx = (ca.left+ca.right)/2, cy = (ca.top+ca.bottom)/2;
+      x.fillStyle = C.ink; x.font = '800 15px ' + FONT;
+      x.fillText(o.center, cx, cy - 7);
+      x.fillStyle = C.muted; x.font = '600 9.5px ' + FONT;
+      x.fillText(o.sub || '', cx, cy + 9);
+    }
+    x.restore();
+  }
+};
+function donutChart(id, labels, vals, colors, sub, unit){
+  const tot = vals.reduce((a,b)=>a+b, 0);
+  mk(id, {
+    type:'doughnut',
+    data:{labels:labels, datasets:[{data:vals, backgroundColor:colors,
+      borderWidth:2, borderColor:'#fff'}]},
+    options:{maintainAspectRatio:false, cutout:'58%',
+      layout:{padding:{top:6, bottom:2}},
+      plugins:{legend:{display:false},
+        tooltip:{callbacks:{label:c=>c.label+' '+cm(c.parsed)+unit}},
+        donutLabel:{center:cm(Math.round(tot)), sub:sub}}},
+    plugins:[donutLabel]
+  });
+  legendFor(id, labels.map((l,i)=>({label:l, c:colors[i]})));
+}
+
+/* ══════ 상단 대시보드 ══════ */
+/* C1 주차별 출품ㆍ낙찰 (막대만) */
+barChart('c1', [
+  {label:'출품', data:cut(L.tot), c:C.ink},
+  {label:'낙찰', data:cut(W.tot), c:C.ok}
+], {});
+
+/* C1B 전체 낙찰률 추이 */
+const wrT = W.totT / L.totT * 100;
+lineChart('c1b', [
+  {label:'낙찰률', data:P(ratio(W.tot, L.tot)), c:C.base, fill:true}
+], {tgt:wrT, tgtLabel:'목표 '+wrT.toFixed(1)+'%'});
+
+/* C1C 주차별 출품ㆍ낙찰 + 낙찰률 */
+mk('c1c', {
+  type:'bar',
+  data:{labels:WL, datasets:[
+    {type:'bar', label:'출품', data:cut(L.tot), backgroundColor:cut(L.tot).map((_,i)=>alpha(i,C.ink)), borderRadius:3, yAxisID:'y', _lab:C.ink},
+    {type:'bar', label:'낙찰', data:cut(W.tot), backgroundColor:cut(W.tot).map((_,i)=>alpha(i,C.ok)), borderRadius:3, yAxisID:'y', _lab:C.ok},
+    {type:'line', label:'낙찰률', data:P(ratio(W.tot, L.tot)), borderColor:C.base, backgroundColor:C.base+'18', borderWidth:2.4, pointRadius:3.5, tension:.24, yAxisID:'y1', _lab:C.base, _pos:'above'}
+  ]},
+  options:{maintainAspectRatio:false,
+    layout:{padding:{top:24, bottom:6, left:4, right:RPAD}},
+    plugins:{legend:LEG, barLabel:{fmt:(v,di)=> di===2 ? v.toFixed(1)+'%' : cm(Math.round(v))}},
+    scales:{
+      y:{beginAtZero:true, grid:{color:C.line},
+         suggestedMax:Math.max.apply(null, cut(L.tot).filter(v=>v!==null))*1.62,
+         ticks:{callback:v=>cm(v), font:{size:NARROW?8.5:10}, maxTicksLimit:NARROW?5:7},
+         title:{display:!NARROW, text:'출품/낙찰 대수', font:{size:9.5, weight:'600'}}},
+      /* 비율선이 막대와 겹치지 않도록 우축 하한을 낮춰 상단 구간에 배치 */
+      y1:Object.assign({position:'right', grid:{display:false},
+         ticks:{callback:v=>v+'%', stepSize:10, font:{size:NARROW?8.5:10}},
+         title:{display:!NARROW, text:'낙찰률', font:{size:9.5, weight:'600'}}},
+         rateBand(P(ratio(W.tot, L.tot)), W.totT/L.totT*100)),
+      x:{grid:{display:false},
+         ticks:{maxRotation:0, minRotation:0, autoSkip:false, font:{size:NARROW?9:10}}}
+    }
+  },
+  plugins:[resetTY, barLabel, hline(wrT, '목표 '+wrT.toFixed(1)+'%', 'y1', C.base)]
+});
+
+/* C2 항목별 달성률 */
+const ACH = [
+  ['출품대수',    FC.list/L.totT],
+  ['낙찰대수',    FC.won/W.totT],
+  ['매출액',      FIN.rev/DATA.p3[0].t],
+  ['매출이익',    FIN.gp/DATA.p3[1].t],
+  ['영업이익',    FIN.op/DATA.p3[2].t],
+  ['대당 수수료', lvFc.feePer/DATA.leverT.feePer],
+  ['활성 출품처', fcast(DATA.p2.acct[0].w, true)/DATA.p2.acct[0].t]
+];
+const gc = v => v>=100 ? C.ok : (v>=90 ? C.warn : C.bad);
+hbarChart('c2', ACH.map(function(a){
+    return NARROW && a[0].length > 8 ? a[0].slice(0,7)+'…' : a[0]; }),
+  [{data:ACH.map(a=>a[1]*100), bg:ACH.map(a=>gc(a[1]*100)), c:C.ink}], {});
+
+/* M1~M6 지표별 팀 순위 — 세로 막대 (1등이 왼쪽) */
+METRICS.forEach(function(m){
+  const rows = m.rows;
+  const val  = r => m.rate ? r.fc*100 : r.fc/m.div;
+  const tgt  = r => m.rate ? r.t*100  : r.t/m.div;
+  const lab  = v => metricChartFmt(v, m);
+  const mx   = Math.max.apply(null, rows.map(r=>Math.max(val(r), tgt(r))));
+  mk(m.id, {
+    type:'bar',
+    data:{labels:rows.map(function(r,i){
+        if(!narrowNow()) return (i===0?'👑':'')+r.nm;
+        const m = r.nm.match(/^(.+?)(\(.+\))$/);
+        return m ? [m[1], m[2]] : r.nm; }), datasets:[
+      {label:'목표', data:rows.map(tgt), backgroundColor:'#cdd6de', borderRadius:3,
+       barPercentage:.9, categoryPercentage:.82, _lab:'#7a8b99', _dy:-15},
+      {label:'실적', data:rows.map(val), borderRadius:3, barPercentage:.9,
+       categoryPercentage:.82, backgroundColor:C.base, _lab:C.ink}
+    ]},
+    options:{maintainAspectRatio:false,
+      layout:{padding:{top:narrowNow()?30:22, bottom:2, left:2, right:4}},
+      plugins:{legend:{display:false}, barLabel:{fmt:lab}, verdict:{rows:rows},
+        tooltip:{callbacks:{
+          title:items=> items && items.length ? rows[items[0].dataIndex].nm : '',
+          label:ctx=> ctx.dataset.label+': '+metricChartFmtUnit(ctx.parsed.y, m),
+          afterBody:items=> items && items.length ? ['차이: '+metricDiffText(rows[items[0].dataIndex], m, true)] : []
+        }}},
+      scales:{
+        x:{grid:{display:false}, ticks:{font:{size:narrowNow()?8.5:9.5, weight:'700'}, maxRotation:0,
+           minRotation:0, autoSkip:false, padding:2}},
+        y:{beginAtZero:true, grid:{color:C.line}, suggestedMax:mx*1.55,
+           ticks:{maxTicksLimit:5, font:{size:9},
+                  callback:v=> metricChartFmt(v, m)}}}},
+    plugins:[resetTY, barLabel, verdict]
+  });
+});
+
+/* C3 매출액ㆍ매출이익 누적 (좌우축 분리) */
+mk('c3', {
+  type:'line',
+  data:{labels:WL, datasets:[
+    {label:'매출액 누적 (좌축)', data:M(pace(DATA.p3[0].w)), borderColor:C.ink,
+     backgroundColor:C.ink+'14', borderWidth:2.4, pointRadius:3.6, tension:.2,
+     fill:true, _lab:C.ink, _pos:'above'},
+    {label:'매출이익 누적 (우축)', data:M(pace(DATA.p3[1].w)), borderColor:C.ok,
+     backgroundColor:C.ok, borderWidth:2.4, pointRadius:3.6, tension:.2,
+     borderDash:[5,3], yAxisID:'y1', _lab:C.ok, _pos:'below'}
+  ]},
+  options:{maintainAspectRatio:false,
+    layout:{padding:{top:24, bottom:8, left:4, right:10}},
+    plugins:{legend:LEG, barLabel:{fmt:v=>cm(Math.round(v))}},
+    scales:{
+      y:{beginAtZero:true, grid:{color:C.line}, ticks:{callback:v=>cm(v)},
+         suggestedMax:(DATA.p3[0].t/1e6)*1.08,
+         title:{display:true, text:'매출액(백만원)', font:{size:9.5, weight:'600'}}},
+      y1:{position:'right', beginAtZero:true, grid:{display:false},
+          ticks:{callback:v=>cm(v)}, suggestedMax:(DATA.p3[1].t/1e6)*1.75,
+          title:{display:true, text:'매출이익(백만원)', font:{size:9.5, weight:'600'}}},
+      x:{grid:{display:false}}}},
+  plugins:[resetTY, barLabel]
+});
+legendFor('c3', [{label:'매출액 누적 (좌축)', c:C.ink},
+                 {label:'매출이익 누적 (우축)', c:C.ok}]);
+
+/* ══════ Part 1 ══════ */
+donutChart('c5', TN, TN.map(n=>TL[n].fc), TEAM, '출품 전망(대)', '대');
+donutChart('c6', TN, TN.map(n=>TW[n].fc), TEAM, '낙찰 전망(대)', '대');
+
+barChart('c7', TN.map((n,i)=>({label:n, data:cut(TL[n].w), c:TEAM[i],
+  flat:true, stack:'s', pos:'inbar'})), {stacked:true});
+
+const gpTgt = G.t / R.t * 100;
+lineChart('c10', [
+  {label:'매출이익률', data:P(ratio(G.w, R.w)), c:C.ok, fill:true}
+], {tgt:gpTgt, tgtLabel:'목표 '+gpTgt.toFixed(2)+'%',
+    fmt:v=>v.toFixed(2)+'%', tick:v=>v.toFixed(1)+'%'});
+
+/* ══════ 레버 ══════ */
+lineChart('c11', [
+  {label:'자사매입 낙찰률', data:P(LV.ownWin), c:C.ink},
+  {label:'출품유도 낙찰률', data:P(LV.indWin), c:C.ok, dash:true}
+], {tgt:DATA.leverT.ownWin*100, tgtLabel:'목표 50%'});
+
+const feeVals = cut(LV.feePer).filter(v=>v!==null && v!==undefined && isFinite(v));
+const feeMin = Math.min.apply(null, feeVals.concat([DATA.leverT.feePer]));
+const feeMax = Math.max.apply(null, feeVals.concat([DATA.leverT.feePer]));
+barChart('c12', [
+  {label:'대당 수수료', data:cut(LV.feePer), c:C.slate}
+], {tgt:DATA.leverT.feePer, tgtLabel:'목표 '+Math.round(DATA.leverT.feePer/1000)+'천원', bp:.6,
+    min:Math.floor((feeMin - 4000)/1000)*1000,
+    max:Math.ceil((feeMax + 4000)/1000)*1000,
+    fmt:v=>cm(Math.round(v))});
+
+/* ══════ Part 2 ══════ */
+barChart('c13', [
+  {label:'출품', data:cut(DATA.p2.list[0].w), c:C.ink},
+  {label:'낙찰', data:cut(DATA.p2.win[0].w),  c:C.ok}
+], {});
+
+const p2wrT = DATA.p2.win[0].t / DATA.p2.list[0].t * 100;
+lineChart('c13b', [
+  {label:'신규 출품 낙찰률', data:P(ratio(DATA.p2.win[0].w, DATA.p2.list[0].w)), c:C.base, fill:true}
+], {tgt:p2wrT, tgtLabel:'목표 '+p2wrT.toFixed(1)+'%'});
+
+function unitLine(id, num, den, div, tgt, suffix){
+  const s0 = cut(ratio(num[0].w, den[0].w)).map(v=>v===null?null:v/div);
+  lineChart(id, [{label:'신규 출품', data:s0, c:C.ink}],
+    {tgt:tgt/div, tgtLabel:'목표 '+cm(Math.round(tgt/div))+suffix,
+     fmt:v=>cm(Math.round(v)), tick:v=>cm(Math.round(v))});
+}
+unitLine('c14', DATA.p2.price, DATA.p2.win, 1e4,
+  DATA.p2.price[0].t / DATA.p2.win[0].t, '만');
+unitLine('c15', DATA.p2.fee, DATA.p2.win, 1e3,
+  DATA.p2.fee[0].t / DATA.p2.win[0].t, '천');
+
+barChart('c16', [
+  {label:'활성 출품처', data:cut(DATA.p2.acct[0].w), c:C.ok}
+], {tgt:DATA.p2.acct[0].t, tgtLabel:'목표 120개', min:0, max:150});
+
+lineChart('c16b', [
+  {label:'상위 10개처 비중', data:P(DATA.p2.acct[2].w), c:C.bad, fill:true}
+], {tgt:DATA.p2.acct[2].t*100, tgtLabel:'상한 45%'});
+
+/* ══════ Part 3 ══════ */
+mk('c17', {
+  type:'bar',
+  data:{labels:WL, datasets:[
+    {label:'매출액 (좌축)', data:M(DATA.p3[0].w),
+     backgroundColor:cut(DATA.p3[0].w).map((_,i)=>alpha(i,C.ink)), borderRadius:3, _lab:C.ink},
+    {label:'매출이익 (우축)', data:M(DATA.p3[1].w),
+     backgroundColor:cut(DATA.p3[1].w).map((_,i)=>alpha(i,C.ok)), borderRadius:3,
+     yAxisID:'y1', _lab:C.ok},
+    {label:'영업이익 (우축)', data:M(DATA.p3[2].w),
+     backgroundColor:cut(DATA.p3[2].w).map((_,i)=>alpha(i,C.warn)), borderRadius:3,
+     yAxisID:'y1', _lab:C.warn}
+  ]},
+  options:{maintainAspectRatio:false, layout:{padding:{top:20, bottom:4}},
+    plugins:{legend:LEG, barLabel:{fmt:v=>cm(Math.round(v))}},
+    scales:{y:{beginAtZero:true, grid:{color:C.line}, ticks:{callback:v=>cm(v)},
+        suggestedMax:Math.max.apply(null, M(DATA.p3[0].w).filter(v=>v!==null))*1.22},
+      y1:{position:'right', beginAtZero:true, grid:{display:false},
+          ticks:{callback:v=>cm(v)},
+          suggestedMax:Math.max.apply(null, M(DATA.p3[1].w).filter(v=>v!==null))*1.35},
+      x:{grid:{display:false}}}},
+  plugins:[resetTY, barLabel]
+});
+legendFor('c17', [{label:'매출액 (좌축)', c:C.ink},
+                  {label:'매출이익 (우축)', c:C.ok},
+                  {label:'영업이익 (우축)', c:C.warn}]);
+
+
+/* ══════ Part 4 ══════ */
+barChart('c19', [
+  {label:'출품', data:cut(DATA.p4[0].w), c:C.slate},
+  {label:'낙찰', data:cut(DATA.p4[1].w), c:C.ok}
+], {});
+
+const p4T = DATA.p4[1].t / DATA.p4[0].t * 100;
+lineChart('c19b', [
+  {label:'회차 낙찰률', data:P(ratio(DATA.p4[1].w, DATA.p4[0].w)), c:C.base, fill:true}
+], {tgt:p4T, tgtLabel:'목표 '+p4T.toFixed(1)+'%'});
+
+mk('c19c', {
+  type:'bar',
+  data:{labels:WL, datasets:[
+    {type:'bar', label:'출품', data:cut(DATA.p4[0].w), backgroundColor:cut(DATA.p4[0].w).map((_,i)=>alpha(i,C.slate)), borderRadius:3, yAxisID:'y', _lab:C.slate},
+    {type:'bar', label:'낙찰', data:cut(DATA.p4[1].w), backgroundColor:cut(DATA.p4[1].w).map((_,i)=>alpha(i,C.ok)), borderRadius:3, yAxisID:'y', _lab:C.ok},
+    {type:'line', label:'낙찰률', data:P(ratio(DATA.p4[1].w, DATA.p4[0].w)), borderColor:C.base, backgroundColor:C.base+'18', borderWidth:2.4, pointRadius:3.5, tension:.24, yAxisID:'y1', _lab:C.base, _pos:'above'}
+  ]},
+  options:{maintainAspectRatio:false,
+    layout:{padding:{top:24, bottom:6, left:4, right:RPAD}},
+    plugins:{legend:LEG, barLabel:{fmt:(v,di)=> di===2 ? v.toFixed(1)+'%' : cm(Math.round(v))}},
+    scales:{
+      y:{beginAtZero:true, grid:{color:C.line},
+         suggestedMax:Math.max.apply(null, cut(DATA.p4[0].w).filter(v=>v!==null))*1.62,
+         ticks:{callback:v=>cm(v), font:{size:NARROW?8.5:10}, maxTicksLimit:NARROW?5:7},
+         title:{display:!NARROW, text:'회차 대수', font:{size:9.5, weight:'600'}}},
+      y1:Object.assign({position:'right', grid:{display:false},
+         ticks:{callback:v=>v+'%', stepSize:10, font:{size:NARROW?8.5:10}},
+         title:{display:!NARROW, text:'낙찰률', font:{size:9.5, weight:'600'}}},
+         rateBand(P(ratio(DATA.p4[1].w, DATA.p4[0].w)), DATA.p4[1].t/DATA.p4[0].t*100)),
+      x:{grid:{display:false},
+         ticks:{maxRotation:0, minRotation:0, autoSkip:false, font:{size:NARROW?9:10}}}
+    }
+  },
+  plugins:[resetTY, barLabel, hline(p4T, '목표 '+p4T.toFixed(1)+'%', 'y1', C.base)]
+});
+
+/* ══════ Part 5 (예시 수치) ══════ */
+const p5get = function(g, nm){
+  return DATA.p5.rows.find(function(r){ return r.g === g && r.nm === nm; });
+};
+const p5In = p5get('회원관리','내수 회원'), p5Ex = p5get('회원관리','수출 회원');
+donutChart('c30', ['내수 회원','수출 회원'],
+  [fcRow(p5In), fcRow(p5Ex)], [C.ink, C.base],
+  '총회원 전망(명)', '명');
+
+const p5Join = ['실시간 참여','부재자 (only)','후상담 (only)'].map(function(n){
+  return p5get('회원활동', n); });
+barChart('c31', [
+  {label:'월 목표', data:p5Join.map(function(r){ return r.t; }), c:'#cdd6de', flat:true},
+  {label:'월 전망', data:p5Join.map(function(r){ return fcRow(r); }), c:C.ok, flat:true}
+], {labels:['실시간 참여','부재자(only)','후상담(only)']});
+
+const p5AIn = p5get('회원활동','내수 회원'), p5AEx = p5get('회원활동','수출 회원');
+barChart('c32', [
+  {label:'내수 회원', data:cut(p5AIn.w), c:C.base},
+  {label:'수출 회원', data:cut(p5AEx.w), c:C.ok}
+], {});
+
+const p5Cnt = [p5get('회원관리','신규 회원'), p5get('회원관리','탈퇴 회원'),
+               p5get('응찰오류','낙찰취소 건수')];
+barChart('c33', [
+  {label:'월 목표', data:p5Cnt.map(function(r){ return r.t; }), c:'#cdd6de', flat:true},
+  {label:'월 전망', data:p5Cnt.map(function(r){ return fcRow(r); }), c:C.ok, flat:true}
+], {labels:['신규 회원','탈퇴 회원','낙찰취소 건수']});
+
+const p5Amt = [p5get('회원관리','연회비 수익'), p5get('응찰오류','낙찰취소 수익'),
+               p5get('응찰오류','수금 위약금'), p5get('응찰오류','지급 위로금')];
+barChart('c34', [
+  {label:'월 목표', data:p5Amt.map(function(r){ return r.t/1e6; }), c:'#cdd6de', flat:true},
+  {label:'월 전망', data:p5Amt.map(function(r){ return fcRow(r)/1e6; }), c:C.ok, flat:true}
+], {labels:['연회비 수익','낙찰취소 수익','수금 위약금','지급 위로금']});
+
+/* ══════ Part 6 ══════ */
+lineChart('c23', [
+  {label:'정산률', data:P(ratio(DATA.p6[0].w, DATA.p6[0].base)), c:C.ink},
+  {label:'반출률', data:P(ratio(DATA.p6[1].w, DATA.p6[0].base)), c:C.ok, dash:true, pos:'above'}
+], {tgt:DATA.p6[0].rt*100, tgtLabel:'정산 목표 '+(DATA.p6[0].rt*100).toFixed(0)+'%',
+    range:{min:97, max:101}});
+
+/* ══════ Part 7 ══════ */
+/* 과제명은 잘라내지 않고 공백 기준 줄바꿈 (모바일 포함) */
+hbarChart('c24',
+  DATA.p7.map(function(r){
+    const parts = r.nm.split(' ');
+    return parts.length > 2 ? [parts.slice(0,2).join(' '), parts.slice(2).join(' ')] : parts; }),
+  [{data:DATA.p7.map(r=>r.pr*100),
+    bg:DATA.p7.map(r=> r.st==='정상' ? C.ok : (r.pr>=0.5 ? C.warn : C.bad)), c:C.ink}],
+  {max:100, tgtLabel:'완료 100%', fmt:v=>v.toFixed(0)+'%'});
+
+/* Part 8 차트 제거 — 섹션 미표시 */
+</script>
+</body>
+</html>

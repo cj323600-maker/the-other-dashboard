@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>코오롱오토옥션 일간 보고</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+:root{
+  --ink:#0f1a24; --muted:#6b7c8c; --line:#e3e8ed; --canvas:#f2f4f7; --surface:#fff;
+  --ok:#0e7c66; --warn:#b47800; --bad:#c0392b; --base:#1f6feb;
+  --sans:"Pretendard Variable",Pretendard,-apple-system,system-ui,"Malgun Gothic",sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{font-family:var(--sans);background:var(--canvas);color:var(--ink);
+  font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+h2{margin:0;font-size:14px;font-weight:700;letter-spacing:-.02em}
+
+/* 헤더 */
+.top{background:var(--ink);color:#fff;padding:14px 16px;border-bottom:3px solid var(--ok)}
+.top b{font-size:16px;letter-spacing:-.03em}
+.top .m{display:flex;align-items:center;gap:8px;margin-top:4px;font-size:11.5px;color:#9fb3c4}
+.top .m span{margin-left:auto;color:#ffb4ac;border:1px solid rgba(255,180,172,.4);
+  padding:2px 7px;border-radius:4px;font-weight:700;font-size:10.5px}
+
+.wrap{max-width:520px;margin:0 auto;padding:14px 14px 48px}
+@media(min-width:900px){.wrap{max-width:1080px}}
+
+/* KPI */
+.kpis{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+@media(min-width:900px){.kpis{grid-template-columns:repeat(4,1fr)}}
+.kpi{background:var(--surface);border:1px solid var(--line);border-top:3px solid var(--line);
+  border-radius:10px;padding:11px 12px}
+.kpi.ok{border-top-color:var(--ok)}.kpi.warn{border-top-color:var(--warn)}.kpi.bad{border-top-color:var(--bad)}
+.kpi .k{font-size:11px;color:var(--muted);font-weight:600}
+.kpi .v{font-size:23px;font-weight:800;letter-spacing:-.04em;font-variant-numeric:tabular-nums;margin:2px 0 1px}
+.kpi .d{font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums}
+.kpi .d em{font-style:normal;font-weight:700}
+.up{color:var(--base)}.down{color:var(--bad)}
+
+/* 카드 */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;
+  padding:12px 12px 10px;margin-bottom:14px}
+.card .hd{display:flex;align-items:baseline;gap:7px;margin-bottom:8px}
+.card .hd small{font-size:11px;color:var(--muted);margin-left:auto;font-weight:600}
+.chart{position:relative;height:205px}
+.chart.tall{height:235px}
+@media(min-width:900px){.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .grid>.card{margin-bottom:0}.grid{margin-bottom:14px}}
+
+/* 표 */
+table{border-collapse:collapse;width:100%;font-size:12.5px;font-variant-numeric:tabular-nums}
+th,td{padding:7px 4px;text-align:right;border-bottom:1px solid #f0f3f5;white-space:nowrap}
+thead th{font-size:10.5px;color:var(--muted);font-weight:700;border-bottom:1px solid var(--line);text-align:right}
+th.l,td.l{text-align:left;padding-left:0}
+tr.sub td{background:#f7f9fb;font-weight:700}
+tr.tot td{background:#eef2f5;font-weight:800}
+td.l small{display:block;font-size:10px;color:var(--muted);font-weight:400}
+.pill{display:inline-block;min-width:52px;padding:2px 7px;border-radius:5px;
+  font-size:11.5px;font-weight:700;text-align:center}
+.pill.ok{background:#e6f2ef;color:var(--ok)}
+.pill.warn{background:#fdf3e0;color:var(--warn)}
+.pill.bad{background:#fbeceb;color:var(--bad)}
+.dash{color:#c3cbd3}
+.note{font-size:11px;color:var(--muted);line-height:1.7;margin:8px 0 0}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <b>코오롱오토옥션 일간 보고</b>
+  <div class="m"><span id="hd"></span></div>
+  <div class="m" id="hd2"></div>
+</div>
+
+<div class="wrap">
+  <div class="kpis" id="kpis"></div>
+
+  <div class="grid">
+    <div class="card">
+      <div class="hd"><h2>자사매입 · 출품유도 실적</h2><small id="lg1"></small></div>
+      <div class="chart" id="c1"></div>
+    </div>
+    <div class="card">
+      <div class="hd"><h2>경매장 입고 퍼널</h2><small>단위: 대</small></div>
+      <div class="chart" id="c2"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="hd"><h2>정산 · 반출 진행률</h2><small id="lg3"></small></div>
+    <div class="chart tall" id="c3"></div>
+  </div>
+
+  <div class="card">
+    <div class="hd"><h2>① 매입 · 유도 대수</h2><small>단위: 대</small></div>
+    <table id="t1"></table>
+  </div>
+
+  <div class="card">
+    <div class="hd"><h2>② 경매장 입고현황</h2><small>단위: 대</small></div>
+    <table id="t2"></table>
+    <p class="note">성능 · 등록 · 노출은 단계별 재고 대수입니다.</p>
+  </div>
+
+  <div class="card">
+    <div class="hd"><h2>③ 경매 처리</h2><small id="lg4"></small></div>
+    <table id="t3"></table>
+    <p class="note" id="n3"></p>
+  </div>
+
+  <p class="note" id="foot"></p>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+<script>
+/* ═══════════════════════════════════════════════════════════
+   ▼ 매일 여기만 수정 (엑셀 '일간 보고' 시트 값)
+     null = 엑셀의 '-' (미입력)
+     영업일 · 진도율은 date 와 HOLIDAYS 로 자동 계산됩니다.
+   ═══════════════════════════════════════════════════════════ */
+const DATA = {
+  date: "2026-08-25",
+
+  // 영업일 수동 지정이 필요하면 숫자를 넣으세요. null = 자동 계산
+  bizTotalOverride: null,
+  bizDoneOverride : null,
+
+  // ① 매입 · 유도 대수
+  purchase: [
+    { g:"자사 매입", short:"자사·법인",   name:"법인영업팀",   desc:"자체+잔가+소매위탁", target:125,  today:0,   mtd:46   },
+    { g:"자사 매입", short:"자사·플랫폼", name:"플랫폼매입팀", desc:"매입 출품",          target:200,  today:12,  mtd:156  },
+    { g:"자사 매입", short:"자사·출품",   name:"출품영업팀",   desc:"출품전문점·인",      target:1323, today:70,  mtd:1085 },
+    { g:"자사 매입", short:"자사·경매",   name:"경매운영팀",   desc:"FC",                 target:506,  today:60,  mtd:367  },
+
+    { g:"출품 유도", short:"유도·법인",   name:"법인영업팀",   desc:"제휴·협력점",        target:915,  today:0,   mtd:1191 },
+    { g:"출품 유도", short:"유도·출품",   name:"출품영업팀",   desc:"출품전문점·인",      target:671,  today:19,  mtd:582  },
+    { g:"출품 유도", short:"유도·경매",   name:"경매운영팀",   desc:"FC+기타",            target:868,  today:197, mtd:688  }
+  ],
+
+  // ② 경매장 입고현황 — 8/25 원본은 총계 기준
+  inbound: [
+    { name:"총 계", desc:"", secured:142, inb:81, perf:159, reg:1736, exp:1734 }
+  ],
+
+  // ③ 경매 처리
+  auction: {
+    date:"2026-08-19", won:804,
+    settle : [401,205,138,38,11],   // D-Day ~ D+4
+    release: [201,293,200,73,14]
+  }
+};
+
+/* 평일에 걸리는 공휴일만 적습니다 (주말 공휴일은 대체공휴일 날짜로).
+   회사 창립기념일 · 하계휴무 등 사내 휴무일도 여기에 추가하면 반영됩니다. */
+const HOLIDAYS = [
+  "2026-01-01",                             // 신정
+  "2026-02-16","2026-02-17","2026-02-18",   // 설날
+  "2026-03-02",                             // 삼일절 대체 (3/1 일)
+  "2026-05-05",                             // 어린이날
+  "2026-05-25",                             // 부처님오신날 대체 (5/24 일)
+  "2026-08-17",                             // 광복절 대체 (8/15 토)
+  "2026-09-24","2026-09-25","2026-09-28",   // 추석 + 대체
+  "2026-10-05",                             // 개천절 대체 (10/3 토)
+  "2026-10-09",                             // 한글날
+  "2026-12-25"                              // 성탄절
+];
+
+/* ═══════════════════════════════════════════════════════════ */
+(function(){
+const D=DATA, P=D.purchase, I=D.inbound, A=D.auction;
+
+/* ── 영업일 자동 계산 (해당 월, 주말·공휴일 제외 / 보고일 포함) ── */
+const HS=new Set(HOLIDAYS);
+const p2=v=>String(v).padStart(2,'0');
+const bizDays=(ymd)=>{
+  const y=+ymd.slice(0,4), m=+ymd.slice(5,7), d=+ymd.slice(8,10);
+  const eom=new Date(y,m,0).getDate();
+  let total=0, done=0;
+  for(let i=1;i<=eom;i++){
+    const w=new Date(y,m-1,i).getDay();
+    if(w===0||w===6) continue;
+    if(HS.has(y+'-'+p2(m)+'-'+p2(i))) continue;
+    total++; if(i<=d) done++;
+  }
+  return {total,done};
+};
+const B=bizDays(D.date);
+const bizTotal = D.bizTotalOverride ?? B.total;
+const bizDone  = D.bizDoneOverride  ?? B.done;
+const EX = bizDone/bizTotal;
+
+/* ── 공통 ────────────────────────────────────────── */
+const nz=v=>v==null?0:v, ko=v=>Math.round(v).toLocaleString('ko-KR');
+const n=v=>v==null?'<span class="dash">-</span>':ko(v);
+const f1=v=>v.toLocaleString('ko-KR',{minimumFractionDigits:1,maximumFractionDigits:1});
+const pc=x=>isFinite(x)?f1(x*100)+'%':'-';
+const pp=x=>isFinite(x)?(x>=0?'+':'−')+f1(Math.abs(x)*100)+'%p':'-';
+const gr=r=>!isFinite(r)?'warn':r>=1?'ok':r>=.9?'warn':'bad';
+const pill=r=>'<span class="pill '+gr(r)+'">'+pc(r)+'</span>';
+const sum=(a,k)=>a.reduce((s,r)=>s+nz(r[k]),0);
+const sumN=(a,k)=>a.every(r=>r[k]==null)?null:sum(a,k);
+const own=P.filter(r=>r.g==="자사 매입"), ind=P.filter(r=>r.g==="출품 유도");
+const T={target:sum(P,'target'),today:sum(P,'today'),mtd:sum(P,'mtd')};
+const IT={secured:sum(I,'secured'),inb:sum(I,'inb'),perf:sum(I,'perf'),reg:sum(I,'reg'),exp:sum(I,'exp')};
+const cum=a=>{let s=0;return a.map(v=>v==null?null:(s+=v));};
+const lastV=a=>{for(let i=a.length-1;i>=0;i--)if(a[i]!=null)return a[i];return 0;};
+const sC=cum(A.settle), rC=cum(A.release), sT=lastV(sC), rT2=lastV(rC);
+const rT=T.mtd/T.target, rO=sum(own,'mtd')/sum(own,'target'), rI=sum(ind,'mtd')/sum(ind,'target');
+
+/* 헤더 */
+document.getElementById('hd').textContent = '보고일 '+D.date+' · 영업일 '+bizDone+'/'+bizTotal+'일 · 진도율 '+pc(EX);
+document.getElementById('hd2').innerHTML = '<span>대외비</span>';
+document.getElementById('lg1').textContent = '점선 = 진도율 '+pc(EX);
+document.getElementById('lg3').textContent = '낙찰 '+ko(A.won)+'대 대비';
+document.getElementById('lg4').textContent = '경매일 '+A.date;
+
+/* KPI */
+const kpi=(k,v,d,r)=>'<div class="kpi '+(r===undefined?'':gr(r))+'"><div class="k">'+k+'</div>'
+  +'<div class="v">'+v+'</div><div class="d">'+d+'</div></div>';
+const tag=r=>'<em class="'+(r-EX>=0?'up':'down')+'">'+pp(r-EX)+'</em> 진도율 대비';
+document.getElementById('kpis').innerHTML =
+   kpi('매입·유도 누적', ko(T.mtd)+'대', tag(rT), rT)
+ + kpi('자사 매입', ko(sum(own,'mtd'))+'대', tag(rO), rO)
+ + kpi('출품 유도', ko(sum(ind,'mtd'))+'대', tag(rI), rI)
+ + kpi('경매장 입고', ko(IT.inb)+'대', '입고율 <em>'+pc(IT.inb/IT.secured)+'</em>');
+
+/* ── 표 ① ─────────────────────────────────────── */
+let b='';
+const row=(r,cls)=>'<tr'+(cls?' class="'+cls+'"':'')+'><td class="l">'+r.label
+  +(r.desc?'<small>'+r.desc+'</small>':'')+'</td>'
+  +'<td>'+n(r.target)+'</td><td>'+n(r.today)+'</td><td>'+n(r.mtd)+'</td>'
+  +'<td>'+pill(r.mtd/r.target)+'</td></tr>';
+own.forEach(r=>b+=row({label:r.name,desc:r.desc,target:r.target,today:r.today,mtd:r.mtd}));
+b+=row({label:'자사 매입 소계',target:sum(own,'target'),today:sumN(own,'today'),mtd:sum(own,'mtd')},'sub');
+ind.forEach(r=>b+=row({label:r.name,desc:r.desc,target:r.target,today:r.today,mtd:r.mtd}));
+b+=row({label:'출품 유도 소계',target:sum(ind,'target'),today:sumN(ind,'today'),mtd:sum(ind,'mtd')},'sub');
+b+=row({label:'총 계',target:T.target,today:T.today,mtd:T.mtd},'tot');
+document.getElementById('t1').innerHTML=
+ '<thead><tr><th class="l">구분</th><th>목표</th><th>당일</th><th>누적</th><th>달성률</th></tr></thead><tbody>'+b+'</tbody>';
+
+/* ── 표 ② ─────────────────────────────────────── */
+let b2=I.map(r=>'<tr'+(r.name==='총 계'?' class="tot"':'')+'><td class="l">'+r.name+(r.desc?'<small>'+r.desc+'</small>':'')+'</td>'
+  +'<td>'+n(r.secured)+'</td><td>'+n(r.inb)+'</td><td>'+n(r.perf)+'</td>'
+  +'<td>'+n(r.reg)+'</td><td>'+n(r.exp)+'</td></tr>').join('');
+if(!(I.length===1 && I[0].name==='총 계')){
+  b2+='<tr class="tot"><td class="l">총 계</td><td>'+n(IT.secured)+'</td><td>'+n(IT.inb)
+    +'</td><td>'+n(IT.perf)+'</td><td>'+n(IT.reg)+'</td><td>'+n(IT.exp)+'</td></tr>';
+}
+document.getElementById('t2').innerHTML=
+ '<thead><tr><th class="l">팀</th><th>매입·유도</th><th>입고</th><th>성능</th><th>등록</th><th>노출</th></tr></thead><tbody>'+b2+'</tbody>';
+
+/* ── 표 ③ ─────────────────────────────────────── */
+const L=['D-Day','D+1','D+2','D+3','D+4'];
+const prow=(nm,arr,c)=>'<tr><td class="l">'+nm+'</td>'+arr.map(v=>'<td>'+n(v)+'</td>').join('')
+  +'<td><b>'+ko(lastV(c))+'</b></td></tr>'
+  +'<tr class="sub"><td class="l">'+nm+'률</td>'+c.map(v=>'<td>'+(v==null?'<span class="dash">-</span>':f1(v/A.won*100)+'%')+'</td>').join('')
+  +'<td>'+f1(lastV(c)/A.won*100)+'%</td></tr>';
+document.getElementById('t3').innerHTML=
+ '<thead><tr><th class="l">구분</th>'+L.map(l=>'<th>'+l+'</th>').join('')+'<th>누적</th></tr></thead><tbody>'
+ +prow('정산',A.settle,sC)+prow('반출',A.release,rC)+'</tbody>';
+document.getElementById('n3').textContent =
+ '낙찰 '+ko(A.won)+'대 기준 누적 · 미정산 '+ko(A.won-sT)+'대 · 미반출 '+ko(A.won-rT2)+'대';
+
+document.getElementById('foot').innerHTML =
+ '영업일 = 해당 월 평일에서 공휴일 제외, 보고일 포함 (자동 계산)<br>'
++'달성률 = 월 누적 ÷ 월 목표 · 진도율 대비 = 달성률 − 진도율('+pc(EX)+')<br>'
++'판정: 달성 ≥ 100% · 주의 ≥ 90% · 미달 &lt; 90% · 수치는 업로드 양식의 예시값';
+
+/* ═══════════════ CHARTS ═══════════════ */
+const C={ink:'#0f1a24',ok:'#0e7c66',warn:'#b47800',bad:'#c0392b',base:'#1f6feb',muted:'#6b7c8c',line:'#e3e8ed',vio:'#7a5bb5'};
+Chart.defaults.font.family='"Pretendard Variable",Pretendard,system-ui,sans-serif';
+Chart.defaults.font.size=10.5;
+Chart.defaults.color=C.muted;
+Chart.defaults.maintainAspectRatio=false;
+Chart.defaults.plugins.legend.labels.boxWidth=9;
+Chart.defaults.plugins.legend.labels.boxHeight=9;
+const cv=id=>{const h=document.getElementById(id);h.innerHTML='<canvas></canvas>';return h.querySelector('canvas');};
+const gc=r=>({ok:C.ok,warn:C.warn,bad:C.bad})[gr(r)];
+
+/* 가로 막대 값 라벨 — afterDatasetsDraw 단계에서 그림.
+   기준선(점선)은 afterDraw 단계라 항상 라벨 위에 덮여 그려집니다. */
+const hLabel = fmt => ({
+  id:'hlab',
+  afterDatasetsDraw(ch){
+    const x=ch.ctx, ds=ch.data.datasets[0].data;
+    x.save(); x.font='800 10.5px Pretendard'; x.textAlign='left'; x.textBaseline='middle'; x.fillStyle=C.ink;
+    ch.getDatasetMeta(0).data.forEach((el,i)=>{
+      if(ds[i]==null) return;
+      x.fillText(fmt(ds[i],i), el.x+6, el.y);
+    });
+    x.restore();
+  }
+});
+
+/* 1. 항목별 달성률 */
+const rows=[
+  {l:'자사 매입',v:rO,count:sum(own,'mtd'),target:sum(own,'target')},
+  {l:'출품 유도',v:rI,count:sum(ind,'mtd'),target:sum(ind,'target')}
+];
+const max1=Math.max.apply(null, rows.map(r=>r.v*100).concat([EX*100]));
+new Chart(cv('c1'),{
+  type:'bar',
+  data:{labels:rows.map(r=>r.l),datasets:[{data:rows.map(r=>+(r.v*100).toFixed(1)),
+    backgroundColor:rows.map(r=>gc(r.v)),borderRadius:3,barPercentage:.72}]},
+  options:{indexAxis:'y',
+    layout:{padding:{right:82,top:12}},
+    plugins:{legend:{display:false},
+      tooltip:{callbacks:{label:c=>{const r=rows[c.dataIndex];return '누적 '+ko(r.count)+'대 / 목표 '+ko(r.target)+'대 · 달성률 '+f1(r.v*100)+'%';}}}},
+    scales:{x:{beginAtZero:true,max:Math.ceil(max1*1.35/10)*10,
+               ticks:{callback:v=>v+'%'},grid:{color:C.line}},
+            y:{grid:{display:false}}}},
+  plugins:[ hLabel((v,i)=>ko(rows[i].count)+'대 · '+f1(v)+'%'),
+    {id:'bl',afterDraw(ch){    /* 라벨보다 나중에 그려 점선이 가려지지 않게 함 */
+      const x=ch.scales.x.getPixelForValue(EX*100),a=ch.chartArea,c=ch.ctx;
+      c.save();c.strokeStyle=C.base;c.lineWidth=1.5;c.setLineDash([4,3]);
+      c.beginPath();c.moveTo(x,a.top);c.lineTo(x,a.bottom);c.stroke();c.setLineDash([]);
+      c.fillStyle=C.base;c.font='800 9.5px Pretendard';c.textAlign='center';
+      c.fillText(f1(EX*100)+'%',x,a.top-3);c.restore();}}]
+});
+
+/* 2. 입고 퍼널 */
+const fv=[IT.secured,IT.inb,IT.perf,IT.reg,IT.exp];
+new Chart(cv('c2'),{
+  type:'bar',
+  data:{labels:['매입·유도','입고','성능','등록','노출'],
+    datasets:[{data:fv,backgroundColor:[C.ink,C.ok,C.base,C.vio,C.muted],borderRadius:3,barPercentage:.72}]},
+  options:{indexAxis:'y',
+    layout:{padding:{right:14}},
+    plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>ko(c.parsed.x)+'대'}}},
+    scales:{x:{beginAtZero:true,max:Math.ceil(Math.max.apply(null,fv)*1.22/50)*50,grid:{color:C.line}},
+            y:{grid:{display:false}}}},
+  plugins:[ hLabel(v=>ko(v)) ]
+});
+
+/* 3. 정산·반출 누적 */
+const sP=sC.map(v=>v==null?null:+(v/A.won*100).toFixed(1));
+const rP=rC.map(v=>v==null?null:+(v/A.won*100).toFixed(1));
+new Chart(cv('c3'),{
+  type:'line',
+  data:{labels:L,datasets:[
+    {label:'정산률',data:sP,borderColor:C.ok,backgroundColor:'rgba(14,124,102,.10)',
+     fill:true,tension:.3,pointRadius:4,pointBackgroundColor:C.ok},
+    {label:'반출률',data:rP,borderColor:C.base,backgroundColor:'rgba(31,111,235,.08)',
+     fill:true,tension:.3,pointRadius:4,pointBackgroundColor:C.base}]},
+  options:{layout:{padding:{top:18,left:4,right:8}},
+    plugins:{legend:{position:'bottom'},
+      tooltip:{callbacks:{label:c=>c.dataset.label+' '+c.parsed.y+'%'}}},
+    scales:{y:{beginAtZero:true,max:100,ticks:{callback:v=>v+'%'},grid:{color:C.line}},
+            x:{grid:{display:false}}}},
+  plugins:[{id:'plab',afterDatasetsDraw(ch){
+    const x=ch.ctx; x.save(); x.font='800 10px Pretendard'; x.textAlign='center';
+    [0,1].forEach(di=>{
+      const ds=ch.data.datasets[di];
+      x.fillStyle=ds.borderColor;
+      ch.getDatasetMeta(di).data.forEach((el,i)=>{
+        if(ds.data[i]==null) return;
+        /* 정산률은 점 위, 반출률은 점 아래 — 두 선이 겹쳐도 숫자가 안 겹침 */
+        x.textBaseline = di===0 ? 'bottom' : 'top';
+        x.fillText(f1(ds.data[i])+'%', el.x, el.y + (di===0 ? -7 : 8));
+      });
+    });
+    x.restore();}}]
+});
+})();
+</script>
+</body>
+</html>
