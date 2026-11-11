@@ -206,7 +206,7 @@ function renderHome(){
 function renderModule(m,sub){
   document.getElementById("ttl").textContent=m.name;
   var v=LIVE[m.key],list=DATA?DATA[m.key]:null,isList=sub==="list",file=sub&&sub.indexOf("f=")===0?decodeURIComponent(sub.slice(2)):null;
-  var src=file?href(file):liveUrl(m),it=file&&list?list.filter(function(x){return x.path===file;})[0]:null;
+  var src=file?href(file):liveUrl(m)+"?v="+((v&&v.lm)||Date.now()),it=file&&list?list.filter(function(x){return x.path===file;})[0]:null;
   var tabs='<div class="vt" style="--c:'+m.c+'"><a class="tab'+(!isList&&!file?" on":"")+'" href="#'+m.key+'">최신본</a><a class="tab'+(isList||file?" on":"")+'" href="#'+m.key+'/list">지난 보고서'+(list?" "+list.length:"")+'</a><span class="sp"></span>'
     +(isList?'':'<span class="meta">'+esc(file?(it?it.label+" · "+it.title:file):(v&&v.lm?"업데이트 "+ago(v.lm):""))+'</span><a class="ext" href="'+src+'" target="_blank" rel="noopener">새 창 ↗</a>')+'</div>';
   if(!isList){document.getElementById("view").innerHTML='<div class="viewer">'+tabs+'<iframe src="'+src+'" title="'+esc(m.name)+'"></iframe></div>';return;}
