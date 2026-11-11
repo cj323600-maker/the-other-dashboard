@@ -12,6 +12,7 @@
 | 회원사 분석 | Country-dashboard | `member/` |
 | 출품 및 낙찰 추이 | Auction-dashboard | `trend/` |
 | 수출시장 환경모니터 | 이 저장소 `market/index.html` (원본 KAA_ClaudeCode 일보/mkt) | `market/` |
+| 국내 경매장 시장 | 이 저장소 `kmarket/index.html` (원본 KAA_ClaudeCode 시장/build_market.py) | `kmarket/` |
 
 - 홈 상단: 일간보고 상단 카드 3개(출품대수·낙찰대수 예상·매출이익 예상)를 최신 일보에서 그대로 읽어 표시
 - 다음 경매일과 D-day: 일보의 경매일 기준, 없으면 다음 수요일
