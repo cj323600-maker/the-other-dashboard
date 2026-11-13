@@ -23,9 +23,6 @@ select{font:inherit;font-size:13px;padding:4px 8px;border:1px solid var(--line);
 .period{display:grid;grid-template-columns:minmax(0,1fr);gap:8px;width:100%}
 .pr-top{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center}
 .pr-sum{font-size:13.5px}.pr-sum b{font-variant-numeric:tabular-nums}
-.pr-ch{position:relative;height:46px;display:flex;align-items:flex-end;gap:1px;padding:0 9px}
-.pr-ch i{flex:1 1 0;min-width:0;background:#cfd8e0;border-radius:2px 2px 0 0;transition:background .15s}
-.pr-ch i.on{background:var(--accent)}
 .pr-sl{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px 18px}
 .pr-sl label{display:flex;flex-direction:column;gap:2px;font-size:12.5px;color:var(--muted);font-weight:600;min-width:0}
 .pr-sl label b{color:var(--ink);font-variant-numeric:tabular-nums}
@@ -96,7 +93,7 @@ svg{display:block;max-width:100%}
 </style></head><body>
 <div class="wrap">
   <div class="top">
-    <div><h1>매칭 테이블</h1><p class="sub" id="sub">최근 8회차(9/22~11/11) · 출품 15,970대 · 전체 낙찰률 47.5% · 데이터 2026.11.11 경매까지</p></div>
+    <div><h1>매칭 테이블</h1><p class="sub" id="sub">최근 45회차(1/7~11/11) · 출품 92,221대 · 전체 낙찰률 47.9% · 데이터 2026.11.11 경매까지</p></div>
     <span class="conf">[대외비]</span>
   </div>
   <div class="panel filters" id="filters"></div>
@@ -118,7 +115,7 @@ const GDL=['A 내수 소매 적합','B 혼합','C 수출 적합'],GDD=['차령 5
 const PL=['500만원 미만','500~999만원','1,000~1,999만원','2,000만원 이상'];
 const PB=s=>s<=0?-1:s<500?0:s<1000?1:s<2000?2:3;
 const SRC=['자사','유도','출품대행'];
-const st={r1:NR-1,r0:Math.max(0,NR-8),pf:-1,org:-1,grp:-1,nr:-1,src:-1,axis:'k',color:'w',gran:'fine',gd:-1,sel:null,tab:'main',f2:'cell'};
+const st={r1:NR-1,r0:0,pf:-1,org:-1,grp:-1,nr:-1,src:-1,axis:'k',color:'w',gran:'fine',gd:-1,sel:null,tab:'main',f2:'cell'};
 const $=id=>document.getElementById(id),f0=v=>Math.round(v).toLocaleString('ko-KR'),f1=v=>v.toFixed(1),pct=v=>(v*100).toFixed(1)+'%';
 const ix2=v=>(1+v).toFixed(2),sg=v=>(v>=0?'+':'−')+f0(Math.abs(v));
 const md=d=>{const a=d.split('-');return (+a[1])+'/'+(+a[2])};
@@ -164,7 +161,6 @@ let raf=0;const later=()=>{if(raf)return;raf=requestAnimationFrame(()=>{raf=0;re
 function initFilters(){const chips=(key,arr)=>arr.map(([v,l])=>`<button class="chip" data-k="${key}" data-v="${v}">${l}</button>`).join('');
   const mx=Math.max(...RS.map(x=>x.n));
   $('filters').innerHTML=`<div class="period"><div class="pr-top"><span class="fl">기간</span><span id="pre">${[[4,'최근 4회차'],[8,'8회차'],[13,'13회차'],[26,'26회차'],[NR,'전체']].map(([v,l])=>`<button class="chip" data-pre="${v}">${l}</button>`).join(' ')}</span><span class="pr-sum" id="prsum"></span></div>
-  <div class="pr-ch" id="prch" aria-hidden="true">${RS.map((x,r)=>`<i data-r="${r}" style="height:${Math.max(8,x.n/mx*100).toFixed(0)}%" title="${md(D.rounds[r])} 출품 ${x.n.toLocaleString()}대 · 낙찰률 ${(x.w/x.n*100).toFixed(1)}%"></i>`).join('')}</div>
   <div class="pr-sl"><label>시작 <b id="l0"></b><input type="range" id="s0" min="0" max="${NR-1}" step="1" value="${st.r0}" aria-label="기간 시작 회차"></label><label>끝 <b id="l1"></b><input type="range" id="s1" min="0" max="${NR-1}" step="1" value="${st.r1}" aria-label="기간 끝 회차"></label></div></div>
   <div class="fg"><span class="fl">가격대(시작가)</span>${chips('pf',[[-1,'전체'],...PL.map((l,i)=>[i,l])])}</div>
   <div class="fg"><span class="fl">국산 · 수입</span>${chips('org',[[-1,'전체'],[0,'국산'],[1,'수입']])}</div>
@@ -177,13 +173,11 @@ function initFilters(){const chips=(key,arr)=>arr.map(([v,l])=>`<button class="c
   $('filters').querySelectorAll('[data-pre]').forEach(b=>b.onclick=()=>{const v=+b.dataset.pre;st.r1=NR-1;st.r0=Math.max(0,NR-v);$('s0').value=st.r0;$('s1').value=st.r1;render()});
   $('s0').oninput=e=>{st.r0=+e.target.value;if(st.r0>st.r1){st.r1=st.r0;$('s1').value=st.r1}syncFilters();later()};
   $('s1').oninput=e=>{st.r1=+e.target.value;if(st.r1<st.r0){st.r0=st.r1;$('s0').value=st.r0}syncFilters();later()};
-  $('prch').onclick=e=>{const r=e.target.dataset&&e.target.dataset.r;if(r===undefined)return;const v=+r;if(Math.abs(v-st.r0)<=Math.abs(v-st.r1))st.r0=v;else st.r1=v;$('s0').value=st.r0;$('s1').value=st.r1;render()};
   $('filters').querySelectorAll('[data-gran]').forEach(b=>b.onclick=()=>{st.gran=b.dataset.gran;setGran(st.gran);st.sel=null;st.touched=false;render()});
   $('grp').onchange=e=>{st.grp=+e.target.value;render()}}
 function syncFilters(){const w=st.r1-st.r0+1;let n=0,ww=0;for(let r=st.r0;r<=st.r1;r++){n+=RS[r].n;ww+=RS[r].w}
   $('l0').textContent=D.rounds[st.r0].replace(/-/g,'.');$('l1').textContent=D.rounds[st.r1].replace(/-/g,'.');
   $('prsum').innerHTML=`<b>${md(D.rounds[st.r0])}~${md(D.rounds[st.r1])}</b> · <b>${w}</b>회차 · 출품 <b>${n.toLocaleString('ko-KR')}</b>대 · 낙찰률 <b>${n?(ww/n*100).toFixed(1):'–'}%</b> <span class="muted">(거르기 전)</span>`;
-  $('prch').querySelectorAll('i').forEach((el,r)=>el.classList.toggle('on',r>=st.r0&&r<=st.r1));
   $('filters').querySelectorAll('[data-pre]').forEach(b=>{const v=+b.dataset.pre;b.classList.toggle('on',st.r1===NR-1&&st.r0===Math.max(0,NR-v))});
   $('filters').querySelectorAll('.chip[data-k]').forEach(b=>b.classList.toggle('on',st[b.dataset.k]===+b.dataset.v));
   $('filters').querySelectorAll('[data-gran]').forEach(b=>b.classList.toggle('on',st.gran===b.dataset.gran))}
@@ -302,7 +296,7 @@ function rule(){return`<div class="panel"><h2>계산 기준</h2><div class="scro
 <tr><td>유찰 대수</td><td style="text-align:left;white-space:normal">출품 − 낙찰. 회당 평균으로 표시</td></tr>
 <tr><td>기회 (회당)</td><td style="text-align:left;white-space:normal">(칸 낙찰률 − 전체 낙찰률) × 회당 출품. 음수는 평균만큼 팔렸다면 더 팔렸을 대수</td></tr>
 <tr><td>표본</td><td style="text-align:left;white-space:normal">칸은 회당 출품이 세분 10대 · 간략 20대 미만이면 판단에서 제외, 칸 × 차종은 기간 내 30대 이상만 순위에 올림</td></tr>
-<tr><td>기간</td><td style="text-align:left;white-space:normal">시작 · 끝 슬라이더나 막대를 눌러 회차 구간을 고름. 막대 높이는 회차별 출품 대수. "2주 연속"과 수급지수 변화는 같은 길이의 기간을 한 회차 앞으로 옮겨 비교</td></tr>
+<tr><td>기간</td><td style="text-align:left;white-space:normal">첫 화면은 전체 회차. 기간 버튼이나 시작 · 끝 슬라이더로 회차 구간을 고름. "2주 연속"과 수급지수 변화는 같은 길이의 기간을 한 회차 앞으로 옮겨 비교</td></tr>
 <tr><td>등급</td><td style="text-align:left;white-space:normal">경매운영팀 차량등급 기준. A 내수 소매 적합 = 차령 5년 이하이고 주행거리 10만 km 이하, C 수출 적합 = 차령 10년 초과 또는 주행거리 15만 km 초과, B 혼합 = 그 밖. 차령 = 2026 − 최초등록 연도</td></tr>
 <tr><td>기준가</td><td style="text-align:left;white-space:normal">같은 차종 · 최초등록 연도 · 주행 구간(5만 km 단위)으로 선택 기간에 실제 낙찰된 값의 중앙값. 낙찰 3대 미만이면 만들지 않음</td></tr>
 <tr><td>진단</td><td style="text-align:left;white-space:normal">차량 공급 부족 = 수급지수 1.10 이상 · 수급지수 0.90 이하인 칸은 전체 낙찰률보다 덜 팔린 대수를 세 묶음으로 나눔: ① 적정가 차(시작가가 기준가의 1.10배 미만) ② 비교 낙찰 없는 차(같은 차종 · 연도 · 주행 구간 낙찰이 3대 미만이라 기준가가 없음, 찾는 회원이 드문 차) ③ 비싼 차(기준가의 1.10배 이상). ① + ② = 회원 요인, ③ = 값 요인이고 세 묶음의 합이 기회 대수와 같음 · 회원 요인이 더 크면 "회원 부족", 값 요인이 더 크면 "값이 비쌈", 작은 쪽이 큰 쪽의 70% 이상이면 "회원 부족 · 값도 비쌈" · 수급지수가 0.90~1.10이면 균형</td></tr>
