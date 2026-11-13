@@ -120,10 +120,10 @@ const PB=s=>s<=0?-1:s<500?0:s<1000?1:s<2000?2:3;
 const SRC=['자사','유도','출품대행'];
 const st={r1:NR-1,r0:Math.max(0,NR-8),pf:-1,org:-1,grp:-1,nr:-1,src:-1,axis:'k',color:'w',gran:'fine',gd:-1,sel:null,tab:'main',f2:'cell'};
 const $=id=>document.getElementById(id),f0=v=>Math.round(v).toLocaleString('ko-KR'),f1=v=>v.toFixed(1),pct=v=>(v*100).toFixed(1)+'%';
-const ix2=v=>(v>=0?'+':'−')+(Math.abs(v)*100).toFixed(1)+'%p',sg=v=>(v>=0?'+':'−')+f0(Math.abs(v));
+const ix2=v=>(1+v).toFixed(2),sg=v=>(v>=0?'+':'−')+f0(Math.abs(v));
 const md=d=>{const a=d.split('-');return (+a[1])+'/'+(+a[2])};
 const med=a=>{if(!a.length)return NaN;const b=[...a].sort((x,y)=>x-y),m=b.length>>1;return b.length%2?b[m]:(b[m-1]+b[m])/2};
-const MIN_COMBO=30,TH=0.05,TW=0.015;  // 평균 대비 낙찰률 격차 기준: ±5%p 뚜렷, ±1.5%p 약함
+const MIN_COMBO=30,TH=0.10,TW=0.03;  // 수급지수 기준: 1.10 이상 · 0.90 이하 뚜렷, 0.97~1.03 평균 수준
 function pass(i,r0,r1,noPrice){const r=RR[i];if(r<r0||r>r1)return false;
   if(!noPrice&&st.pf>=0&&PB(D.s[i])!==st.pf)return false;
   if(st.org>=0&&D.mo[D.m[i]]!==st.org)return false;if(st.grp>=0&&D.mg[D.m[i]]!==st.grp)return false;
@@ -135,7 +135,7 @@ function stat(I,R,weeks,ref){const s={n:I.length,w:0,ex:0,ratio:[],over:0,refN:0
   for(const i of I){const won=D.we[i]>0;if(won){s.w++;if(D.we[i]===2)s.ex++;if(D.s[i]>0&&D.p[i]>0)s.ratio.push(D.p[i]/D.s[i])}
     if(D.s[i]>0){const rp=ref.get(D.m[i]+'|'+D.y[i]+'|'+RK(D.k[i]));if(rp){const g=D.s[i]/rp;s.kn++;if(g>=1.10){s.xn++;if(won)s.xw++}else{s.fn++;if(won)s.fw++}
       if(!won){s.refN++;s.gap.push(g-1);if(g>=1.10)s.over++}}}}
-  s.rate=s.n?s.w/s.n:NaN;s.idx=s.n?s.rate-R:NaN;s.un_=s.n-s.w;s.per=s.n/weeks;s.opp=s.n?(s.rate-R)*s.per:0;s.rt=med(s.ratio);s.gapM=med(s.gap);s.overS=s.refN?s.over/s.refN:NaN;
+  s.rate=s.n?s.w/s.n:NaN;s.idx=R>0&&s.n?s.rate/R-1:NaN;s.un_=s.n-s.w;s.per=s.n/weeks;s.opp=s.n?(s.rate-R)*s.per:0;s.rt=med(s.ratio);s.gapM=med(s.gap);s.overS=s.refN?s.over/s.refN:NaN;
   // 요인 분해(회당 대수, 합 = 기회): 적정가 차 · 비싼 차 · 비교 낙찰 없는 차가 각각 전체 낙찰률보다 더(덜) 팔린 대수
   s.un=s.n-s.kn;s.uw=s.w-s.fw-s.xw;s.fr=s.fn?s.fw/s.fn:NaN;s.xr=s.xn?s.xw/s.xn:NaN;s.ur=s.un?s.uw/s.un:NaN;s.cov=s.n?s.kn/s.n:0;
   s.cf=(s.fw-s.fn*R)/weeks;s.cx=(s.xw-s.xn*R)/weeks;s.cu=(s.uw-s.un*R)/weeks;s.mem=s.cf+s.cu;s.prc=s.cx;return s}
@@ -154,10 +154,10 @@ function ranked(C){const g=group(C.I,i=>{const p=PB(D.s[i]);return p<0?null:YB(D
   for(const [k,I] of g){const s=stat(I,C.R,C.weeks,C.ref);if(s.per<MIN_CELL)continue;const [y,kk,p]=k.split('|').map(Number);a.push({k,y,kk,p,I,s})}
   return{over:a.filter(x=>x.s.opp<0).sort((x,y)=>x.s.opp-y.s.opp).slice(0,5),short:a.filter(x=>x.s.opp>0).sort((x,y)=>y.s.opp-x.s.opp).slice(0,5)}}
 function spark(I,C){const g=group(I,i=>RR[i]),ga=group(C.I,i=>RR[i]);const pts=[];for(let r=Math.max(C.r0,C.r1-7);r<=C.r1;r++){const a=g.get(r)||[],b=ga.get(r)||[];if(a.length<5||!b.length){pts.push(null);continue}
-    const ra=a.filter(i=>D.we[i]).length/a.length,rb=b.filter(i=>D.we[i]).length/b.length;pts.push(rb?ra-rb:null)}
-  const W=70,H=22,n=pts.length;if(n<2)return'';const v=pts.filter(x=>x!==null);if(v.length<2)return'';const mx=Math.max(0.15,...v.map(Math.abs));let d='',pen=false;
+    const ra=a.filter(i=>D.we[i]).length/a.length,rb=b.filter(i=>D.we[i]).length/b.length;pts.push(rb?ra/rb-1:null)}
+  const W=70,H=22,n=pts.length;if(n<2)return'';const v=pts.filter(x=>x!==null);if(v.length<2)return'';const mx=Math.max(0.3,...v.map(Math.abs));let d='',pen=false;
   pts.forEach((p,i)=>{if(p===null){pen=false;return}const x=n===1?W/2:i*(W-4)/(n-1)+2,y=H/2-p/mx*(H/2-2);d+=(pen?'L':'M')+x.toFixed(1)+','+y.toFixed(1);pen=true});
-  return`<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="평균 대비 낙찰률 추이"><line x1="0" y1="${H/2}" x2="${W}" y2="${H/2}" stroke="#c9d1d9" stroke-dasharray="2 2"/><path d="${d}" fill="none" stroke="#16202a" stroke-width="1.5"/></svg>`}
+  return`<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="수급지수 추이"><line x1="0" y1="${H/2}" x2="${W}" y2="${H/2}" stroke="#c9d1d9" stroke-dasharray="2 2"/><path d="${d}" fill="none" stroke="#16202a" stroke-width="1.5"/></svg>`}
 /* ---------- 화면 ---------- */
 const RS=(()=>{const a=[];let o=0;for(let r=0;r<NR;r++){let w=0;for(let i=o;i<o+D.cnt[r];i++)if(D.we[i])w++;a.push({n:D.cnt[r],w});o+=D.cnt[r]}return a})();
 let raf=0;const later=()=>{if(raf)return;raf=requestAnimationFrame(()=>{raf=0;render()})};
@@ -204,14 +204,14 @@ function f2table(C,Cp){let h='';
   if(st.f2==='cell'){const a=ranked(C),b=ranked(Cp),rep=new Set([...b.over.map(x=>'o'+x.k),...b.short.map(x=>'s'+x.k)]);
     const row=(x,side)=>{const [dl,dc]=diag(x.s,true),sel=st.sel&&st.sel.y===x.y&&st.sel.k===x.kk&&st.sel.p===x.p;
       return`<tr class="click${rep.has(side+x.k)?' rep':''}${sel?' sel':''}" data-y="${x.y}" data-k="${x.kk}" data-p="${x.p}"><td>${cellName(x.y,x.kk,x.p)}${rep.has(side+x.k)?' <span class="muted" style="font-weight:500;font-size:11.5px">2주 연속</span>':''}</td><td>${f0(x.s.per)}</td><td>${f0(x.s.un_/C.weeks)}</td><td>${pct(x.s.rate)}</td><td class="${x.s.idx<0?'t-o':'t-s'}">${ix2(x.s.idx)}</td><td>${sg(x.s.opp)}대</td><td>${spark(x.I,C)}</td><td><span class="pill ${dc}">${dl}</span></td></tr>`};
-    h=`<div class="scroll"><table class="t" style="min-width:640px"><thead><tr><th>칸 (최초등록 연도 / 주행거리 / 시작가)</th><th>회당 출품 (대)</th><th>회당 유찰 (대)</th><th>낙찰률</th><th>평균 대비</th><th>기회 (회당)</th><th>평균 대비 추이</th><th>진단</th></tr></thead><tbody>
+    h=`<div class="scroll"><table class="t" style="min-width:640px"><thead><tr><th>칸 (최초등록 연도 / 주행거리 / 시작가)</th><th>회당 출품 (대)</th><th>회당 유찰 (대)</th><th>낙찰률</th><th>수급지수</th><th>기회 (회당)</th><th>수급지수 추이</th><th>진단</th></tr></thead><tbody>
     <tr><td colspan="8" style="text-align:left;font-weight:700;color:var(--over);background:var(--over-soft)">차가 남는 칸 — 평균만큼 팔렸다면 더 팔렸을 대수 순</td></tr>${a.over.map(x=>row(x,'o')).join('')||'<tr><td colspan="7" class="muted" style="text-align:left">해당 칸 없음</td></tr>'}
     <tr><td colspan="8" style="text-align:left;font-weight:700;color:var(--short);background:var(--short-soft)">차가 모자라는 칸 — 평균보다 더 팔린 대수 순</td></tr>${a.short.map(x=>row(x,'s')).join('')||'<tr><td colspan="7" class="muted" style="text-align:left">해당 칸 없음</td></tr>'}</tbody></table></div>`}
   else{const g=group(C.I,i=>{const p=PB(D.s[i]);return p<0?null:YB(D.y[i])+'|'+KB(D.k[i])+'|'+p+'|'+D.m[i]});const a=[];
     for(const [k,I] of g){if(I.length<MIN_COMBO)continue;const s=stat(I,C.R,C.weeks,C.ref),[y,kk,p,m]=k.split('|').map(Number);a.push({y,kk,p,m,s})}
     const o=a.filter(x=>x.s.opp<0).sort((x,y)=>x.s.opp-y.s.opp).slice(0,5),sh=a.filter(x=>x.s.opp>0).sort((x,y)=>y.s.opp-x.s.opp).slice(0,5);
     const row=x=>{const [dl,dc]=diag(x.s,true);return`<tr class="click" data-y="${x.y}" data-k="${x.kk}" data-p="${x.p}"><td>${D.models[x.m]}<br><span class="muted" style="font-size:11.5px">${cellName(x.y,x.kk,x.p)}</span></td><td>${f0(x.s.n)}</td><td>${pct(x.s.rate)}</td><td class="${x.s.idx<0?'t-o':'t-s'}">${ix2(x.s.idx)}</td><td>${sg(x.s.opp)}대</td><td>${x.s.refN>=3?(x.s.gapM>=0?'+':'−')+Math.abs(x.s.gapM*100).toFixed(0)+'%':'–'}</td><td><span class="pill ${dc}">${dl}</span></td></tr>`};
-    h=`<div class="scroll"><table class="t" style="min-width:640px"><thead><tr><th>차종 (칸)</th><th>기간 출품 (대)</th><th>낙찰률</th><th>평균 대비</th><th>기회 (회당)</th><th>유찰 차 값 차이</th><th>진단</th></tr></thead><tbody>
+    h=`<div class="scroll"><table class="t" style="min-width:640px"><thead><tr><th>차종 (칸)</th><th>기간 출품 (대)</th><th>낙찰률</th><th>수급지수</th><th>기회 (회당)</th><th>유찰 차 값 차이</th><th>진단</th></tr></thead><tbody>
     <tr><td colspan="7" style="text-align:left;font-weight:700;color:var(--over);background:var(--over-soft)">차가 남는 차종</td></tr>${o.map(row).join('')||'<tr><td colspan="7" class="muted" style="text-align:left">기간 내 30대 이상 조합 없음</td></tr>'}
     <tr><td colspan="7" style="text-align:left;font-weight:700;color:var(--short);background:var(--short-soft)">차가 모자라는 차종</td></tr>${sh.map(row).join('')||'<tr><td colspan="7" class="muted" style="text-align:left">기간 내 30대 이상 조합 없음</td></tr>'}</tbody></table></div>`}
   return h}
@@ -237,11 +237,11 @@ function detail(C,Cp){const s0=st.sel;if(!s0)return`<div class="panel side"><h2>
   const to=dl===LB.S?'출품 조직(출품영업 · FC(시너지) · 법인영업 · 플랫폼매입)':dl===LB.P?'출품영업 · FC(시너지) · 법인영업':dl===LB.M?'회원운영팀':dl===LB.B?'회원운영팀 + 출품영업 · FC(시너지) · 법인영업':'(해당 없음)';
   const ask=dl===LB.S?'이 칸 차량 출품 확대(유찰 차량은 수출 회원과 협상)':dl===LB.P?'기준가보다 비싸게 나온 차량의 시작가 · 희망가 재협의':dl===LB.M?'이 칸 차량을 사는 매수 회원 모집 · 재방문':dl===LB.B?'매수 회원 모집과 비싼 차량 시작가 재협의를 함께 진행':'';
   const ev=`회원 요인 ${sg(s.mem)}대/회(적정가 차 ${sg(s.cf)} · 비교 낙찰 없는 차 ${sg(s.cu)}), 값 요인 ${sg(s.prc)}대/회(비싼 차 ${f0(s.xn)}대 낙찰률 ${s.xn?pct(s.xr):'–'})`;
-  const req=`[매칭 테이블 요청]\n칸: ${name}\n근거(${st.r1===NR-1?'최근 ':''}${C.weeks}회차 ${md(D.rounds[C.r0])}~${md(D.rounds[C.r1])}): 회당 출품 ${f0(s.per)}대, 낙찰률 ${pct(s.rate)}(전체 ${pct(C.R)}), 평균 대비 ${ix2(s.idx)}, 기회 ${sg(s.opp)}대/회\n진단: ${dl} — ${ev}\n받는 쪽: ${to}\n요청: ${ask}\n목표(숫자 하나): \n기한: \n보내는 쪽: `;
+  const req=`[매칭 테이블 요청]\n칸: ${name}\n근거(${st.r1===NR-1?'최근 ':''}${C.weeks}회차 ${md(D.rounds[C.r0])}~${md(D.rounds[C.r1])}): 회당 출품 ${f0(s.per)}대, 낙찰률 ${pct(s.rate)}(전체 ${pct(C.R)}), 수급지수 ${ix2(s.idx)}, 기회 ${sg(s.opp)}대/회\n진단: ${dl} — ${ev}\n받는 쪽: ${to}\n요청: ${ask}\n목표(숫자 하나): \n기한: \n보내는 쪽: `;
   return`<div class="panel side"><div class="hd"><h2>칸 상세: ${name}</h2><span class="pill ${dc}">${dl}</span></div>
   <div class="kv"><span>회당 출품 / 낙찰 / 유찰</span><b>${f0(s.per)}대 / ${f0(s.w/C.weeks)}대 / ${f0(s.un_/C.weeks)}대</b></div>
-  <div class="kv"><span>낙찰률 / 전체 평균 대비</span><b>${pct(s.rate)} / <span class="${s.idx<=-TW?'t-o':s.idx>=TW?'t-s':''}">${ix2(s.idx)}</span></b></div>
-  <div class="kv"><span>한 회차 전 같은 길이 기간의 평균 대비</span><b>${Cp.r0===C.r0||!Ip.length?'–':ix2(sp.idx)+' → '+ix2(s.idx)+' ('+(dv>=0?'▲':'▼')+(Math.abs(dv)*100).toFixed(1)+'%p)'}</b></div>
+  <div class="kv"><span>낙찰률 / 수급지수</span><b>${pct(s.rate)} / <span class="${s.idx<=-TW?'t-o':s.idx>=TW?'t-s':''}">${ix2(s.idx)}</span></b></div>
+  <div class="kv"><span>한 회차 전 같은 길이 기간의 수급지수</span><b>${Cp.r0===C.r0||!Ip.length?'–':ix2(sp.idx)+' → '+ix2(s.idx)+' ('+(dv>=0?'▲':'▼')+Math.abs(dv).toFixed(2)+')'}</b></div>
   <div class="kv"><span>기회 (회당)</span><b>${sg(s.opp)}대</b></div>
   <div class="kv"><span>시작가 대비 낙찰가 (중앙값)</span><b>${isNaN(s.rt)?'–':s.rt.toFixed(2)+'배'}</b></div>
   <div class="mini">진단 근거 — 전체 낙찰률 ${pct(C.R)}보다 더(덜) 팔린 대수를 세 묶음으로 나눔</div>
@@ -272,7 +272,7 @@ function detail(C,Cp){const s0=st.sel;if(!s0)return`<div class="panel side"><h2>
   <div class="mini">요청 만들기</div>
   <textarea id="req" aria-label="요청 문안">${req}</textarea>
   <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px"><button class="btn" id="copy">문안 복사</button><span class="note" id="copied" style="align-self:center">칸 이름과 근거 숫자는 자동으로 채워집니다. 목표 · 기한 · 보내는 쪽만 적어 전달합니다.</span></div></div>`}
-function grades(C){const g=group(C.I,i=>GD(i));let h=`<div class="panel" style="margin-top:12px"><div class="hd"><h2>등급별 요약</h2><span class="note">경매운영팀 차량등급 기준 · 차령 = 2026 − 최초등록 연도</span></div><div class="scroll"><table class="t" style="min-width:680px"><thead><tr><th>등급</th><th style="text-align:left">기준</th><th>회당 출품 (대)</th><th>회당 낙찰 (대)</th><th>낙찰률</th><th>평균 대비</th><th>낙찰 중 수출 비중</th><th>수입차 비중</th></tr></thead><tbody>`;
+function grades(C){const g=group(C.I,i=>GD(i));let h=`<div class="panel" style="margin-top:12px"><div class="hd"><h2>등급별 요약</h2><span class="note">경매운영팀 차량등급 기준 · 차령 = 2026 − 최초등록 연도</span></div><div class="scroll"><table class="t" style="min-width:680px"><thead><tr><th>등급</th><th style="text-align:left">기준</th><th>회당 출품 (대)</th><th>회당 낙찰 (대)</th><th>낙찰률</th><th>수급지수</th><th>낙찰 중 수출 비중</th><th>수입차 비중</th></tr></thead><tbody>`;
   for(let k=0;k<3;k++){const I=g.get(k)||[],s=stat(I,C.R,C.weeks,C.ref);let im=0;for(const i of I)if(D.mo[D.m[i]])im++;
     h+=`<tr class="click${st.gd===k?' sel':''}" data-gd="${k}"><td><b>${GDL[k]}</b></td><td style="text-align:left;white-space:normal">${GDD[k]}</td><td>${f0(s.per)}</td><td>${f0(s.w/C.weeks)}</td><td>${I.length?pct(s.rate):'–'}</td><td class="${s.idx<=-TW?'t-o':s.idx>=TW?'t-s':''}">${I.length?ix2(s.idx):'–'}</td><td>${s.w?pct(s.ex/s.w):'–'}</td><td>${I.length?pct(im/I.length):'–'}</td></tr>`}
   return h+'</tbody></table></div><p class="note" style="margin-top:4px">행을 누르면 그 등급만 걸러 봅니다. 다시 누르면 전체로 돌아갑니다.</p></div>'}
@@ -286,26 +286,26 @@ function expo(C){const E=C.I.filter(i=>D.we[i]===2),oth=D.regions.indexOf('기�
 function meet(C,Cp){// 최신 회차 vs 직전 4회차 평균 대비 낙찰률 변화
   const r1=st.r1,A=[],B=[];for(let i=0;i<N;i++){if(RR[i]===r1&&pass(i,r1,r1))A.push(i);else if(RR[i]>=r1-4&&RR[i]<r1&&pass(i,r1-4,r1-1))B.push(i)}
   const Ra=A.length?A.filter(i=>D.we[i]).length/A.length:0,Rb=B.length?B.filter(i=>D.we[i]).length/B.length:0,ga=group(A,i=>YB(D.y[i])+'|'+KB(D.k[i])),gb=group(B,i=>YB(D.y[i])+'|'+KB(D.k[i]));const mv=[];
-  for(const [k,J] of ga){const K=gb.get(k)||[];if(J.length<MIN_CELL||K.length<MIN_CELL*2)continue;const ia=J.filter(i=>D.we[i]).length/J.length-Ra,ib=K.filter(i=>D.we[i]).length/K.length-Rb;mv.push({k,ia,ib,d:ia-ib,n:J.length})}
+  for(const [k,J] of ga){const K=gb.get(k)||[];if(J.length<MIN_CELL||K.length<MIN_CELL*2)continue;const ia=J.filter(i=>D.we[i]).length/J.length/Ra-1,ib=K.filter(i=>D.we[i]).length/K.length/Rb-1;mv.push({k,ia,ib,d:ia-ib,n:J.length})}
   mv.sort((a,b)=>Math.abs(b.d)-Math.abs(a.d));const a=ranked(C),b=ranked(Cp),rep=[...a.over.filter(x=>b.over.some(y=>y.k===x.k)).map(x=>[x,'over']),...a.short.filter(x=>b.short.some(y=>y.k===x.k)).map(x=>[x,'short'])];
   const nm=k=>{const [y,kk]=k.split('|').map(Number);return YL[y]+' / '+KL[kk]};
-  return`<div class="meet"><div class="panel"><h2>① 이번 주 평균 대비 낙찰률이 크게 움직인 칸</h2><p class="note">${md(D.rounds[r1])} 회차의 평균 대비 낙찰률 − 직전 4회차의 평균 대비 낙찰률 · 연식 × 주행거리 칸 · 회당 ${MIN_CELL}대 이상</p>
-  ${mv.slice(0,3).map(x=>`<div class="li"><div class="big">${nm(x.k)}</div><div>평균 대비 <b class="num">${ix2(x.ib)}</b> 에서 <b class="num ${x.ia<0?'t-o':'t-s'}">${ix2(x.ia)}</b> <span class="pill ${x.d<0?'over':'short'}">${x.d<0?'▼':'▲'} ${(Math.abs(x.d)*100).toFixed(1)}%p</span></div><div class="note">최신 회차 출품 ${f0(x.n)}대</div></div>`).join('')||'<p class="muted">해당 칸 없음</p>'}</div>
+  return`<div class="meet"><div class="panel"><h2>① 이번 주 수급지수가 크게 움직인 칸</h2><p class="note">${md(D.rounds[r1])} 회차 수급지수 − 직전 4회차 수급지수 · 연식 × 주행거리 칸 · 회당 ${MIN_CELL}대 이상</p>
+  ${mv.slice(0,3).map(x=>`<div class="li"><div class="big">${nm(x.k)}</div><div>수급지수 <b class="num">${ix2(x.ib)}</b> 에서 <b class="num ${x.ia<0?'t-o':'t-s'}">${ix2(x.ia)}</b> <span class="pill ${x.d<0?'over':'short'}">${x.d<0?'▼':'▲'} ${Math.abs(x.d).toFixed(2)}</span></div><div class="note">최신 회차 출품 ${f0(x.n)}대</div></div>`).join('')||'<p class="muted">해당 칸 없음</p>'}</div>
   <div class="panel"><h2>② 2주 연속 순위에 오른 칸</h2><p class="note">선택한 ${C.weeks}회차 기준 먼저 볼 칸 중 한 회차 전 기간에도 순위에 있던 칸</p>
-  ${rep.map(([x,c])=>{const [dl,dc]=diag(x.s,true);return`<div class="li"><div class="big">${cellName(x.y,x.kk,x.p)}</div><div>회당 ${f0(x.s.per)}대 · 낙찰률 ${pct(x.s.rate)} · 평균 대비 <b class="${c==='over'?'t-o':'t-s'}">${ix2(x.s.idx)}</b> · 기회 ${sg(x.s.opp)}대 <span class="pill ${dc}">${dl}</span></div></div>`}).join('')||'<p class="muted">해당 칸 없음</p>'}</div>
+  ${rep.map(([x,c])=>{const [dl,dc]=diag(x.s,true);return`<div class="li"><div class="big">${cellName(x.y,x.kk,x.p)}</div><div>회당 ${f0(x.s.per)}대 · 낙찰률 ${pct(x.s.rate)} · 수급지수 <b class="${c==='over'?'t-o':'t-s'}">${ix2(x.s.idx)}</b> · 기회 ${sg(x.s.opp)}대 <span class="pill ${dc}">${dl}</span></div></div>`}).join('')||'<p class="muted">해당 칸 없음</p>'}</div>
   <div class="panel"><h2>③ 요청 현황</h2><p class="note">반려됐거나 기한을 넘긴 요청, 이번 주 새 요청</p><div class="li"><p>요청 목록 시트가 아직 연결되지 않았습니다. 지금은 칸 상세의 "요청 만들기" 문안을 복사해 전달하고, 12월 시험 운영 때 구글 시트와 연결합니다.</p></div>
   <div class="li"><p class="note">운영 규칙(안): 팀당 진행 중 요청 3건까지, 기한 2주 초과 시 빨간 표시, 완료 여부는 등록 때와 지금의 칸 숫자로 판정</p></div></div></div>`}
 function rule(){return`<div class="panel"><h2>계산 기준</h2><div class="scroll"><table class="t" style="min-width:560px;margin-top:8px"><thead><tr><th>항목</th><th style="text-align:left">기준</th></tr></thead><tbody>
 <tr><td>칸</td><td style="text-align:left;white-space:normal">세분(기본): 연식 7(최초등록 연도 2023년 이후 / 2021~2022년 / 2019~2020년 / 2017~2018년 / 2015~2016년 / 2012~2014년 / 2011년 이전) × 주행거리 6(5만 km 단위, 25만 km 이상까지) × 시작가 4(500만원 미만 / 500~999만원 / 1,000~1,999만원 / 2,000만원 이상) = 168칸, 지도는 42칸. 간략: 연식 4 × 주행거리 3 × 시작가 4 = 48칸, 지도 12칸</td></tr>
-<tr><td>지도 색</td><td style="text-align:left;white-space:normal">색 기준 네 가지. 낙찰 대수(기본) · 출품 대수 · 유찰 대수 = 붉은색이 짙을수록 많음(가장 많은 칸 대비 6단계). 평균 대비 낙찰률 = 파랑은 평균보다 잘 팔리는 칸, 빨강은 덜 팔리는 칸</td></tr>
-<tr><td>평균 대비 낙찰률</td><td style="text-align:left;white-space:normal">칸 낙찰률 − 전체 낙찰률(%p, 같은 기간 · 같은 거르기). 음수면 평균보다 덜 팔려 차가 남고, 양수면 평균보다 잘 팔려 차가 모자람. ±5%p를 넘으면 진단 대상, ±1.5%p 안은 평균 수준</td></tr>
+<tr><td>지도 색</td><td style="text-align:left;white-space:normal">색 기준 네 가지. 낙찰 대수(기본) · 출품 대수 · 유찰 대수 = 붉은색이 짙을수록 많음(가장 많은 칸 대비 6단계). 수급지수 = 파랑은 평균보다 잘 팔리는 칸, 빨강은 덜 팔리는 칸</td></tr>
+<tr><td>수급지수</td><td style="text-align:left;white-space:normal">칸 낙찰률 ÷ 경매장 전체 낙찰률(같은 기간 · 같은 거르기). 경매장 평균 = 1.00. 1.00보다 크면 평균보다 잘 팔려 사려는 회원에 비해 차가 모자란 칸(공급 부족), 작으면 덜 팔려 차가 남는 칸(수요 부족). 예: 전체 낙찰률 47.5%에서 칸 낙찰률 57.0%면 1.20, 38.0%면 0.80. 1.10 이상 · 0.90 이하를 진단 대상으로, 0.97~1.03은 평균 수준으로 봄. 경매운영팀 차량등급 수요 시뮬레이터와 같은 정의</td></tr>
 <tr><td>유찰 대수</td><td style="text-align:left;white-space:normal">출품 − 낙찰. 회당 평균으로 표시</td></tr>
 <tr><td>기회 (회당)</td><td style="text-align:left;white-space:normal">(칸 낙찰률 − 전체 낙찰률) × 회당 출품. 음수는 평균만큼 팔렸다면 더 팔렸을 대수</td></tr>
 <tr><td>표본</td><td style="text-align:left;white-space:normal">칸은 회당 출품이 세분 10대 · 간략 20대 미만이면 판단에서 제외, 칸 × 차종은 기간 내 30대 이상만 순위에 올림</td></tr>
-<tr><td>기간</td><td style="text-align:left;white-space:normal">시작 · 끝 슬라이더나 막대를 눌러 회차 구간을 고름. 막대 높이는 회차별 출품 대수. "2주 연속"과 평균 대비 낙찰률 변화는 같은 길이의 기간을 한 회차 앞으로 옮겨 비교</td></tr>
+<tr><td>기간</td><td style="text-align:left;white-space:normal">시작 · 끝 슬라이더나 막대를 눌러 회차 구간을 고름. 막대 높이는 회차별 출품 대수. "2주 연속"과 수급지수 변화는 같은 길이의 기간을 한 회차 앞으로 옮겨 비교</td></tr>
 <tr><td>등급</td><td style="text-align:left;white-space:normal">경매운영팀 차량등급 기준. A 내수 소매 적합 = 차령 5년 이하이고 주행거리 10만 km 이하, C 수출 적합 = 차령 10년 초과 또는 주행거리 15만 km 초과, B 혼합 = 그 밖. 차령 = 2026 − 최초등록 연도</td></tr>
 <tr><td>기준가</td><td style="text-align:left;white-space:normal">같은 차종 · 최초등록 연도 · 주행 구간(5만 km 단위)으로 선택 기간에 실제 낙찰된 값의 중앙값. 낙찰 3대 미만이면 만들지 않음</td></tr>
-<tr><td>진단</td><td style="text-align:left;white-space:normal">차량 공급 부족 = 칸 낙찰률이 전체보다 5%p 이상 높음 · 5%p 이상 낮은 칸은 전체 낙찰률보다 덜 팔린 대수를 세 묶음으로 나눔: ① 적정가 차(시작가가 기준가의 1.10배 미만) ② 비교 낙찰 없는 차(같은 차종 · 연도 · 주행 구간 낙찰이 3대 미만이라 기준가가 없음, 찾는 회원이 드문 차) ③ 비싼 차(기준가의 1.10배 이상). ① + ② = 회원 요인, ③ = 값 요인이고 세 묶음의 합이 기회 대수와 같음 · 회원 요인이 더 크면 "회원 부족", 값 요인이 더 크면 "값이 비쌈", 작은 쪽이 큰 쪽의 70% 이상이면 "회원 부족 · 값도 비쌈" · 격차가 ±5%p 안이면 균형</td></tr>
+<tr><td>진단</td><td style="text-align:left;white-space:normal">차량 공급 부족 = 수급지수 1.10 이상 · 수급지수 0.90 이하인 칸은 전체 낙찰률보다 덜 팔린 대수를 세 묶음으로 나눔: ① 적정가 차(시작가가 기준가의 1.10배 미만) ② 비교 낙찰 없는 차(같은 차종 · 연도 · 주행 구간 낙찰이 3대 미만이라 기준가가 없음, 찾는 회원이 드문 차) ③ 비싼 차(기준가의 1.10배 이상). ① + ② = 회원 요인, ③ = 값 요인이고 세 묶음의 합이 기회 대수와 같음 · 회원 요인이 더 크면 "회원 부족", 값 요인이 더 크면 "값이 비쌈", 작은 쪽이 큰 쪽의 70% 이상이면 "회원 부족 · 값도 비쌈" · 수급지수가 0.90~1.10이면 균형</td></tr>
 <tr><td>낙찰</td><td style="text-align:left;white-space:normal">낙찰 + 후상담낙찰(낙찰취소 제외), 출품은 실시 차량(재출품은 회차마다 1건)</td></tr>
 <tr><td>데이터</td><td style="text-align:left;white-space:normal">${D.src}. 과거 회차는 추출 시점 차이로 공식 실적(출품 및 낙찰 추이)과 낙찰이 회차당 0~23대 다를 수 있음. 출품 조직은 최신 회차만 표시</td></tr>
 </tbody></table></div></div>`}
@@ -316,17 +316,18 @@ function render(){syncFilters();const C=ctx(0),Cp=ctx(1);
   if(st.tab==='main'){const a=ranked(C);const o=a.over[0],s=a.short[0];
     h=`<div class="kpis"><div class="kpi"><div class="k">회당 출품</div><div class="v num">${f0(C.n/C.weeks)}<small> 대</small></div><div class="d">기간 ${f0(C.n)}대 · ${C.weeks}회차</div></div>
     <div class="kpi"><div class="k">전체 낙찰률</div><div class="v num">${pct(C.R)}</div><div class="d">회당 낙찰 ${f0(C.w/C.weeks)}대</div></div>
-    <div class="kpi"><div class="k">차가 가장 남는 칸</div><div class="v t-o" style="font-size:16px">${o?cellName(o.y,o.kk,o.p):'–'}</div><div class="d">${o?'평균 대비 '+ix2(o.s.idx)+' · 기회 '+sg(o.s.opp)+'대':''}</div></div>
-    <div class="kpi"><div class="k">차가 가장 모자라는 칸</div><div class="v t-s" style="font-size:16px">${s?cellName(s.y,s.kk,s.p):'–'}</div><div class="d">${s?'평균 대비 '+ix2(s.s.idx)+' · 기회 '+sg(s.s.opp)+'대':''}</div></div></div>
+    <div class="kpi"><div class="k">차가 가장 남는 칸</div><div class="v t-o" style="font-size:16px">${o?cellName(o.y,o.kk,o.p):'–'}</div><div class="d">${o?'수급지수 '+ix2(o.s.idx)+' · 기회 '+sg(o.s.opp)+'대':''}</div></div>
+    <div class="kpi"><div class="k">차가 가장 모자라는 칸</div><div class="v t-s" style="font-size:16px">${s?cellName(s.y,s.kk,s.p):'–'}</div><div class="d">${s?'수급지수 '+ix2(s.s.idx)+' · 기회 '+sg(s.s.opp)+'대':''}</div></div></div>
     <div class="panel sumrow" style="margin-top:12px">${(()=>{const g=group(C.I,i=>{const p=PB(D.s[i]);return p<0?null:YB(D.y[i])+'|'+KB(D.k[i])+'|'+p});const c={};[LB.P,LB.M,LB.B,LB.S].forEach(k=>c[k]=[0,0]);let thin=0;for(const [k,I] of g){const s=stat(I,C.R,C.weeks,C.ref);if(s.per<MIN_CELL){thin++;continue}const d=diag(s,true)[0];if(c[d]){c[d][0]++;c[d][1]+=s.opp}}
       const it=(k,cl)=>`<span><span class="pill ${cl}">${k}</span> ${c[k][0]}칸 · 기회 ${sg(c[k][1])}대</span>`;
       return`<b>${YL.length*KL.length*4}칸 진단 요약</b>${it(LB.M,'over')}${it(LB.P,'over')}${c[LB.B][0]?it(LB.B,'over'):''}${it(LB.S,'short')}<span class="muted">회당 ${MIN_CELL}대 미만 ${thin}칸 제외 · 기회는 회당 대수</span>`})()}</div>
     ${grades(C)}
     <div class="cols" style="margin-top:16px"><div class="stack">
-      <div class="panel p-map"><div class="hd"><h2>매칭 지도 — 연식 × ${st.axis==='p'?'시작가':'주행거리'}</h2><span class="fg"><span class="fl">가로축</span><button class="chip${st.axis==='k'?' on':''}" data-ax="k">주행거리</button><button class="chip${st.axis==='p'?' on':''}" data-ax="p">시작가</button><span class="fl" style="margin-left:8px">색 기준</span><button class="chip${st.color==='w'?' on':''}" data-col="w">낙찰 대수</button><button class="chip${st.color==='n'?' on':''}" data-col="n">출품 대수</button><button class="chip${st.color==='u'?' on':''}" data-col="u">유찰 대수</button><button class="chip${st.color==='ix'?' on':''}" data-col="ix">평균 대비 낙찰률</button></span></div>
-      <p class="note" style="margin:-4px 0 8px">${st.color==='ix'?`칸의 큰 숫자 = 그 칸 낙찰률이 전체 낙찰률 ${pct(C.R)}보다 몇 %p 높은지(낮은지). 파랑은 평균보다 잘 팔리는 칸(차량 공급 부족), 빨강은 평균보다 덜 팔리는 칸(차가 남음)입니다. 아래는 회당 출품과 유찰 대수입니다.`:st.color==='n'?'칸의 큰 숫자 = 회당 출품 대수, 그 아래는 회당 낙찰 대수와 낙찰률. 붉은색이 짙을수록 출품이 많은 칸입니다.':st.color==='u'?'칸의 큰 숫자 = 회당 유찰 대수(출품 − 낙찰), 그 아래는 회당 출품 대수와 낙찰률. 붉은색이 짙을수록 안 팔리고 남는 차가 많은 칸입니다.':'칸의 큰 숫자 = 회당 낙찰 대수, 그 아래는 회당 출품 대수와 낙찰률. 붉은색이 짙을수록 낙찰이 많은 주력 칸입니다. 칸 안의 표시는 진단입니다.'}</p>
+      <div class="panel p-map"><div class="hd"><h2>매칭 지도 — 연식 × ${st.axis==='p'?'시작가':'주행거리'}</h2><span class="fg"><span class="fl">가로축</span><button class="chip${st.axis==='k'?' on':''}" data-ax="k">주행거리</button><button class="chip${st.axis==='p'?' on':''}" data-ax="p">시작가</button><span class="fl" style="margin-left:8px">색 기준</span><button class="chip${st.color==='w'?' on':''}" data-col="w">낙찰 대수</button><button class="chip${st.color==='n'?' on':''}" data-col="n">출품 대수</button><button class="chip${st.color==='u'?' on':''}" data-col="u">유찰 대수</button><button class="chip${st.color==='ix'?' on':''}" data-col="ix">수급지수</button></span></div>
+      <p class="note" style="margin:-4px 0 8px">${st.color==='ix'?`칸의 큰 숫자 = 수급지수(칸 낙찰률 ÷ 경매장 전체 낙찰률 ${pct(C.R)}, 경매장 평균 = 1.00). 1.00보다 크면 평균보다 잘 팔려 차가 모자란 칸(파랑), 작으면 덜 팔려 차가 남는 칸(빨강)입니다. 예: 1.20 = 평균보다 20% 더 팔림, 0.80 = 20% 덜 팔림. 아래는 낙찰률과 회당 출품 · 유찰 대수입니다.`:st.color==='n'?'칸의 큰 숫자 = 회당 출품 대수, 그 아래는 회당 낙찰 대수와 낙찰률. 붉은색이 짙을수록 출품이 많은 칸입니다.':st.color==='u'?'칸의 큰 숫자 = 회당 유찰 대수(출품 − 낙찰), 그 아래는 회당 출품 대수와 낙찰률. 붉은색이 짙을수록 안 팔리고 남는 차가 많은 칸입니다.':'칸의 큰 숫자 = 회당 낙찰 대수, 그 아래는 회당 출품 대수와 낙찰률. 붉은색이 짙을수록 낙찰이 많은 주력 칸입니다. 칸 안의 표시는 진단입니다.'}</p>
+      <div class="note" style="background:var(--soft);border-radius:8px;padding:8px 12px;margin-bottom:8px"><b style="color:var(--ink)">수급지수란</b> 칸 낙찰률 ÷ 경매장 전체 낙찰률(현재 ${pct(C.R)}). <b>1.00 = 경매장 평균</b>, 1.10 이상 = 평균보다 10% 넘게 잘 팔림(차량 공급 부족), 0.90 이하 = 10% 넘게 덜 팔림(차가 남음, 원인은 회원 부족 또는 값이 비쌈으로 진단). 표 · 칸 상세 · 회의 화면의 지수는 모두 이 값입니다.</div>
       <div class="scroll">${heat(C)}</div>
-      <div class="legend">${st.color==='ix'?'<span><i class="c-o2"></i>평균보다 5%p 넘게 낮음 (차가 남음)</span><span><i class="c-o1"></i>1.5~5%p 낮음</span><span><i class="c-e"></i>평균 수준 (±1.5%p)</span><span><i class="c-s1"></i>1.5~5%p 높음</span><span><i class="c-s2"></i>5%p 넘게 높음 (차량 공급 부족)</span><span>빗금 = 회당 출품 '+MIN_CELL+'대 미만</span>':'<span>적음</span>'+RED.map(c=>`<i style="background:${c};margin:0 -2px"></i>`).join('')+`<span>많음 (${st.color==='n'?'출품':st.color==='u'?'유찰':'낙찰'} 대수, 가장 많은 칸 대비)</span>`}</div></div>
+      <div class="legend">${st.color==='ix'?'<span><i class="c-o2"></i>0.90 이하 차가 남음</span><span><i class="c-o1"></i>0.90~0.97</span><span><i class="c-e"></i>0.97~1.03 평균 수준</span><span><i class="c-s1"></i>1.03~1.10</span><span><i class="c-s2"></i>1.10 이상 차량 공급 부족</span><span>빗금 = 회당 출품 '+MIN_CELL+'대 미만</span>':'<span>적음</span>'+RED.map(c=>`<i style="background:${c};margin:0 -2px"></i>`).join('')+`<span>많음 (${st.color==='n'?'출품':st.color==='u'?'유찰':'낙찰'} 대수, 가장 많은 칸 대비)</span>`}</div></div>
       <div class="panel p-rank"><div class="hd"><h2>먼저 볼 ${st.f2==='cell'?'칸':'차종'}</h2><span><button class="chip${st.f2==='cell'?' on':''}" data-f2="cell">칸</button> <button class="chip${st.f2==='model'?' on':''}" data-f2="model">차종</button></span></div>${f2table(C,Cp)}</div>
     </div>${detail(C,Cp)}</div>`}
   else if(st.tab==='meet')h=meet(C,Cp);else if(st.tab==='exp')h=expo(C);else h=rule();
