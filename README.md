@@ -13,6 +13,7 @@
 | 출품 및 낙찰 추이 | Auction-dashboard | `trend/` |
 | 수출시장 환경모니터 | 이 저장소 `market/index.html` (원본 KAA_ClaudeCode 일보/mkt) | `market/` |
 | 국내 경매장 시장 | 이 저장소 `kmarket/index.html` (원본 KAA_ClaudeCode 시장/build_market.py) | `kmarket/` |
+| 매칭 테이블 | 이 저장소 `matching/index.html` (원본 KAA_ClaudeCode 매칭테이블/tools/mt_data.py · mt_build.py) | `matching/` |
 
 - 화면 구성(2026-11-11 포털형): 왼쪽 고정 메뉴(보고·분석·시장), 상단 바(날짜·다음 경매), 보고서는 ERP 안에서 보기(최신본·지난 보고서 탭, 새 창 열기), 폰은 ☰ 메뉴
 - 홈 상단: 일간보고 상단 카드 3개(출품대수·낙찰대수 예상·매출이익 예상)를 최신 일보에서 그대로 읽어 표시

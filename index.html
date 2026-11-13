@@ -8,7 +8,7 @@
 <style>
 :root{--ink:#141B22;--bg:#F3F5F8;--card:#fff;--mut:#5B6773;--line:#E2E7EC;--blue:#1F5FBF;--soft:#F1F5FA;--ok:#1E7B47;--okbg:#E6F4EA;--bad:#B3261E;--badbg:#FBE9E7;
 --side:#14202B;--side2:#1C2B38;--sideTx:#C9D3DC;--sideMut:#7F8E9B;
---c-daily:#1F5FBF;--c-weekly:#1E7B47;--c-monthly:#6B3FA0;--c-member:#E07B39;--c-trend:#2F5D8A;--c-market:#0E7C86;--c-kmarket:#8A5A00}
+--c-daily:#1F5FBF;--c-weekly:#1E7B47;--c-monthly:#6B3FA0;--c-member:#E07B39;--c-trend:#2F5D8A;--c-market:#0E7C86;--c-kmarket:#8A5A00;--c-matching:#B3423A}
 @media (prefers-color-scheme:dark){:root{--ink:#E6EBF0;--bg:#0E1318;--card:#172029;--mut:#98A4AF;--line:#26313B;--blue:#6E9EE8;--soft:#1C2733;--ok:#5CC48A;--okbg:#17321F;--bad:#F2928A;--badbg:#3A1C1A;--side:#0A0F14;--side2:#151E27}}
 *{box-sizing:border-box}html,body{margin:0;height:100%;background:var(--bg);color:var(--ink)}
 body{font-family:"Pretendard Variable",Pretendard,-apple-system,system-ui,"Malgun Gothic",sans-serif;font-variant-numeric:tabular-nums;word-break:keep-all;overflow-wrap:anywhere;-webkit-text-size-adjust:100%}
@@ -112,7 +112,8 @@ var I={
  member:'<circle cx="9" cy="8" r="3"/><path d="M3 20a6 6 0 0 1 12 0M16 11a3 3 0 1 0 0-6M21 20a6 6 0 0 0-4-5.6"/>',
  trend:'<path d="M3 17l6-6 4 4 8-8M15 7h6v6"/>',
  globe:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/>',
- market:'<path d="M3 21h18M5 21V10l7-5 7 5v11M9 21v-6h6v6"/>'};
+ market:'<path d="M3 21h18M5 21V10l7-5 7 5v11M9 21v-6h6v6"/>',
+ grid:'<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>'};
 var ico=function(k){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'+I[k]+'</svg>';};
 var MODS=[
   {key:"daily",  grp:"보고",name:"일간보고",          dir:"daily",  src:"Daily-dashboard",   c:"var(--c-daily)",  ic:"day"},
@@ -120,6 +121,7 @@ var MODS=[
   {key:"monthly",grp:"보고",name:"월간보고",          dir:"monthly",src:"Month-dashboard",   c:"var(--c-monthly)",ic:"month"},
   {key:"member", grp:"분석",name:"회원사 분석",       dir:"member", src:"Country-dashboard", c:"var(--c-member)", ic:"member", subSel:"small"},
   {key:"trend",  grp:"분석",name:"출품 및 낙찰 추이", dir:"trend",  src:"Auction-dashboard", c:"var(--c-trend)",  ic:"trend"},
+  {key:"matching",grp:"분석",name:"매칭 테이블",      dir:"matching",self:true,             c:"var(--c-matching)",ic:"grid", subSel:".sub"},
   {key:"market", grp:"시장",name:"수출시장 환경모니터",dir:"market", self:true,              c:"var(--c-market)", ic:"globe", subSel:".hd p"},
   {key:"kmarket",grp:"시장",name:"국내 경매장 시장", dir:"kmarket",self:true,              c:"var(--c-kmarket)",ic:"market",subSel:".sub"}
 ];
@@ -172,6 +174,7 @@ function brief(m,st){
   if(m.key==="trend"&&(x=st.match(/(\d{4})년\s*(\d{1,2})월\s*~\s*(\d{4})년\s*(\d{1,2})월\s*(\d{1,2})일.*?(\d+회차)/)))return x[1].slice(2)+"."+x[2]+" ~ "+x[3].slice(2)+"."+x[4]+"."+x[5]+" · "+x[6];
   if(m.key==="member"&&(x=st.match(/수출\s*([\d,]+)개사\s*·\s*내수\s*([\d,]+)개사.*?(\d{1,2}\/\d{1,2})\s*~\s*(\d{1,2}\/\d{1,2})/)))return"수출 "+x[1]+" · 내수 "+x[2]+"개사 · "+x[3]+"~"+x[4];
   if(m.key==="market"&&(x=st.match(/확인 기준일\s*(\d{4})\.(\d{2})\.(\d{2})/)))return"규제 확인 "+(+x[2])+"/"+(+x[3]);
+  if(m.key==="matching"&&(x=st.match(/최근\s*(\d+)회차\(([\d\/]+)~([\d\/]+)\).*?낙찰률\s*([\d.]+%)/)))return"최근 "+x[1]+"회차 · "+x[2]+"~"+x[3]+" · 낙찰률 "+x[4];
   if(m.key==="kmarket"&&(x=st.match(/(\d{4})년\s*(\d{1,2})월\s*~\s*(\d{4})년\s*(\d{1,2})월/)))return"협회 9개사 · "+x[1].slice(2)+"."+x[2]+" ~ "+x[3].slice(2)+"."+x[4];
   return st.split("·")[0].trim().slice(0,28);
 }
