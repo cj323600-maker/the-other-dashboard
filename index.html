@@ -137,7 +137,7 @@ function renderAuction(t){
   var d=null,m=t&&t.match(/경매일\s*(\d{1,2})\/(\d{1,2})/),t0=new Date(now.getFullYear(),now.getMonth(),now.getDate());
   if(m){d=new Date(now.getFullYear(),+m[1]-1,+m[2]);if(d<t0)d=null;}
   if(!d){d=new Date(t0);d.setDate(d.getDate()+((3-d.getDay()+7)%7));}
-  var dd=Math.round((d-t0)/86400000);AUC={d:d,dd:dd};
+  var dd=0,x=new Date(t0);while(x<d){x.setDate(x.getDate()+1);var wd=x.getDay();if(wd!==0&&wd!==6)dd++;}AUC={d:d,dd:dd};// 2026-11-14: D-n은 일보와 같은 영업일(주말 제외) 기준
   document.getElementById("auction").innerHTML="다음 경매 <b>"+md(d)+"</b><span class=\"dday\">"+(dd===0?"D-DAY":"D-"+dd)+"</span>";
 }
 renderAuction("");
@@ -174,7 +174,7 @@ function brief(m,st){
   if(m.key==="trend"&&(x=st.match(/(\d{4})년\s*(\d{1,2})월\s*~\s*(\d{4})년\s*(\d{1,2})월\s*(\d{1,2})일.*?(\d+회차)/)))return x[1].slice(2)+"."+x[2]+" ~ "+x[3].slice(2)+"."+x[4]+"."+x[5]+" · "+x[6];
   if(m.key==="member"&&(x=st.match(/수출\s*([\d,]+)개사\s*·\s*내수\s*([\d,]+)개사.*?(\d{1,2}\/\d{1,2})\s*~\s*(\d{1,2}\/\d{1,2})/)))return"수출 "+x[1]+" · 내수 "+x[2]+"개사 · "+x[3]+"~"+x[4];
   if(m.key==="market"&&(x=st.match(/확인 기준일\s*(\d{4})\.(\d{2})\.(\d{2})/)))return"규제 확인 "+(+x[2])+"/"+(+x[3]);
-  if(m.key==="matching"&&(x=st.match(/최근\s*(\d+)회차\(([\d\/]+)~([\d\/]+)\).*?낙찰률\s*([\d.]+%)/)))return"최근 "+x[1]+"회차 · "+x[2]+"~"+x[3]+" · 낙찰률 "+x[4];
+  if(m.key==="matching"&&(x=st.match(/(최근|전체)\s*(\d+)회차\(([\d\/]+)~([\d\/]+)\).*?낙찰률\s*([\d.]+%)/)))return x[1]+" "+x[2]+"회차 · "+x[3]+"~"+x[4]+" · 낙찰률 "+x[5];
   if(m.key==="kmarket"&&(x=st.match(/(\d{4})년\s*(\d{1,2})월\s*~\s*(\d{4})년\s*(\d{1,2})월/)))return"협회 9개사 · "+x[1].slice(2)+"."+x[2]+" ~ "+x[3].slice(2)+"."+x[4];
   return st.split("·")[0].trim().slice(0,28);
 }
@@ -236,7 +236,12 @@ function menu(o){side.classList.toggle("open",o);scrim.classList.toggle("open",o
 document.getElementById("burger").onclick=function(){menu(!side.classList.contains("open"));};scrim.onclick=function(){menu(false);};
 window.addEventListener("hashchange",function(){menu(false);route(true);window.scrollTo(0,0);});
 route(true);
-Promise.all(MODS.map(loadLive)).then(function(){route(false);});
+function selfTime(m){// 2026-11-14: 포털 저장소 안 메뉴는 배포 때마다 Last-Modified가 함께 바뀌므로 그 파일의 마지막 커밋 시각을 씀
+  var ck="erp_ct_"+m.key;try{var c=JSON.parse(sessionStorage.getItem(ck)||"null");if(c&&Date.now()-c.t<CACHE_MS)return Promise.resolve(c.v);}catch(e){}
+  return fetch("https://api.github.com/repos/"+CFG.owner+"/"+CFG.repo+"/commits?path="+encodeURIComponent(m.dir+"/index.html")+"&sha="+CFG.branch+"&per_page=1",{headers:{Accept:"application/vnd.github+json"}})
+   .then(function(r){if(!r.ok)throw 0;return r.json();}).then(function(j){var v=j&&j[0]?Date.parse(j[0].commit.committer.date):0;try{sessionStorage.setItem(ck,JSON.stringify({t:Date.now(),v:v}));}catch(e){}return v;}).catch(function(){return 0;});
+}
+Promise.all(MODS.map(function(m){return loadLive(m).then(function(){if(!m.self)return;return selfTime(m).then(function(v){if(v&&LIVE[m.key])LIVE[m.key].lm=v;});});})).then(function(){route(false);});
 loadTree().then(function(p){DATA=group(p);}).catch(function(e){ERR=e.message||"목록 조회 실패";}).then(function(){route(false);});
 })();
 </script>

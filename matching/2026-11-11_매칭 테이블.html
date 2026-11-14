@@ -122,7 +122,7 @@ table.t td{overflow-wrap:anywhere}
 </style></head><body>
 <div class="wrap">
   <div class="top">
-    <div><h1>매칭 테이블</h1><p class="sub" id="sub">최근 45회차(1/7~11/11) · 출품 92,221대 · 전체 낙찰률 47.9% · 데이터 2026.11.11 경매까지</p></div>
+    <div><h1>매칭 테이블</h1><p class="sub" id="sub">전체 45회차(1/7~11/11) · 출품 92,221대 · 전체 낙찰률 47.9% · 데이터 2026.11.11 경매까지</p></div>
     <span class="conf">[대외비]</span>
   </div>
   <div class="panel filters" id="filters"></div>
@@ -333,7 +333,7 @@ function rule(){return`<div class="panel"><h2>계산 기준</h2><div class="scro
 </tbody></table></div></div>`}
 function render(){syncFilters();const C=ctx(0),Cp=ctx(1);
   if(st.sel===undefined||st.sel===null&&!st.touched){const a0=ranked(C).over[0];if(a0)st.sel={y:a0.y,k:a0.kk,p:a0.p};st.touched=true}
-  $('sub').textContent=`${st.r1===NR-1?'최근':'선택'} ${C.weeks}회차(${md(D.rounds[C.r0])}~${md(D.rounds[C.r1])}) · 출품 ${f0(C.n)}대 · 전체 낙찰률 ${pct(C.R)} · 데이터 ${D.rounds[NR-1].replace(/-/g,'.')} 경매까지`;
+  $('sub').textContent=`${st.r0===0&&st.r1===NR-1?'전체':st.r1===NR-1?'최근':'선택'} ${C.weeks}회차(${md(D.rounds[C.r0])}~${md(D.rounds[C.r1])}) · 출품 ${f0(C.n)}대 · 전체 낙찰률 ${pct(C.R)} · 데이터 ${D.rounds[NR-1].replace(/-/g,'.')} 경매까지`;
   let h='';
   if(st.tab==='main'){const a=ranked(C);const o=a.over[0],s=a.short[0];
     h=`<div class="kpis"><div class="kpi"><div class="k">회당 출품</div><div class="v num">${f0(C.n/C.weeks)}<small> 대</small></div><div class="d">기간 ${f0(C.n)}대 · ${C.weeks}회차</div></div>
