@@ -156,11 +156,6 @@ const cellName=(y,k,p)=>YL[y]+' / 주행거리 '+(k>=0?KL[k]:'전체')+' / 시�
 function ranked(C){const g=group(C.I,i=>{const p=PB(D.s[i]);return p<0?null:YB(D.y[i])+'|'+KB(D.k[i])+'|'+p});const a=[];
   for(const [k,I] of g){const s=stat(I,C.R,C.weeks,C.ref);if(s.per<MIN_CELL)continue;const [y,kk,p]=k.split('|').map(Number);a.push({k,y,kk,p,I,s})}
   return{over:a.filter(x=>x.s.opp<0).sort((x,y)=>x.s.opp-y.s.opp).slice(0,5),short:a.filter(x=>x.s.opp>0).sort((x,y)=>y.s.opp-x.s.opp).slice(0,5)}}
-function spark(I,C){const g=group(I,i=>RR[i]),ga=group(C.I,i=>RR[i]);const pts=[];for(let r=Math.max(C.r0,C.r1-7);r<=C.r1;r++){const a=g.get(r)||[],b=ga.get(r)||[];if(a.length<5||!b.length){pts.push(null);continue}
-    const ra=a.filter(i=>D.we[i]).length/a.length,rb=b.filter(i=>D.we[i]).length/b.length;pts.push(rb?ra/rb-1:null)}
-  const W=70,H=22,n=pts.length;if(n<2)return'';const v=pts.filter(x=>x!==null);if(v.length<2)return'';const mx=Math.max(0.3,...v.map(Math.abs));let d='',pen=false;
-  pts.forEach((p,i)=>{if(p===null){pen=false;return}const x=n===1?W/2:i*(W-4)/(n-1)+2,y=H/2-p/mx*(H/2-2);d+=(pen?'L':'M')+x.toFixed(1)+','+y.toFixed(1);pen=true});
-  return`<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="수급지수 추이"><line x1="0" y1="${H/2}" x2="${W}" y2="${H/2}" stroke="#c9d1d9" stroke-dasharray="2 2"/><path d="${d}" fill="none" stroke="#16202a" stroke-width="1.5"/></svg>`}
 /* ---------- 화면 ---------- */
 const RS=(()=>{const a=[];let o=0;for(let r=0;r<NR;r++){let w=0;for(let i=o;i<o+D.cnt[r];i++)if(D.we[i])w++;a.push({n:D.cnt[r],w});o+=D.cnt[r]}return a})();
 let raf=0;const later=()=>{if(raf)return;raf=requestAnimationFrame(()=>{raf=0;render()})};
@@ -203,10 +198,10 @@ function heat(C){const byP=st.axis==='p',cols=byP?PL:KL,fine=cols.length>4;const
 function f2table(C,Cp){let h='';
   if(st.f2==='cell'){const a=ranked(C),b=ranked(Cp),rep=new Set([...b.over.map(x=>'o'+x.k),...b.short.map(x=>'s'+x.k)]);
     const row=(x,side)=>{const [dl,dc]=diag(x.s,true),sel=st.sel&&st.sel.y===x.y&&st.sel.k===x.kk&&st.sel.p===x.p;
-      return`<tr class="click${rep.has(side+x.k)?' rep':''}${sel?' sel':''}" data-y="${x.y}" data-k="${x.kk}" data-p="${x.p}"><td>${cellName(x.y,x.kk,x.p)}${rep.has(side+x.k)?' <span class="muted" style="font-weight:500;font-size:11.5px">2주 연속</span>':''}</td><td>${f0(x.s.per)}</td><td>${f0(x.s.un_/C.weeks)}</td><td>${pct(x.s.rate)}</td><td class="${x.s.idx<0?'t-o':'t-s'}">${ix2(x.s.idx)}</td><td>${sg(x.s.opp)}대</td><td>${spark(x.I,C)}</td><td><span class="pill ${dc}">${dl}</span></td></tr>`};
-    h=`<div class="scroll"><table class="t" style="min-width:640px"><thead><tr><th>칸 (최초등록 연도 / 주행거리 / 시작가)</th><th>회당 출품 (대)</th><th>회당 유찰 (대)</th><th>낙찰률</th><th>수급지수</th><th>기회 (회당)</th><th>수급지수 추이</th><th>진단</th></tr></thead><tbody>
-    <tr><td colspan="8" style="text-align:left;font-weight:700;color:var(--over);background:var(--over-soft)">차가 남는 칸 — 평균만큼 팔렸다면 더 팔렸을 대수 순</td></tr>${a.over.map(x=>row(x,'o')).join('')||'<tr><td colspan="7" class="muted" style="text-align:left">해당 칸 없음</td></tr>'}
-    <tr><td colspan="8" style="text-align:left;font-weight:700;color:var(--short);background:var(--short-soft)">차가 모자라는 칸 — 평균보다 더 팔린 대수 순</td></tr>${a.short.map(x=>row(x,'s')).join('')||'<tr><td colspan="7" class="muted" style="text-align:left">해당 칸 없음</td></tr>'}</tbody></table></div>`}
+      return`<tr class="click${rep.has(side+x.k)?' rep':''}${sel?' sel':''}" data-y="${x.y}" data-k="${x.kk}" data-p="${x.p}"><td>${cellName(x.y,x.kk,x.p)}${rep.has(side+x.k)?' <span class="muted" style="font-weight:500;font-size:11.5px">2주 연속</span>':''}</td><td>${f0(x.s.per)}</td><td>${f0(x.s.un_/C.weeks)}</td><td>${pct(x.s.rate)}</td><td class="${x.s.idx<0?'t-o':'t-s'}">${ix2(x.s.idx)}</td><td>${sg(x.s.opp)}대</td><td><span class="pill ${dc}">${dl}</span></td></tr>`};
+    h=`<div class="scroll"><table class="t" style="min-width:640px"><thead><tr><th>칸 (최초등록 연도 / 주행거리 / 시작가)</th><th>회당 출품 (대)</th><th>회당 유찰 (대)</th><th>낙찰률</th><th>수급지수</th><th>기회 (회당)</th><th>진단</th></tr></thead><tbody>
+    <tr><td colspan="7" style="text-align:left;font-weight:700;color:var(--over);background:var(--over-soft)">차가 남는 칸 — 평균만큼 팔렸다면 더 팔렸을 대수 순</td></tr>${a.over.map(x=>row(x,'o')).join('')||'<tr><td colspan="7" class="muted" style="text-align:left">해당 칸 없음</td></tr>'}
+    <tr><td colspan="7" style="text-align:left;font-weight:700;color:var(--short);background:var(--short-soft)">차가 모자라는 칸 — 평균보다 더 팔린 대수 순</td></tr>${a.short.map(x=>row(x,'s')).join('')||'<tr><td colspan="7" class="muted" style="text-align:left">해당 칸 없음</td></tr>'}</tbody></table></div>`}
   else{const g=group(C.I,i=>{const p=PB(D.s[i]);return p<0?null:YB(D.y[i])+'|'+KB(D.k[i])+'|'+p+'|'+D.m[i]});const a=[];
     for(const [k,I] of g){if(I.length<MIN_COMBO)continue;const s=stat(I,C.R,C.weeks,C.ref),[y,kk,p,m]=k.split('|').map(Number);a.push({y,kk,p,m,s})}
     const o=a.filter(x=>x.s.opp<0).sort((x,y)=>x.s.opp-y.s.opp).slice(0,5),sh=a.filter(x=>x.s.opp>0).sort((x,y)=>y.s.opp-x.s.opp).slice(0,5);
