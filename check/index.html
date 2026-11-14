@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>보고서 점검</title>
+<title>보고서 점검 프로그램</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css">
 <style>
 :root{--bg:#F4F6F8;--card:#fff;--ink:#16202A;--mut:#5B6876;--line:#E3E8EC;--ok:#1E7B47;--ok-s:#E6F4EC;--bad:#B42318;--bad-s:#FDECEA;--wait:#8A5A00;--wait-s:#FFF4DE}
@@ -30,101 +30,71 @@ h2{font-size:16px;margin:22px 0 8px}h2 small{font-size:12.5px;color:var(--mut);f
 .note{font-size:12px;color:var(--mut);margin-top:8px}
 .err{color:var(--bad);font-size:13px}
 @media(max-width:760px){.sum{grid-template-columns:repeat(2,minmax(0,1fr))}.row{grid-template-columns:minmax(0,1fr) auto}.vals{grid-column:1/-1}.w{padding:16px 12px 40px}}
+.live{display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);border-radius:999px;padding:5px 12px;font-size:12.5px;font-weight:700;margin-top:10px}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--ok);box-shadow:0 0 0 0 rgba(30,123,71,.5);animation:pl 1.8s infinite}.dot.bad{background:var(--bad);animation-name:pr}.dot.wait{background:var(--wait)}
+@keyframes pl{0%{box-shadow:0 0 0 0 rgba(30,123,71,.55)}70%{box-shadow:0 0 0 8px rgba(30,123,71,0)}100%{box-shadow:0 0 0 0 rgba(30,123,71,0)}}
+@keyframes pr{0%{box-shadow:0 0 0 0 rgba(180,35,24,.55)}70%{box-shadow:0 0 0 8px rgba(180,35,24,0)}100%{box-shadow:0 0 0 0 rgba(180,35,24,0)}}
+.live .m{font-weight:500;color:var(--mut)}
+table.h{width:100%;border-collapse:collapse;font-size:13px}table.h th,table.h td{padding:8px 6px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}table.h th{font-size:12px;color:var(--mut);font-weight:600}
+table.h td.n{white-space:nowrap;font-variant-numeric:tabular-nums}
+@media(max-width:560px){table.h .hide{display:none}}
 </style>
 </head>
 <body><div class="w">
-<div class="top"><div><h1>보고서 점검</h1><div class="sub" id="sub">ERP 게시본 8개의 갱신 상태와 공통 숫자를 열 때마다 자동으로 대조 · 기준 = 출품 및 낙찰 추이의 회차 자료</div></div><span class="conf">[대외비]</span></div>
+<div class="top"><div><h1>보고서 점검 프로그램</h1><div class="sub" id="sub">ERP 게시본 8개의 갱신 상태와 공통 숫자를 자동 대조 · 화면을 연 동안 1분마다 게시본 변경을 감시해 바뀌면 다시 점검 · 파일 업데이트(배포) 때와 매시 정각에도 자동 점검</div></div><span class="conf">[대외비]</span></div>
+<div class="live" id="live"><span class="dot" id="dot"></span><span id="lv">점검 시작</span><span class="m" id="lm"></span></div>
 <div class="sum" id="sum"><div class="k"><div class="l">불러오는 중</div><div class="v">–</div></div></div>
 <h2>갱신 상태 <small>각 보고서의 데이터 마지막 날짜 vs 마땅히 반영돼 있어야 할 날짜</small></h2>
 <div class="box" id="fresh"></div>
 <h2>숫자 일치 <small>같은 숫자가 나오는 보고서끼리 대조 · 기준값은 출품 및 낙찰 추이 회차 자료 합산</small></h2>
 <div class="box" id="nums"></div>
+<h2>자동 점검 기록 <small>파일 업데이트(배포)와 매시 정각에 GitHub에서 자동 실행 · 최근 30회</small></h2>
+<div class="box" style="padding:4px 12px"><table class="h"><thead><tr><th>점검 시각</th><th>계기</th><th>결과</th><th class="hide">불일치 · 갱신 필요 항목</th></tr></thead><tbody id="hist"><tr><td colspan="4">불러오는 중</td></tr></tbody></table></div>
 <p class="note" id="foot"></p>
 </div>
+<script src="engine.js"></script>
 <script>
 (function(){
 "use strict";
-var H="https://cj323600-maker.github.io/";
-var SRC={daily:["일간보고","Daily-dashboard/"],weekly:["주간보고","week-dashboard/"],monthly:["월간보고","Month-dashboard/"],member:["회원사 분석","Country-dashboard/"],
-  trend:["출품 및 낙찰 추이","Auction-dashboard/"],market:["수출시장 환경모니터","the-other-dashboard/market/"],kmarket:["국내 경매장 시장","the-other-dashboard/kmarket/"],matching:["매칭 테이블","the-other-dashboard/matching/"]};
-var $=function(i){return document.getElementById(i);};
+var $=function(i){return document.getElementById(i);},E=RCHECK;
 var esc=function(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});};
-var num=function(s){return s==null?null:+String(s).replace(/,/g,"");};
-var f0=function(v){return v==null?"–":Math.round(v).toLocaleString("ko-KR");};
-var pad=function(n){return(n<10?"0":"")+n;};
-var iso=function(d){return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());};
-var md=function(s){return s?(+s.slice(5,7))+"/"+(+s.slice(8,10)):"–";};
-var WK="일월화수목금토";
-function text(html){var d=new DOMParser().parseFromString(html.replace(/</g," <"),"text/html");// 칸 사이 공백 확보
-  d.querySelectorAll("script,style").forEach(function(e){e.remove();});return (d.body?d.body.textContent:"").replace(/\s+/g," ");}
-function load(k){return fetch(H+SRC[k][1]+"?t="+Date.now(),{cache:"no-store"}).then(function(r){if(!r.ok)throw new Error(r.status);return r.text();});}
-var now=new Date(),today=new Date(now.getFullYear(),now.getMonth(),now.getDate());
-function addBiz(d,k){var x=new Date(d);while(k>0){x.setDate(x.getDate()+1);if(x.getDay()%6)k--;}return x;}
-function prevBiz(d){var x=new Date(d);do{x.setDate(x.getDate()-1);}while(x.getDay()===0||x.getDay()===6);return x;}
-// 마땅히 끝났어야 할 최근 경매일: 오늘이 수요일이고 19시 전이면 지난주 수요일
-function lastAuction(){var x=new Date(today),back=(x.getDay()-3+7)%7;if(back===0&&now.getHours()<19)back=7;x.setDate(x.getDate()-back);return x;}
-var R=[],F=[];
-function judge(vals,tol){var v=vals.filter(function(x){return x.v!=null;}).map(function(x){return x.v;});if(v.length<2)return"info";var mx=Math.max.apply(null,v),mn=Math.min.apply(null,v);return(mx-mn)<=(tol||0)+1e-9?"ok":"bad";}
-function addNum(t,sub,vals,fmt,tol,msg){R.push({t:t,sub:sub,vals:vals,fmt:fmt||f0,j:judge(vals,tol),msg:msg||""});}
-function addFresh(nm,last,need,state,why){F.push({nm:nm,last:last,need:need,j:state,why:why});}
-var LBL={ok:"일치",bad:"불일치",wait:"갱신 대기",info:"참고"};var FL={ok:"최신",bad:"갱신 필요",wait:"갱신 대기",info:"참고"};
-function render(){
-  var c={ok:0,bad:0,wait:0,info:0};R.concat(F).forEach(function(x){if(c[x.j]!=null)c[x.j]++;});
-  $("sum").innerHTML=[["점검 항목"+(c.info?" (참고 "+c.info+"건 포함)":""),R.length+F.length,"개",""],["일치 · 최신",c.ok,"건","ok"],["불일치 · 갱신 필요",c.bad,"건",c.bad?"bad":"ok"],["갱신 대기",c.wait,"건",c.wait?"wait":""]]
+var pad=function(n){return(n<10?"0":"")+n;},hm=function(d){return pad(d.getHours())+":"+pad(d.getMinutes())+":"+pad(d.getSeconds());};
+var LBL={ok:"일치",bad:"불일치",wait:"갱신 대기",info:"참고"},FL={ok:"최신",bad:"갱신 필요",wait:"갱신 대기",info:"참고"};
+var fmt=function(v,dec){return v==null?"찾지 못함":(dec?v.toFixed(dec):Math.round(v).toLocaleString("ko-KR"));};
+var last=null,LM={},busy=false,next=60,runs=0;
+function render(x){
+  var c=x.c;
+  $("sum").innerHTML=[["점검 항목"+(c.info?" (참고 "+c.info+"건 포함)":""),x.R.length+x.F.length,"개",""],["일치 · 최신",c.ok,"건","ok"],["불일치 · 갱신 필요",c.bad,"건",c.bad?"bad":"ok"],["갱신 대기",c.wait,"건",c.wait?"wait":""]]
     .map(function(a){return'<div class="k '+a[3]+'"><div class="l">'+a[0]+'</div><div class="v">'+a[1]+'<small>'+a[2]+'</small></div></div>';}).join("");
-  $("fresh").innerHTML=F.map(function(x){return'<div class="row"><div class="t">'+esc(x.nm)+'<small>'+esc(x.why)+'</small></div><div class="vals"><span class="src">데이터 마지막 <b>'+esc(x.last)+'</b></span><span class="src">기대 <b>'+esc(x.need)+'</b></span></div><span class="pill '+x.j+'">'+FL[x.j]+'</span></div>';}).join("");
-  $("nums").innerHTML=R.map(function(x){return'<div class="row"><div class="t">'+esc(x.t)+'<small>'+esc(x.sub)+(x.msg?' · '+esc(x.msg):'')+'</small></div><div class="vals">'+x.vals.map(function(v){return'<span><span class="src">'+esc(v.s)+'</span> <b>'+(v.v==null?"찾지 못함":x.fmt(v.v))+'</b></span>';}).join("")+'</div><span class="pill '+x.j+'">'+LBL[x.j]+'</span></div>';}).join("");
-  $("foot").textContent="점검 시각 "+now.getFullYear()+"."+pad(now.getMonth()+1)+"."+pad(now.getDate())+" "+pad(now.getHours())+":"+pad(now.getMinutes())+" · 게시본을 직접 내려받아 대조(캐시 무시). 기대 날짜: 경매 결과 반영 보고서는 직전 경매일(수요일 19시 이후), 일간보고는 직전 영업일, 주간보고는 목요일 16시 재무 확정 다음 날부터, 월간보고는 매월 6일부터 전월. 매칭 테이블 낙찰은 경매운영팀 시뮬레이터 자료라 공식 실적과 차이가 있어 갱신 날짜만 본다.";
+  $("fresh").innerHTML=x.F.map(function(r){return'<div class="row"><div class="t">'+esc(r.t)+'<small>'+esc(r.sub)+'</small></div><div class="vals"><span class="src">데이터 마지막 <b>'+esc(r.last)+'</b></span><span class="src">기대 <b>'+esc(r.need)+'</b></span></div><span class="pill '+r.j+'">'+FL[r.j]+'</span></div>';}).join("");
+  $("nums").innerHTML=x.R.map(function(r){return'<div class="row"><div class="t">'+esc(r.t)+'<small>'+esc(r.sub)+'</small></div><div class="vals">'+r.vals.map(function(v){return'<span><span class="src">'+esc(v.s)+'</span> <b>'+fmt(v.v,r.dec)+'</b></span>';}).join("")+'</div><span class="pill '+r.j+'">'+LBL[r.j]+'</span></div>';}).join("");
+  if(x.err.length)$("sum").insertAdjacentHTML("beforeend",'<div class="k bad" style="grid-column:1/-1"><div class="l">불러오지 못한 보고서</div><div class="v err" style="font-size:15px">'+esc(x.err.join(", "))+'</div></div>');
 }
-Promise.all(Object.keys(SRC).map(function(k){return load(k).then(function(h){return[k,h];},function(e){return[k,null,e];});})).then(function(arr){
-  var S={},T={},ERR=[];arr.forEach(function(a){if(a[1]==null){ERR.push(SRC[a[0]][0]);return;}S[a[0]]=a[1];T[a[0]]=text(a[1]);});
-  // 기준: 추이 회차 자료 ["26.11.11", 출품, 낙찰, "2026-11-11", 신규 출품, 신규 낙찰]
-  var RD=[];if(S.trend){var re=/\["\d\d\.\d\d\.\d\d", (\d+), (\d+), "(\d{4}-\d\d-\d\d)", \d+, \d+\]/g,m;while((m=re.exec(S.trend)))RD.push({d:m[3],n:+m[1],w:+m[2]});}
-  var LA=iso(lastAuction()),L=RD.length?RD[RD.length-1]:null;
-  var sumMo=function(mo,upto){return RD.filter(function(r){return r.d.slice(0,7)===mo&&(!upto||r.d<=upto);}).reduce(function(a,r){a.n+=r.n;a.w+=r.w;a.k++;return a;},{n:0,w:0,k:0});};
-  var due=iso(addBiz(new Date(LA),1));// 경매 다음 영업일까지는 갱신 대기
-  var freshByDate=function(nm,last,why){var st=!last?"bad":(last>=LA?"ok":(iso(today)<=due&&last>=iso(new Date(new Date(LA).getTime()-7*864e5))?"wait":"bad"));addFresh(nm,last?md(last)+" 경매":"찾지 못함",md(LA)+" 경매",st,why);};
-  // 1) 갱신 상태
-  freshByDate("출품 및 낙찰 추이",L&&L.d,"회차 자료 마지막 경매일");
-  var mm=T.member&&T.member.match(/1\/7~(\d{1,2})\/(\d{1,2})/);freshByDate("회원사 분석",mm?"2026-"+pad(+mm[1])+"-"+pad(+mm[2]):null,"분석 기간 끝 경매일");
-  var mk=T.market&&T.market.match(/수출 회원사 낙찰 [\d,]+ ?대 ?1\/7~(\d{1,2})\/(\d{1,2})/);freshByDate("수출시장 환경모니터",mk?"2026-"+pad(+mk[1])+"-"+pad(+mk[2]):null,"수출 낙찰 누적 기간 끝");
-  var mt=S.matching&&S.matching.match(/데이터 (\d{4})\.(\d\d)\.(\d\d) 경매까지/);freshByDate("매칭 테이블",mt?mt[1]+"-"+mt[2]+"-"+mt[3]:null,"데이터 마지막 경매일");
-  var dd=T.daily&&T.daily.match(/기준일 (\d{4})\.(\d\d)\.(\d\d)/),dn=iso(prevBiz(today));
-  if(today.getDay()%6&&now.getHours()>=19)dn=iso(today);
-  addFresh("일간보고",dd?md(dd[1]+"-"+dd[2]+"-"+dd[3])+"("+WK[new Date(+dd[1],+dd[2]-1,+dd[3]).getDay()]+")":"찾지 못함",md(dn)+" 이후",dd&&(dd[1]+"-"+dd[2]+"-"+dd[3])>=dn?"ok":"bad","기준일 · 평일 19시 이후는 당일, 그 전은 직전 영업일");
-  var wkd=T.weekly&&T.weekly.match(/경매 (\d{1,2})\/(\d{1,2})\(수\)/),wd=wkd?"2026-"+pad(+wkd[1])+"-"+pad(+wkd[2]):null;
-  var thu=new Date(new Date(LA).getTime()+864e5),wneed=(today>thu||(+today===+thu&&now.getHours()>=17))?LA:iso(new Date(new Date(LA).getTime()-7*864e5));
-  addFresh("주간보고",wd?md(wd)+" 경매 주":"찾지 못함",md(wneed)+" 경매 주",!wd?"bad":(wd>=wneed?"ok":"bad"),"재무 확정(경매 다음 날 16시) 반영 후 기대 주차");
-  var mo=T.monthly&&T.monthly.match(/(\d{1,2})월 마감/),pm=new Date(today.getFullYear(),today.getMonth()-(today.getDate()>=6?1:2),1);
-  addFresh("월간보고",mo?mo[1]+"월 마감":"찾지 못함",(pm.getMonth()+1)+"월 마감",mo&&+mo[1]>=pm.getMonth()+1?"ok":"bad","매월 6일부터 전월 마감본");
-  var km=T.kmarket&&T.kmarket.match(/~ (\d{4})년 (\d{1,2})월 · 주간 속보 (\d{4})년 (\d{1,2})월 (\d)일 주/);
-  addFresh("국내 경매장 시장",km?km[2]+"월 월간 · "+km[4]+"월 "+km[5]+"주 속보":"찾지 못함","협회 공개 일정",km?"info":"bad","협회 자료 공개 시점에 따라 갱신(참고)");
-  // 2) 숫자 일치
-  if(L){
-    var wN=T.weekly&&T.weekly.match(/출품 ([\d,]+) \/ [\d,]+대\([\d.]+%\) · 낙찰 ([\d,]+) \/ [\d,]+대/);
-    var dW=wd?RD.filter(function(r){return r.d===wd;})[0]:null;
-    if(dW)addNum("주간보고 회차 출품",md(wd)+" 경매 · 단위 대",[{s:"추이",v:dW.n},{s:"주보",v:wN&&num(wN[1])}]);
-    if(dW)addNum("주간보고 회차 낙찰",md(wd)+" 경매 · 단위 대",[{s:"추이",v:dW.w},{s:"주보",v:wN&&num(wN[2])}]);
-    var mnow=iso(today).slice(0,7),dm=T.daily&&T.daily.match(/월 누적 팀별 성적표.*?합계 ([\d,]+) ([\d,]+) \d+% [\d.]+% ([\d,]+) ([\d,]+) /),dmo=sumMo((dd?dd[1]+"-"+dd[2]:mnow));
-    addNum("이번 달 누적 출품",(dd?(+dd[2])+"월":"")+" · 경매가 지난 회차 합계 · 단위 대",[{s:"추이 합산",v:dmo.n},{s:"일보 월 누적",v:dm&&num(dm[2])}]);
-    addNum("이번 달 누적 낙찰",(dd?(+dd[2])+"월":"")+" · 단위 대",[{s:"추이 합산",v:dmo.w},{s:"일보 월 누적",v:dm&&num(dm[4])}]);
-    var wc=T.weekly&&T.weekly.match(/(\d{1,2})월 누적 출품 ([\d,]+) \/ [\d,]+대\([\d.]+%\) · 낙찰 ([\d,]+) \//);
-    if(wc&&wd){var wm=sumMo(wd.slice(0,7),wd);addNum("주간보고 월 누적 출품 · 낙찰",wc[1]+"월 · "+md(wd)+"까지 · 단위 대",[{s:"추이 출품",v:wm.n},{s:"주보 출품",v:num(wc[2])},{s:"추이 낙찰",v:wm.w},{s:"주보 낙찰",v:num(wc[3])}],f0,0,"");R[R.length-1].j=(wm.n===num(wc[2])&&wm.w===num(wc[3]))?"ok":"bad";}
-    var mN=T.monthly&&T.monthly.match(/출품 ([\d,]+) \/ [\d,]+대\([\d.]+%\) · 낙찰 ([\d,]+) \/ [\d,]+대/);
-    if(mo){var mm2=sumMo("2026-"+pad(+mo[1]));addNum("월간보고 월 출품 · 낙찰",mo[1]+"월 · "+mm2.k+"회차 · 단위 대",[{s:"추이 출품",v:mm2.n},{s:"월보 출품",v:mN&&num(mN[1])},{s:"추이 낙찰",v:mm2.w},{s:"월보 낙찰",v:mN&&num(mN[2])}]);R[R.length-1].j=(mN&&mm2.n===num(mN[1])&&mm2.w===num(mN[2]))?"ok":"bad";}
-    var yr=T.trend&&T.trend.match(/2026년 \(\d{1,2}\/\d{1,2}까지\) (\d+)회 ([\d,]+)대 ([\d,]+)대/),mem=S.member&&S.member.match(/전사 ([\d,]+)대의/);
-    addNum("2026년 누적 낙찰","추이 연도별 요약 = 회차 합산 = 회원사 분석 전사 · 단위 대",[{s:"추이 회차 합산",v:RD.filter(function(r){return r.d>="2026";}).reduce(function(a,r){return a+r.w;},0)},{s:"추이 연도 요약",v:yr&&num(yr[3])},{s:"회원사 분석",v:mem&&num(mem[1])}]);
-    var ex=S.member&&S.member.match(/누적 낙찰대수 ([\d,]+) ?<?[^>]*>? ?대 전사/)||S.member&&S.member.match(/누적 낙찰대수[^\d]{0,40}([\d,]+)/),em=T.market&&T.market.match(/수출 회원사 낙찰 ([\d,]+) ?대/);
-    addNum("2026년 수출 회원사 낙찰","회원사 분석 = 수출시장 환경모니터 · 단위 대",[{s:"회원사 분석",v:ex&&num(ex[1])},{s:"환경모니터",v:em&&num(em[1])}]);
-  }
-  var dg=T.daily&&T.daily.match(/전사 매출이익 재무 확정 .*? ([\d.]+) ([\d.]+) [▲▼]/),wg=T.weekly&&T.weekly.match(/낙찰 [\d,]+ \/ [\d,]+대\([\d.]+%\) · 매출이익 ([\d.]+) \/ [\d.]+억원/);
-  addNum("이번 달 누적 매출이익(재무 확정)","일보 월 누적 전사 = 주보 월 누적 · 단위 억원",[{s:"일보",v:dg&&+dg[2]},{s:"주보",v:wg&&+wg[1]}],function(v){return v.toFixed(2);},0,"주보 주차와 일보 월 누적 회차가 같을 때 비교");
-  var di=T.daily&&T.daily.match(/재무 재고 평가액\((\d+\/\d+)\) ([\d.]+)억원/),wi=T.weekly&&T.weekly.match(/재고 평가액 ([\d.]+)억원 · 1주차|재고 평가액 ([\d.]+)억원/);
-  addNum("재무 재고 평가액","일보 재고 자산 각주 = 주보 · 단위 억원",[{s:"일보"+(di?"("+di[1]+")":""),v:di&&+di[2]},{s:"주보",v:wi&&+(wi[1]||wi[2])}],function(v){return v.toFixed(2);});
-  R=R.filter(function(x){return x.t;});
-  if(ERR.length)$("sub").innerHTML+=' <span class="err">· 불러오지 못한 보고서: '+esc(ERR.join(", "))+'</span>';
-  render();
-}).catch(function(e){$("sum").innerHTML='<div class="k bad"><div class="l">오류</div><div class="v err">'+esc(e.message||e)+'</div></div>';});
+function status(){
+  var c=last?last.c:null,st=!c?"":(c.bad||(last.err&&last.err.length)?"bad":(c.wait?"wait":""));$("dot").className="dot "+st;
+  $("lv").textContent=busy?"점검 중":(!c?"점검 시작":(st==="bad"?"실시간 작동 중 · 불일치 · 갱신 필요 "+c.bad+"건":"실시간 작동 중 · 이상 없음"));
+  $("lm").textContent=last?"마지막 점검 "+hm(new Date(last.at))+" · 게시본 변경 확인 "+next+"초 뒤 · 점검 "+runs+"회":"";
+}
+function check(){if(busy)return;busy=true;status();return E.run(E.browserGet,new Date()).then(function(x){last=x;runs++;render(x);busy=false;status();},function(e){busy=false;$("lv").textContent="점검 오류: "+(e.message||e);});}
+// 게시본 변경 감시: 1분마다 8개 보고서의 Last-Modified를 보고 바뀌면 바로 다시 점검
+function watch(){
+  var ks=Object.keys(E.SRC);
+  Promise.all(ks.map(function(k){return fetch(E.H+E.SRC[k][1]+"?t="+Date.now(),{method:"HEAD",cache:"no-store"}).then(function(r){return[k,r.headers.get("last-modified")||""];},function(){return[k,""];});})).then(function(a){
+    var ch=a.filter(function(x){return LM[x[0]]!==undefined&&x[1]&&LM[x[0]]!==x[1];}).map(function(x){return E.SRC[x[0]][0];});
+    a.forEach(function(x){if(x[1])LM[x[0]]=x[1];});
+    if(ch.length){$("lm").textContent="게시본 변경 감지: "+ch.join(", ")+" · 다시 점검";check();}
+  });
+}
+function hist(){
+  fetch("history.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.json():null;}).then(function(h){
+    var rs=(h&&h.runs||[]).slice(-30).reverse();var TR={push:"파일 업데이트",schedule:"매시 정각",workflow_dispatch:"수동",local:"배포 후 점검"};
+    $("hist").innerHTML=rs.length?rs.map(function(r){var d=new Date(r.at);return'<tr><td class="n">'+(d.getMonth()+1)+"/"+d.getDate()+" "+pad(d.getHours())+":"+pad(d.getMinutes())+'</td><td>'+esc(TR[r.trigger]||r.trigger)+'</td><td><span class="pill '+(r.c.bad?"bad":"ok")+'" style="justify-self:start">'+(r.c.bad?"불일치 · 갱신 필요 "+r.c.bad+"건":"이상 없음")+'</span></td><td class="hide">'+esc((r.bad||[]).join(", ")||"–")+'</td></tr>';}).join(""):'<tr><td colspan="4">아직 기록 없음(첫 자동 점검 뒤 표시)</td></tr>';
+  }).catch(function(){$("hist").innerHTML='<tr><td colspan="4">기록을 불러오지 못함</td></tr>';});
+}
+$("foot").textContent="기대 날짜: 경매 결과 반영 보고서는 직전 경매일(수요일 19시 이후), 일간보고는 직전 영업일, 주간보고는 경매 다음 날 17시 이후 그 주차, 월간보고는 매월 6일부터 전월. 값을 찾지 못한 항목은 불일치로 본다. 매칭 테이블 낙찰은 경매운영팀 시뮬레이터 자료라 갱신 날짜만 본다.";
+check();hist();watch();
+setInterval(function(){next--;if(next<=0){next=60;watch();hist();}status();},1000);
+document.addEventListener("visibilitychange",function(){if(!document.hidden){watch();}});
 })();
 </script>
 </body>

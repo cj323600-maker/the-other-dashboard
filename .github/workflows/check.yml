@@ -1,0 +1,33 @@
+name: 보고서 점검 프로그램
+# 파일 업데이트(이 저장소에 보고서 · 보관본이 올라올 때)와 매시 정각에 게시본 8개를 자동 대조하고 check/history.json에 기록
+on:
+  push:
+    branches: [main]
+    paths-ignore: ['check/history.json', 'check/latest.json']
+  schedule:
+    - cron: '7 * * * *'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: report-check
+  cancel-in-progress: false
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: 게시본 반영 대기(파일 업데이트 때)
+        if: github.event_name == 'push'
+        run: sleep 150
+      - name: 점검
+        run: node check/run.js ${{ github.event_name }}
+      - name: 기록 저장
+        run: |
+          git config user.name "report-check-bot"
+          git config user.email "report-check-bot@users.noreply.github.com"
+          git add check/history.json check/latest.json
+          git diff --cached --quiet || (git commit -m "보고서 점검 자동 기록 [skip ci]" && git pull --rebase -q origin main && git push)
