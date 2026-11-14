@@ -8,7 +8,7 @@
 <style>
 :root{--ink:#141B22;--bg:#F3F5F8;--card:#fff;--mut:#5B6773;--line:#E2E7EC;--blue:#1F5FBF;--soft:#F1F5FA;--ok:#1E7B47;--okbg:#E6F4EA;--bad:#B3261E;--badbg:#FBE9E7;
 --side:#14202B;--side2:#1C2B38;--sideTx:#C9D3DC;--sideMut:#7F8E9B;
---c-daily:#1F5FBF;--c-weekly:#1E7B47;--c-monthly:#6B3FA0;--c-member:#E07B39;--c-trend:#2F5D8A;--c-market:#0E7C86;--c-kmarket:#8A5A00;--c-matching:#B3423A}
+--c-daily:#1F5FBF;--c-weekly:#1E7B47;--c-monthly:#6B3FA0;--c-member:#E07B39;--c-trend:#2F5D8A;--c-market:#0E7C86;--c-kmarket:#8A5A00;--c-matching:#B3423A;--c-check:#4B5563}
 @media (prefers-color-scheme:dark){:root{--ink:#E6EBF0;--bg:#0E1318;--card:#172029;--mut:#98A4AF;--line:#26313B;--blue:#6E9EE8;--soft:#1C2733;--ok:#5CC48A;--okbg:#17321F;--bad:#F2928A;--badbg:#3A1C1A;--side:#0A0F14;--side2:#151E27}}
 *{box-sizing:border-box}html,body{margin:0;height:100%;background:var(--bg);color:var(--ink)}
 body{font-family:"Pretendard Variable",Pretendard,-apple-system,system-ui,"Malgun Gothic",sans-serif;font-variant-numeric:tabular-nums;word-break:keep-all;overflow-wrap:anywhere;-webkit-text-size-adjust:100%}
@@ -114,6 +114,7 @@ var I={
  trend:'<path d="M3 17l6-6 4 4 8-8M15 7h6v6"/>',
  globe:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/>',
  market:'<path d="M3 21h18M5 21V10l7-5 7 5v11M9 21v-6h6v6"/>',
+ check:'<path d="M12 3l8 3v6c0 4.5-3.4 8.2-8 9-4.6-.8-8-4.5-8-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/>',
  grid:'<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>'};
 var ico=function(k){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'+I[k]+'</svg>';};
 var MODS=[
@@ -124,7 +125,8 @@ var MODS=[
   {key:"trend",  grp:"분석",name:"출품 및 낙찰 추이", dir:"trend",  src:"Auction-dashboard", c:"var(--c-trend)",  ic:"trend"},
   {key:"matching",grp:"분석",name:"매칭 테이블",      dir:"matching",self:true,             c:"var(--c-matching)",ic:"grid", subSel:".sub"},
   {key:"market", grp:"시장",name:"수출시장 환경모니터",dir:"market", self:true,              c:"var(--c-market)", ic:"globe", subSel:".hd p"},
-  {key:"kmarket",grp:"시장",name:"국내 경매장 시장", dir:"kmarket",self:true,              c:"var(--c-kmarket)",ic:"market",subSel:".sub"}
+  {key:"kmarket",grp:"시장",name:"국내 경매장 시장", dir:"kmarket",self:true,              c:"var(--c-kmarket)",ic:"market",subSel:".sub"},
+  {key:"check",  grp:"관리",name:"보고서 점검",       dir:"check",  self:true,              c:"var(--c-check)",  ic:"check", subSel:".sub", noList:true}
 ];
 var BY={};MODS.forEach(function(m){BY[m.key]=m;});
 var VIEWABLE=/\.(html?|pdf|png|jpe?g|gif|svg|webp|txt|md)$/i,NEW_DAYS=3,now=new Date(),WK="일월화수목금토";
@@ -212,7 +214,7 @@ function renderHome(){
   html+='</div><h3 class="sec"><span>보고서와 분석</span><small>'+(up.length?"최근 36시간 갱신 "+up.map(function(m){return m.name;}).join(" · "):"최신본 기준")+'</small></h3><div class="grid">';
   MODS.forEach(function(m){var v=LIVE[m.key],list=DATA?DATA[m.key]:null;
     html+='<a class="mod" href="#'+m.key+'" style="--c:'+m.c+'"><div class="ic">'+ico(m.ic)+'</div><div><h4>'+esc(m.name)+'</h4><div class="upd'+(fresh(m)?" fresh":"")+'">'+(v&&v.lm?"업데이트 "+esc(ago(v.lm)):"")+'</div></div>'
-      +'<div><div class="lt">'+esc(v?(brief(m,v.sub)||v.title):"불러오는 중")+'</div></div><div class="ft">열기 →<span>지난 보고서 '+(list?list.length:"-")+'건</span></div></a>';});
+      +'<div><div class="lt">'+esc(v?(brief(m,v.sub)||v.title):"불러오는 중")+'</div></div><div class="ft">열기 →<span>'+(m.noList?"열 때마다 자동 대조":"지난 보고서 "+(list?list.length:"-")+"건")+'</span></div></a>';});
   html+='</div>'+(ERR?'<div class="panel err" style="margin-top:16px">지난 보고서 목록: '+esc(ERR)+'</div>':'')
     +'<div class="foot">코오롱오토옥션 전략기획팀 · 최신본은 각 보고서 저장소 업데이트 시 자동 반영 · 지난 보고서는 메뉴별 보관 폴더에 날짜_제목.html 형식으로 보관</div></div>';
   document.getElementById("view").innerHTML=html;
@@ -221,7 +223,7 @@ function renderModule(m,sub){
   document.getElementById("ttl").textContent=m.name;
   var v=LIVE[m.key],list=DATA?DATA[m.key]:null,isList=sub==="list",file=sub&&sub.indexOf("f=")===0?decodeURIComponent(sub.slice(2)):null;
   var src=file?href(file):liveUrl(m)+"?v="+((v&&v.lm)||Date.now())+(sub&&sub.indexOf("r=")===0?"#"+sub:""),it=file&&list?list.filter(function(x){return x.path===file;})[0]:null;
-  var tabs='<div class="vt" style="--c:'+m.c+'"><a class="tab'+(!isList&&!file?" on":"")+'" href="#'+m.key+'">최신본</a><a class="tab'+(isList||file?" on":"")+'" href="#'+m.key+'/list">지난 보고서'+(list?" "+list.length:"")+'</a><span class="sp"></span>'
+  var tabs='<div class="vt" style="--c:'+m.c+'"><a class="tab'+(!isList&&!file?" on":"")+'" href="#'+m.key+'">'+(m.noList?"점검 결과":"최신본")+'</a>'+(m.noList?'':'<a class="tab'+(isList||file?" on":"")+'" href="#'+m.key+'/list">지난 보고서'+(list?" "+list.length:"")+'</a>')+'<span class="sp"></span>'
     +(isList?'':'<span class="meta">'+esc(file?(it?it.label+" · "+it.title:file):(v&&v.lm?"업데이트 "+ago(v.lm):""))+'</span><a class="ext" href="'+src+'" target="_blank" rel="noopener">새 창 ↗</a>')+'</div>';
   if(!isList){document.getElementById("view").innerHTML='<div class="viewer">'+tabs+'<iframe src="'+src+'" title="'+esc(m.name)+'"></iframe></div>';return;}
   document.getElementById("view").innerHTML='<div class="viewer" style="height:auto">'+tabs+'</div><div class="page"><div class="panel"><input class="search" id="q" type="search" placeholder="지난 보고서 검색 (예: 2026-11, 10월)" autocomplete="off"><div id="list"></div></div></div>';
