@@ -56,7 +56,7 @@ h3.sec small{font-size:12.5px;font-weight:500;color:var(--mut)}
 .ic{width:38px;height:38px;border-radius:10px;display:grid;place-items:center;background:color-mix(in srgb,var(--c) 14%,transparent);color:var(--c)}.ic svg{width:20px;height:20px}
 .mod h4{margin:0;font-size:17px;font-weight:800}
 .upd{font-size:12px;color:var(--mut)}.upd.fresh{color:var(--ok);font-weight:700}
-.mod .lt{font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.mod .ls{font-size:12.5px;color:var(--mut);line-height:1.5;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mod .lt{font-size:14px;font-weight:700;line-height:1.45;overflow-wrap:anywhere}.mod .ls{font-size:12.5px;color:var(--mut);line-height:1.5;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .mod .ft{margin-top:auto;display:flex;justify-content:space-between;align-items:center;font-size:13px;font-weight:700;color:var(--c);padding-top:6px;border-top:1px solid var(--line)}
 .mod .ft span{color:var(--mut);font-weight:600}
 /* 보고서 보기 */
@@ -80,6 +80,7 @@ iframe{flex:1;width:100%;border:0;background:#fff}
 @media (max-width:1024px){.side{transform:translateX(-100%)}.side.open{transform:none;box-shadow:0 0 40px rgba(0,0,0,.4)}.main{margin-left:0}.burger{display:grid;place-items:center}
  .scrim.open{display:block;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:25}.grid{grid-template-columns:repeat(2,1fr)}.bar,.vt{padding-left:16px;padding-right:16px}.page{padding:20px 16px 40px}}
 @media (max-width:760px){.kpis{grid-template-columns:1fr;gap:12px}.kv{font-size:28px}.grid{grid-template-columns:1fr;gap:12px}.hero{padding:20px}.hero h2{font-size:21px}.bar .chip.dt{display:none}.viewer{height:calc(100vh - 63px)}}
+.kpi .kr{font-size:12.5px;color:var(--mut);margin-top:4px}.hero .stale{display:inline-block;margin-left:8px;background:#FDE8E7;color:#B42318;font-weight:800;font-size:12px;padding:2px 8px;border-radius:999px}
 </style>
 </head>
 <body>
@@ -181,7 +182,8 @@ function brief(m,st){
 function readKpi(doc){
   var out=[];doc.querySelectorAll(".kpis .card").forEach(function(c){
     var pill=c.querySelector(".pill"),cv=c.querySelector(".cv");if(!cv)return;var cd=c.querySelector(".cd"),b=cd&&cd.querySelector("b");
-    out.push({lab:txt(c.querySelector(".ct > span")),pill:txt(pill),ok:!!(pill&&/v-ok/.test(pill.className)),v:txt(cv.querySelector("span")),unit:txt(cv.querySelector("small")),d:txt(b)+" "+(cd?txt(cd).replace(txt(b),"").split("·")[0].trim():"")});
+    var rg=(txt(c).match(/범위\s*([\d,.]+~[\d,.]+\s*(?:대|억원))/)||[])[1]||"";
+    out.push({rg:rg,lab:txt(c.querySelector(".ct > span")),pill:txt(pill),ok:!!(pill&&/v-ok/.test(pill.className)),v:txt(cv.querySelector("span")),unit:txt(cv.querySelector("small")),d:txt(b)+" "+(cd?txt(cd).replace(txt(b),"").split("·")[0].trim():"")});
   });return out.length?out:null;
 }
 function group(paths){var o={};MODS.forEach(function(m){o[m.key]=paths.filter(function(p){if(p.indexOf(m.dir+"/")!==0)return false;var f=p.split("/").pop();return f.charAt(0)!=="."&&!/^readme\.md$/i.test(f)&&f!=="index.html";}).map(parse).sort(function(a,b){return b.sortKey-a.sortKey||a.file.localeCompare(b.file,"ko");});});return o;}
@@ -195,13 +197,16 @@ function renderNav(cur){
 function renderHome(){
   document.getElementById("ttl").textContent="홈";
   var lv=LIVE.daily,dl=lv&&lv.sub?lv.sub.split("·").slice(0,3).join("·"):"",up=MODS.filter(fresh);
-  var html='<div class="page"><section class="hero"><div><div class="k">'+(AUC?("다음 경매 "+md(AUC.d)+(AUC.dd===0?" · 오늘 경매":" · D-"+AUC.dd)):"")+'</div><h2>'+esc(lv?lv.title:"전략기획 ERP")+'</h2><div class="s">'+esc(dl)+'</div></div><a href="#daily">일간보고 보기 →</a></section><div class="kpis">';
-  if(KPI){KPI.forEach(function(k){html+='<a class="kpi" href="#daily"><div class="kt"><span>'+esc(k.lab)+'</span>'+(k.pill?'<span class="pill '+(k.ok?"ok":"bad")+'">'+esc(k.pill.replace("주 목표 대비 달성률","달성률"))+'</span>':'')+'</div><div class="kv"><span class="'+(k.ok?"ok":"bad")+'">'+esc(k.v)+'</span><small>'+esc(k.unit)+'</small></div><div class="kd">'+esc(k.d)+'</div></a>';});}
+  var bd=(lv&&lv.sub.match(/기준일\s*(\d{4})\.(\d{2})\.(\d{2})/))||null,stale="";
+  if(bd){var exp=new Date(now.getFullYear(),now.getMonth(),now.getDate());do{exp.setDate(exp.getDate()-1);}while(exp.getDay()===0||exp.getDay()===6);// 2026-11-14: 직전 영업일보다 오래된 일보면 경고
+    if(new Date(+bd[1],+bd[2]-1,+bd[3])<exp)stale='<span class="stale">최신 일보 아님 · 기준일 '+(+bd[2])+'/'+(+bd[3])+'</span>';}
+  var html='<div class="page"><section class="hero"><div><div class="k">일간보고 최신본'+stale+'</div><h2>'+esc(lv?lv.title:"전략기획 ERP")+'</h2><div class="s">'+esc(dl)+'</div></div><a href="#daily">일간보고 보기 →</a></section><div class="kpis">';
+  if(KPI){KPI.forEach(function(k){html+='<a class="kpi" href="#daily"><div class="kt"><span>'+esc(k.lab)+'</span>'+(k.pill?'<span class="pill '+(k.ok?"ok":"bad")+'">'+esc(k.pill.replace("주 목표 대비 달성률","달성률"))+'</span>':'')+'</div><div class="kv"><span class="'+(k.ok?"ok":"bad")+'">'+esc(k.v)+'</span><small>'+esc(k.unit)+'</small></div><div class="kd">'+esc(k.d)+'</div>'+(k.rg?'<div class="kr">예상 범위 '+esc(k.rg)+'</div>':'')+'</a>';});}
   else{for(var i=0;i<3;i++)html+='<div class="kpi"><div class="kv" style="font-size:16px;color:var(--mut)">'+(LIVE.daily?"표시할 항목 없음":"불러오는 중")+'</div></div>';}
   html+='</div><h3 class="sec"><span>보고서와 분석</span><small>'+(up.length?"최근 36시간 갱신 "+up.map(function(m){return m.name;}).join(" · "):"최신본 기준")+'</small></h3><div class="grid">';
   MODS.forEach(function(m){var v=LIVE[m.key],list=DATA?DATA[m.key]:null;
     html+='<a class="mod" href="#'+m.key+'" style="--c:'+m.c+'"><div class="ic">'+ico(m.ic)+'</div><div><h4>'+esc(m.name)+'</h4><div class="upd'+(fresh(m)?" fresh":"")+'">'+(v&&v.lm?"업데이트 "+esc(ago(v.lm)):"")+'</div></div>'
-      +'<div><div class="lt">'+esc(v?v.title:"불러오는 중")+'</div>'+(v&&brief(m,v.sub)?'<div class="ls">'+esc(brief(m,v.sub))+'</div>':'')+'</div><div class="ft">열기 →<span>지난 보고서 '+(list?list.length:"-")+'건</span></div></a>';});
+      +'<div><div class="lt">'+esc(v?(brief(m,v.sub)||v.title):"불러오는 중")+'</div></div><div class="ft">열기 →<span>지난 보고서 '+(list?list.length:"-")+'건</span></div></a>';});
   html+='</div>'+(ERR?'<div class="panel err" style="margin-top:16px">지난 보고서 목록: '+esc(ERR)+'</div>':'')
     +'<div class="foot">코오롱오토옥션 전략기획팀 · 최신본은 각 보고서 저장소 업데이트 시 자동 반영 · 지난 보고서는 메뉴별 보관 폴더에 날짜_제목.html 형식으로 보관</div></div>';
   document.getElementById("view").innerHTML=html;
