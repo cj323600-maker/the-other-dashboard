@@ -188,7 +188,7 @@ function brief(m,st){
 function readKpi(doc){
   var out=[];doc.querySelectorAll(".kpis .card").forEach(function(c){
     var pill=c.querySelector(".pill"),cv=c.querySelector(".cv");if(!cv)return;var cd=c.querySelector(".cd"),b=cd&&cd.querySelector("b");
-    var rm=txt(c).match(/범위\s*([\d,.]+~[\d,.]+\s*(?:대|억원))\s*\(±([\d.]+)%/),hm=txt(c).match(/최근 (\d+)(회차|주) 중 (\d+)회 적중/),rg=rm?rm[1]+" (±"+rm[2]+"%)"+(hm?" · 최근 "+hm[1]+hm[2]+" 중 "+hm[3]+"회 적중":""):"";
+    var rm=txt(c).match(/범위\s*([\d,.]+~[\d,.]+\s*(?:대|억원))\s*\(±([\d.]+)%/),hm=txt(c).match(/최근 (\d+)(회차|주) 중 (\d+)회 적중/),rg=rm?rm[1]+" (±"+rm[2]+"%)":"";
     out.push({rg:rg,lab:txt(c.querySelector(".ct > span")),pill:txt(pill),ok:!!(pill&&/v-ok/.test(pill.className)),v:txt(cv.querySelector("span")),unit:txt(cv.querySelector("small")),d:txt(b)+" "+(cd?txt(cd).replace(txt(b),"").split("·")[0].trim():"")});
   });
   // 2026-11-14: 일보 "재고 자산 현황" 섹션을 네 번째 카드로(달성/미달 판정 없음)
