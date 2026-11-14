@@ -43,7 +43,7 @@ a{color:inherit;text-decoration:none}button{font:inherit;color:inherit;backgroun
 .hero a{background:#fff;color:#163A6B;font-weight:800;font-size:14px;padding:11px 18px;border-radius:10px;white-space:nowrap}
 h3.sec{font-size:16px;font-weight:800;margin:30px 2px 14px;display:flex;justify-content:space-between;align-items:baseline;gap:4px 10px;flex-wrap:wrap}
 h3.sec small{font-size:12.5px;font-weight:500;color:var(--mut)}
-.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:18px}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px;margin-top:18px}@media (max-width:1180px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .kpi{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px 22px;min-width:0;box-shadow:0 1px 2px rgba(0,0,0,.03)}
 .kt{display:flex;justify-content:space-between;align-items:center;gap:6px;font-size:13.5px;font-weight:700;color:var(--mut)}
 .kv{font-size:36px;font-weight:800;letter-spacing:-.02em;margin-top:8px;line-height:1.15}.kv small{font-size:14px;font-weight:600;color:var(--mut);margin-left:4px}
@@ -184,7 +184,13 @@ function readKpi(doc){
     var pill=c.querySelector(".pill"),cv=c.querySelector(".cv");if(!cv)return;var cd=c.querySelector(".cd"),b=cd&&cd.querySelector("b");
     var rg=(txt(c).match(/범위\s*([\d,.]+~[\d,.]+\s*(?:대|억원))/)||[])[1]||"";
     out.push({rg:rg,lab:txt(c.querySelector(".ct > span")),pill:txt(pill),ok:!!(pill&&/v-ok/.test(pill.className)),v:txt(cv.querySelector("span")),unit:txt(cv.querySelector("small")),d:txt(b)+" "+(cd?txt(cd).replace(txt(b),"").split("·")[0].trim():"")});
-  });return out.length?out:null;
+  });
+  // 2026-11-14: 일보 "재고 자산 현황" 섹션을 네 번째 카드로(달성/미달 판정 없음)
+  var h=[].filter.call(doc.querySelectorAll("h2"),function(e){return /^재고 자산 현황/.test(txt(e));})[0];
+  if(h&&out.length){var s=txt(h),m=s.match(/ERP 재고\s*([\d,]+)대\s*·\s*([\d,.]+)억원\(매입원가,\s*([^)]*?)\s*기준\)\s*·\s*이번 회차 출품\s*([\d,]+)대\s*·\s*([\d,.]+)억원/),
+    f=(txt(h.parentNode).match(/재무 재고 평가액\((\d+\/\d+)\)\s*([\d,.]+)억원/)||[]);
+    if(m)out.push({inv:true,lab:"재고 자산 (ERP 매입원가)",pill:"",v:m[2],unit:"억원",d:m[1]+"대 · "+m[3]+" 기준 · 이번 회차 출품 "+m[4]+"대 · "+m[5]+"억원",rg:f[2]?"":"",fin:f[2]?("재무 재고 평가액("+f[1]+") "+f[2]+"억원"):""});}
+  return out.length?out:null;
 }
 function group(paths){var o={};MODS.forEach(function(m){o[m.key]=paths.filter(function(p){if(p.indexOf(m.dir+"/")!==0)return false;var f=p.split("/").pop();return f.charAt(0)!=="."&&!/^readme\.md$/i.test(f)&&f!=="index.html";}).map(parse).sort(function(a,b){return b.sortKey-a.sortKey||a.file.localeCompare(b.file,"ko");});});return o;}
 function isNew(it){return it.ts&&(now.getTime()-it.ts)<NEW_DAYS*86400000&&it.ts<=now.getTime();}
@@ -201,7 +207,7 @@ function renderHome(){
   if(bd){var exp=new Date(now.getFullYear(),now.getMonth(),now.getDate());do{exp.setDate(exp.getDate()-1);}while(exp.getDay()===0||exp.getDay()===6);// 2026-11-14: 직전 영업일보다 오래된 일보면 경고
     if(new Date(+bd[1],+bd[2]-1,+bd[3])<exp)stale='<span class="stale">최신 일보 아님 · 기준일 '+(+bd[2])+'/'+(+bd[3])+'</span>';}
   var html='<div class="page"><section class="hero"><div><div class="k">일간보고 최신본'+stale+'</div><h2>'+esc(lv?lv.title:"전략기획 ERP")+'</h2><div class="s">'+esc(dl)+'</div></div><a href="#daily">일간보고 보기 →</a></section><div class="kpis">';
-  if(KPI){KPI.forEach(function(k){html+='<a class="kpi" href="#daily"><div class="kt"><span>'+esc(k.lab)+'</span>'+(k.pill?'<span class="pill '+(k.ok?"ok":"bad")+'">'+esc(k.pill.replace("주 목표 대비 달성률","달성률"))+'</span>':'')+'</div><div class="kv"><span class="'+(k.ok?"ok":"bad")+'">'+esc(k.v)+'</span><small>'+esc(k.unit)+'</small></div><div class="kd">'+esc(k.d)+'</div>'+(k.rg?'<div class="kr">예상 범위 '+esc(k.rg)+'</div>':'')+'</a>';});}
+  if(KPI){KPI.forEach(function(k){html+='<a class="kpi" href="#daily"><div class="kt"><span>'+esc(k.lab)+'</span>'+(k.pill?'<span class="pill '+(k.ok?"ok":"bad")+'">'+esc(k.pill.replace("주 목표 대비 달성률","달성률"))+'</span>':'')+'</div><div class="kv"><span class="'+(k.inv?"":(k.ok?"ok":"bad"))+'">'+esc(k.v)+'</span><small>'+esc(k.unit)+'</small></div><div class="kd">'+esc(k.d)+'</div>'+(k.rg?'<div class="kr">예상 범위 '+esc(k.rg)+'</div>':'')+(k.fin?'<div class="kr">'+esc(k.fin)+'</div>':'')+'</a>';});}
   else{for(var i=0;i<3;i++)html+='<div class="kpi"><div class="kv" style="font-size:16px;color:var(--mut)">'+(LIVE.daily?"표시할 항목 없음":"불러오는 중")+'</div></div>';}
   html+='</div><h3 class="sec"><span>보고서와 분석</span><small>'+(up.length?"최근 36시간 갱신 "+up.map(function(m){return m.name;}).join(" · "):"최신본 기준")+'</small></h3><div class="grid">';
   MODS.forEach(function(m){var v=LIVE[m.key],list=DATA?DATA[m.key]:null;
