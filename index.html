@@ -82,6 +82,7 @@ iframe{flex:1;width:100%;border:0;background:#fff}
 @media (max-width:760px){.kpis{grid-template-columns:1fr;gap:12px}.kv{font-size:28px}.grid{grid-template-columns:1fr;gap:12px}.hero{padding:20px}.hero h2{font-size:21px}.bar .chip.dt{display:none}.viewer{height:calc(100vh - 63px)}}
 .kpi .kr{font-size:12.5px;color:var(--mut);margin-top:4px}.hero .stale{display:inline-block;margin-left:8px;background:#FDE8E7;color:#B42318;font-weight:800;font-size:12px;padding:2px 8px;border-radius:999px}
 .cst{margin-left:auto;min-width:9px;height:9px;border-radius:999px;background:#22A06B;font-size:10px;font-weight:800;color:#fff;line-height:16px;text-align:center;animation:cpl 1.8s infinite}.cst.bad{min-width:18px;height:16px;padding:0 5px;background:#D92D20;animation-name:cpr}.cst.run{background:#9AA5B1}@keyframes cpl{0%{box-shadow:0 0 0 0 rgba(34,160,107,.6)}70%{box-shadow:0 0 0 7px rgba(34,160,107,0)}100%{box-shadow:0 0 0 0 rgba(34,160,107,0)}}@keyframes cpr{0%{box-shadow:0 0 0 0 rgba(217,45,32,.6)}70%{box-shadow:0 0 0 7px rgba(217,45,32,0)}100%{box-shadow:0 0 0 0 rgba(217,45,32,0)}}
+.cban{display:flex;flex-wrap:wrap;align-items:center;gap:4px 14px;border-radius:12px;padding:10px 16px;margin:0 0 14px;font-size:13px;text-decoration:none;color:inherit}.cban b{font-weight:800}.cban span{flex:1 1 280px;min-width:0;overflow-wrap:anywhere}.cban em{font-style:normal;font-size:12px;opacity:.85;white-space:nowrap}.cban.bad{background:#FDECEA;border:1px solid #F5B5AE;color:#8A1C12}.cban.ok{background:#E9F6EE;border:1px solid #BFE3CC;color:#1E5E3A;padding:7px 14px}.cban.run{background:#EEF2F5;color:#5B6876;padding:7px 14px}
 </style>
 </head>
 <body>
@@ -202,7 +203,7 @@ function isNew(it){return it.ts&&(now.getTime()-it.ts)<NEW_DAYS*86400000&&it.ts<
 var NAVCUR="home";function renderNav(cur){NAVCUR=cur;
   var html='<a href="#home" class="'+(cur==="home"?"on":"")+'">'+ico("home")+'홈</a>',g=null;
   MODS.forEach(function(m){if(m.grp!==g){g=m.grp;html+='<div class="grp">'+g+'</div>';}
-    html+='<a href="#'+m.key+'" class="'+(cur===m.key?"on":"")+'" style="--c:'+m.c+'">'+ico(m.ic)+esc(m.name)+(m.key==="check"?chkBadge():(fresh(m)?'<span class="dot" title="36시간 이내 갱신"></span>':''))+'</a>';});
+    html+='<a href="#'+m.key+'" class="'+(cur===m.key?"on":"")+'" style="--c:'+m.c+'">'+ico(m.ic)+esc(m.name)+(m.key==="check"?chkBadge():(fresh(m)&&!m.noList?'<span class="dot" title="36시간 이내 갱신"></span>':''))+'</a>';});
   document.getElementById("nav").innerHTML=html;
 }
 function renderHome(){
@@ -211,7 +212,7 @@ function renderHome(){
   var bd=(lv&&lv.sub.match(/기준일\s*(\d{4})\.(\d{2})\.(\d{2})/))||null,stale="";
   if(bd){var exp=new Date(now.getFullYear(),now.getMonth(),now.getDate());do{exp.setDate(exp.getDate()-1);}while(exp.getDay()===0||exp.getDay()===6);// 2026-11-14: 직전 영업일보다 오래된 일보면 경고
     if(new Date(+bd[1],+bd[2]-1,+bd[3])<exp)stale='<span class="stale">최신 일보 아님 · 기준일 '+(+bd[2])+'/'+(+bd[3])+'</span>';}
-  var html='<div class="page"><section class="hero"><div><div class="k">일간보고 최신본'+stale+'</div><h2>'+esc(lv?lv.title:"전략기획 ERP")+'</h2><div class="s">'+esc(dl)+'</div></div><a href="#daily">일간보고 보기 →</a></section><div class="kpis">';
+  var html='<div class="page">'+chkBanner()+'<section class="hero"><div><div class="k">일간보고 최신본'+stale+'</div><h2>'+esc(lv?lv.title:"전략기획 ERP")+'</h2><div class="s">'+esc(dl)+'</div></div><a href="#daily">일간보고 보기 →</a></section><div class="kpis">';
   if(KPI){KPI.forEach(function(k){html+='<a class="kpi" href="#daily"><div class="kt"><span>'+esc(k.lab)+'</span>'+(k.pill?'<span class="pill '+(k.ok?"ok":"bad")+'">'+esc(k.pill.replace("주 목표 대비 달성률","달성률"))+'</span>':'')+'</div><div class="kv"><span class="'+(k.inv?"":(k.ok?"ok":"bad"))+'">'+esc(k.v)+'</span><small>'+esc(k.unit)+'</small></div><div class="kd">'+esc(k.d)+'</div>'+(k.rg?'<div class="kr">예상 범위 '+esc(k.rg)+'</div>':'')+(k.fin?'<div class="kr">'+esc(k.fin)+'</div>':'')+'</a>';});}
   else{for(var i=0;i<3;i++)html+='<div class="kpi"><div class="kv" style="font-size:16px;color:var(--mut)">'+(LIVE.daily?"표시할 항목 없음":"불러오는 중")+'</div></div>';}
   html+='</div><h3 class="sec"><span>보고서와 분석</span><small>'+(up.length?"최근 36시간 갱신 "+up.map(function(m){return m.name;}).join(" · "):"최신본 기준")+'</small></h3><div class="grid">';
@@ -261,7 +262,11 @@ function selfTime(m){// 2026-11-14: 포털 저장소 안 메뉴는 배포 때마
 var CHK=null,CHKBUSY=false;
 function chkBadge(){if(CHKBUSY&&!CHK)return'<span class="cst run" title="점검 중"></span>';if(!CHK)return'';var b=CHK.c.bad+(CHK.err.length?1:0),d=new Date(CHK.at);
   return'<span class="cst '+(b?"bad":"ok")+'" title="실시간 작동 중 · 마지막 점검 '+pad(d.getHours())+":"+pad(d.getMinutes())+(b?" · 불일치 · 갱신 필요 "+b+"건":" · 이상 없음")+'">'+(b?b:"")+'</span>';}
-function runChk(){if(!window.RCHECK||CHKBUSY)return;CHKBUSY=true;renderNav(NAVCUR);RCHECK.run(RCHECK.browserGet,new Date()).then(function(x){CHK=x;CHKBUSY=false;renderNav(NAVCUR);},function(){CHKBUSY=false;renderNav(NAVCUR);});}
+// 2026-11-14 홈 경고 표시: 보고서 점검 결과 불일치 · 갱신 필요가 있으면 홈 맨 위에 빨간 경고, 없으면 얇은 초록 줄
+function chkBanner(){if(!CHK)return CHKBUSY?'<div class="cban run">보고서 점검 중…</div>':'';var it=CHK.F.concat(CHK.R).filter(function(x){return x.j==="bad";}).map(function(x){return x.t;}).concat(CHK.err.map(function(e){return e+" 불러오기 실패";})),d=new Date(CHK.at),tm=pad(d.getHours())+":"+pad(d.getMinutes());
+  if(it.length)return'<a class="cban bad" href="#check"><b>보고서 점검 경고 · 불일치 · 갱신 필요 '+it.length+'건</b><span>'+esc(it.join(" · "))+'</span><em>마지막 점검 '+tm+' · 보고서 점검 프로그램 열기 →</em></a>';
+  return'<a class="cban ok" href="#check"><b>보고서 점검 이상 없음</b><span>'+(CHK.c.ok+CHK.c.info)+'건 중 '+CHK.c.ok+'건 일치 · 최신'+(CHK.c.wait?' · 갱신 대기 '+CHK.c.wait+'건':'')+'</span><em>마지막 점검 '+tm+'</em></a>';}
+function runChk(){if(!window.RCHECK||CHKBUSY)return;CHKBUSY=true;renderNav(NAVCUR);RCHECK.run(RCHECK.browserGet,new Date()).then(function(x){CHK=x;CHKBUSY=false;renderNav(NAVCUR);if(NAVCUR==="home")renderHome();},function(){CHKBUSY=false;renderNav(NAVCUR);});}
 (function(){var s=document.createElement("script");s.src="check/engine.js";s.onload=function(){runChk();setInterval(runChk,10*60*1000);};document.head.appendChild(s);})();
 Promise.all(MODS.map(function(m){return loadLive(m).then(function(){if(!m.self)return;return selfTime(m).then(function(v){if(v&&LIVE[m.key])LIVE[m.key].lm=v;});});})).then(function(){route(false);});
 loadTree().then(function(p){DATA=group(p);}).catch(function(e){ERR=e.message||"목록 조회 실패";}).then(function(){route(false);});
