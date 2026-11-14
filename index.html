@@ -115,6 +115,7 @@ var I={
  trend:'<path d="M3 17l6-6 4 4 8-8M15 7h6v6"/>',
  globe:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/>',
  market:'<path d="M3 21h18M5 21V10l7-5 7 5v11M9 21v-6h6v6"/>',
+ file:'<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 14l2 2 4-4"/>',
  check:'<path d="M12 3l8 3v6c0 4.5-3.4 8.2-8 9-4.6-.8-8-4.5-8-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/>',
  grid:'<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>'};
 var ico=function(k){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'+I[k]+'</svg>';};
@@ -127,7 +128,8 @@ var MODS=[
   {key:"matching",grp:"분석",name:"매칭 테이블",      dir:"matching",self:true,             c:"var(--c-matching)",ic:"grid", subSel:".sub"},
   {key:"market", grp:"시장",name:"수출시장 환경모니터",dir:"market", self:true,              c:"var(--c-market)", ic:"globe", subSel:".hd p"},
   {key:"kmarket",grp:"시장",name:"국내 경매장 시장", dir:"kmarket",self:true,              c:"var(--c-kmarket)",ic:"market",subSel:".sub"},
-  {key:"check",  grp:"관리",name:"보고서 점검 프로그램",dir:"check",  self:true,              c:"var(--c-check)",  ic:"check", subSel:".sub", noList:true}
+  {key:"check",  grp:"관리",name:"보고서 점검 프로그램",dir:"check",  self:true,              c:"var(--c-check)",  ic:"check", subSel:".sub", noList:true},
+  {key:"precheck",grp:"관리",name:"원천 파일 사전 점검기",dir:"precheck",self:true,           c:"var(--c-check)",  ic:"file",  subSel:".sub", noList:true}
 ];
 var BY={};MODS.forEach(function(m){BY[m.key]=m;});
 var VIEWABLE=/\.(html?|pdf|png|jpe?g|gif|svg|webp|txt|md)$/i,NEW_DAYS=3,now=new Date(),WK="일월화수목금토";

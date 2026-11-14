@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>원천 파일 사전 점검기</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+:root{--bg:#F4F6F8;--card:#fff;--ink:#16202A;--mut:#5B6876;--line:#E3E8EC;--ok:#1E7B47;--ok-s:#E6F4EC;--bad:#B42318;--bad-s:#FDECEA;--warn:#8A5A00;--warn-s:#FFF4DE;--acc:#1F5FBF}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Pretendard Variable",Pretendard,-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;font-size:14px;line-height:1.5}
+.w{max-width:1280px;margin:0 auto;padding:24px 20px 48px}
+.top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
+h1{margin:0;font-size:22px;font-weight:800}.sub{color:var(--mut);font-size:13px;margin-top:4px}
+.conf{border:1.5px solid #B3261E;color:#B3261E;font-size:12px;font-weight:700;border-radius:4px;padding:2px 8px;white-space:nowrap}
+.drop{display:block;margin:18px 0;border:2px dashed #B8C4CF;border-radius:14px;background:#fff;padding:28px 16px;text-align:center;cursor:pointer;transition:background .15s,border-color .15s}
+.drop.on{background:#EEF4FC;border-color:var(--acc)}.drop b{font-size:16px}.drop p{margin:6px 0 0;color:var(--mut);font-size:13px}
+.drop input{display:none}
+.sec{font-size:12.5px;color:var(--mut);background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 14px}
+.sum{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:16px 0}
+.k{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px}.k .l{font-size:12.5px;color:var(--mut);font-weight:600}.k .v{font-size:24px;font-weight:800;margin-top:2px}.k .v small{font-size:13px;font-weight:600;margin-left:2px}
+.k.ok .v{color:var(--ok)}.k.bad .v{color:var(--bad)}.k.warn .v{color:var(--warn)}
+h2{font-size:16px;margin:22px 0 8px}h2 small{font-size:12.5px;color:var(--mut);font-weight:500;margin-left:6px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:12px}
+.ch{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap}
+.ch b{font-size:15px}.ch .fn{display:block;font-size:12px;color:var(--mut);font-weight:500;overflow-wrap:anywhere}
+.pill{font-size:12px;font-weight:800;border-radius:999px;padding:3px 10px;white-space:nowrap}
+.pill.ok{background:var(--ok-s);color:var(--ok)}.pill.bad{background:var(--bad-s);color:var(--bad)}.pill.warn{background:var(--warn-s);color:var(--warn)}.pill.info{background:#EEF2F5;color:var(--mut)}
+ul.ck{list-style:none;margin:10px 0 0;padding:0}ul.ck li{display:grid;grid-template-columns:70px minmax(0,1fr);gap:10px;padding:6px 0;border-top:1px solid var(--line);font-size:13px}
+ul.ck li .pill{justify-self:start}
+.facts{display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:8px;font-size:13px}.facts span{overflow-wrap:anywhere;min-width:0}.facts .s{color:var(--mut)}
+.miss li{font-size:13px}
+.msg{width:100%;min-height:70px;font:inherit;font-size:13px;border:1px solid var(--line);border-radius:10px;padding:10px}
+button{font:inherit;font-weight:700;border:0;background:var(--acc);color:#fff;border-radius:8px;padding:8px 14px;cursor:pointer}
+.note{font-size:12px;color:var(--mut);margin-top:8px}
+@media(max-width:760px){.sum{grid-template-columns:repeat(2,minmax(0,1fr))}.w{padding:16px 12px 40px}ul.ck li{grid-template-columns:62px minmax(0,1fr)}}
+</style>
+</head>
+<body><div class="w">
+<div class="top"><div><h1>원천 파일 사전 점검기</h1><div class="sub">ERP에서 받은 엑셀을 Claude에게 보내기 전에 파일 종류 · 받은 시각 · 빠진 파일 · 필수 열 · 새 상태값 · 대수를 점검</div></div><span class="conf">[대외비]</span></div>
+<label class="drop" id="drop"><input type="file" id="fi" multiple accept=".xlsx,.xls"><b>엑셀 파일을 여기에 끌어다 놓거나 눌러서 고르기</b><p>출품관리 · 매입관리 · 매출관리 · 공매 전체 데이터 · 경매 전체 데이터 · 재고관리 (여러 개 한꺼번에)</p></label>
+<div class="sec">파일은 이 컴퓨터의 브라우저 안에서만 읽고 어디에도 올리지 않습니다. 점검에 필요한 열(상태 · 날짜 · 대수 · 금액)만 보고, 대표자명 · 연락처 · 주소 · 담당자 이름 같은 개인정보 열은 읽지 않습니다.</div>
+<div id="out"></div>
+</div>
+<script>
+(function(){
+"use strict";
+var $=function(i){return document.getElementById(i);};
+var esc=function(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});};
+var f0=function(v){return Math.round(v).toLocaleString("ko-KR");},e2=function(v){return(v/1e8).toFixed(2);};
+var pad=function(n){return(n<10?"0":"")+n;};
+var now=new Date(),today=now.getFullYear()+"-"+pad(now.getMonth()+1)+"-"+pad(now.getDate());
+// 파일 종류 정의: 이름 앞부분, 필수 열(일보 · 재고 · 주보 스크립트가 쓰는 열), 상태값 목록(새 값이 나오면 일보가 멈춤)
+var KIND={
+  out:{key:"회차",nm:"출품관리",pre:"출품관리_",cols:["회차","경매일","차대번호","출품구분","경매진행상태","재출품횟수"],need:true,
+    vals:{"경매진행상태":["출품등록","출품접수","반출증발급","출품취소","출품신청","낙찰","유찰","후상담낙찰","재출품"],"출품구분":["자사","유도","출품대행"]}},
+  buy:{key:"매입번호",nm:"매입관리",pre:"매입관리_",cols:["매입번호","차대번호","매입상태","매출상태","매입일자","매입구분","매입담당자부서","재고일"],need:true,
+    vals:{"매입상태":["등록","결재진행중","결재완료","송금완료"],"매출상태":["매출미등록","매출등록","매출완료","결재진행중"]}},
+  sale:{key:"매입번호",nm:"매출관리",pre:"매출관리_",cols:["판매완료일자","매입번호","매입일자","매입원가","매입구분","매입담당자부서"],need:true,vals:{}},
+  pub:{key:"회차",nm:"공매 전체 데이터",pre:"공매 전체 데이터_",cols:["회차","공매시작일시","공매종료일시","공매상태","낙찰가","수수료합계(VAT제외)","소스2"],need:true,
+    vals:{"공매상태":["낙찰","유찰","공매진행중","미실시"]}},
+  auc:{key:"회차",nm:"경매 전체 데이터",pre:"경매 전체 데이터_",cols:["회차","경매일","경매상태","낙찰가","수수료합계(VAT제외)","내수수출구분","차대번호","재출품횟수"],need:false,
+    vals:{"경매상태":["낙찰","유찰","후상담낙찰","낙찰취소","미실시"],"내수수출구분":["내수","수출",""]}},
+  inv:{key:"매입구분",nm:"재고관리",pre:"재고관리_",cols:["매입번호","매입구분","매입담당자부서","차대번호","매입일자","재고일","매입원가(공급가)"],need:true,vals:{}}
+};
+var norm=function(s){return String(s==null?"":s).replace(/\s+/g,"");};
+function kindOf(name,head){
+  for(var k in KIND)if(name.indexOf(KIND[k].pre)===0||name.indexOf(KIND[k].pre.replace(/ /g,""))===0)return k;
+  var H=head.map(norm);var best=null,bs=0;for(var k2 in KIND){var s=KIND[k2].cols.filter(function(c){return H.indexOf(norm(c))>=0;}).length/KIND[k2].cols.length;if(s>bs){bs=s;best=k2;}}
+  return bs>=.8?best:null;
+}
+function stamp(name){var m=name.match(/_(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})?/);if(!m)return null;return{d:"20"+m[1]+"-"+m[2]+"-"+m[3],t:m[4]+":"+m[5]};}
+// 경매일 기준: 오늘이 수요일 18시 이후거나 목요일이면 경매 전체 데이터(최신 회차 결과)가 필요
+function lastAuc(){var x=new Date(now.getFullYear(),now.getMonth(),now.getDate()),b=(x.getDay()-3+7)%7;if(b===0&&now.getHours()<18)b=7;x.setDate(x.getDate()-b);return x.getFullYear()+"-"+pad(x.getMonth()+1)+"-"+pad(x.getDate());}
+function needAuc(){var d=now.getDay();return(d===3&&now.getHours()>=18)||d===4;}
+var FILES=[];
+function addFiles(list){var ps=[].slice.call(list).filter(function(f){return/\.xlsx?$/i.test(f.name);}).map(read);$("out").innerHTML='<div class="card">읽는 중…</div>';Promise.all(ps).then(function(rs){rs.forEach(function(r){FILES=FILES.filter(function(x){return x.name!==r.name;});FILES.push(r);});render();}).catch(function(e){$("out").innerHTML='<div class="card"><span class="pill bad">오류</span> 파일을 읽지 못함: '+esc(e.message||e)+'</div>';});}
+function read(f){return f.arrayBuffer().then(function(buf){
+  var wb=XLSX.read(buf,{type:"array",cellDates:false,dense:true});var ws=wb.Sheets[wb.SheetNames[0]];
+  var A=XLSX.utils.sheet_to_json(ws,{header:1,raw:false,defval:""});var head=(A[0]||[]).map(String);
+  var k=kindOf(f.name,head);var r={name:f.name,size:f.size,kind:k,head:head,rows:A.length-1,st:stamp(f.name),ck:[],facts:[]};
+  if(!k){r.ck.push(["bad","파일 종류를 알 수 없음(이름이 출품관리_ · 매입관리_ · 매출관리_ · 공매 전체 데이터_ · 경매 전체 데이터_ · 재고관리_로 시작하지 않고 열 구성도 다름)"]);return r;}
+  var K=KIND[k],H=head.map(norm),ix=function(c){return H.indexOf(norm(c));};
+  var miss=K.cols.filter(function(c){return ix(c)<0;});
+  r.ck.push(miss.length?["bad","필수 열 없음: "+miss.join(", ")]:["ok","필수 열 "+K.cols.length+"개 모두 있음"]);
+  if(r.st&&k==="auc"){var la=lastAuc();r.ck.push(r.st.d>=la?["ok","직전 경매("+la.slice(5).replace("-","/")+") 이후 받은 결과 파일("+r.st.d.slice(5).replace("-","/")+" "+r.st.t+")"]:["bad","직전 경매("+la.slice(5).replace("-","/")+") 전에 받은 파일 · 최신 경매 결과 필요"]);}
+  else if(r.st){var age=(new Date(today)-new Date(r.st.d))/864e5;r.ck.push(age<=0?["ok","오늘 받은 파일("+r.st.d.slice(5).replace("-","/")+" "+r.st.t+")"]:(age<=1?["warn","어제 받은 파일("+r.st.d.slice(5).replace("-","/")+" "+r.st.t+") · 오늘 것으로 다시 받기 권장"]:["bad",age+"일 전 파일("+r.st.d.slice(5).replace("-","/")+") · 최신본 필요"]));}
+  else r.ck.push(["warn","파일 이름에 받은 시각(YYMMDDhhmmss)이 없음"]);
+  if(r.rows<=0)r.ck.push(["bad","데이터 행이 없음"]);
+  var ki=ix(K.key),body0=A.slice(1).filter(function(row){return row.some(function(v){return v!=="";});});
+  var body=body0.filter(function(row){var a=String(row[0]==null?"":row[0]).trim(),kv=ki<0?"x":String(row[ki]==null?"":row[ki]).trim();return a!=="합계"&&kv!==""&&!/^총 [\d,]+건$/.test(kv);});
+  if(body0.length>body.length)r.facts.push(["합계 · 빈 행",(body0.length-body.length)+"행(점검에서 제외)"]);
+  var col=function(c){var i=ix(c);return i<0?[]:body.map(function(row){return String(row[i]==null?"":row[i]).trim();});};
+  var cnt=function(arr){var o={};arr.forEach(function(v){o[v]=(o[v]||0)+1;});return o;};
+  Object.keys(K.vals).forEach(function(c){var c_=cnt(col(c)),nw=Object.keys(c_).filter(function(v){return K.vals[c].indexOf(v)<0&&!(v===""&&K.vals[c].indexOf("")>=0);});
+    if(nw.length)r.ck.push(["bad","새 "+c+" 값: "+nw.map(function(v){return(v||"(빈 값)")+" "+c_[v]+"건";}).join(", ")+" · 일보가 멈출 수 있어 처리 기준 확인 필요"]);});
+  var nums=function(c){return col(c).map(function(v){return+String(v).replace(/,/g,"")||0;});};
+  var sum=function(a){return a.reduce(function(x,y){return x+y;},0);};
+  var range=function(c){var v=col(c).map(function(x){return x.slice(0,10);}).filter(function(x){return/^\d{4}-\d\d-\d\d$/.test(x);}).sort();return v.length?[v[0],v[v.length-1]]:null;};
+  if(k==="out"){
+    var st=cnt(col("경매진행상태")),rd=cnt(col("회차")),gb=cnt(col("출품구분")),vin=col("차대번호"),dup=vin.length-new Set(vin.filter(Boolean)).size-vin.filter(function(v){return!v;}).length;
+    var n=(st["출품등록"]||0)+(st["출품접수"]||0);r.facts.push(["회차",Object.keys(rd).map(function(x){return x.replace("안성 ","").replace(" 경매","")+" "+f0(rd[x])+"행";}).join(" · ")]);
+    r.facts.push(["출품등록 + 출품접수",f0(n)+"대(제휴 출품접수 포함 · 일보 출품대수는 제휴 접수를 빼서 더 적음)"]);r.facts.push(["경매진행상태",Object.keys(st).map(function(x){return x+" "+f0(st[x]);}).join(" · ")]);r.facts.push(["출품구분",Object.keys(gb).map(function(x){return x+" "+f0(gb[x]);}).join(" · ")]);
+    if(Object.keys(rd).length>1)r.ck.push(["warn","회차가 "+Object.keys(rd).length+"개 섞여 있음(다음 회차만 받았는지 확인)"]);
+    r.ck.push(dup>0?["warn","같은 차대번호 "+dup+"건 중복(재등록 차량일 수 있음, 일보는 한 대로 셈)"]:["ok","차대번호 중복 없음"]);
+    r.n=n;
+  }
+  if(k==="buy"){var g=range("매입일자"),ms=cnt(col("매출상태"));r.facts.push(["매입일자",g?g[0]+" ~ "+g[1]:"–"]);r.facts.push(["매출상태",Object.keys(ms).map(function(x){return x+" "+f0(ms[x]);}).join(" · ")]);
+    if(g&&g[1]<today&&(new Date(today)-new Date(g[1]))/864e5>3)r.ck.push(["warn","마지막 매입일자가 "+g[1]+" · 기간을 오늘까지로 받았는지 확인"]);
+    if(g)r.ck.push(g[0]<=today.slice(0,8)+"02"?["ok","이번 달 매입이 처음부터 들어 있음("+g[0]+"부터)"]:["warn","이번 달 매입 일부만 있음("+g[0]+"부터) · 일보 팀 분류는 누적 기록으로 보완되지만 확인 권장"]);}
+  if(k==="sale"){var g2=range("판매완료일자");r.facts.push(["판매완료일자",g2?g2[0]+" ~ "+g2[1]:"–"]);r.facts.push(["판매 대수",f0(body.length)+"대"]);}
+  if(k==="pub"){var ps=cnt(col("공매상태")),pr=cnt(col("회차"));r.facts.push(["공매 회차",Object.keys(pr).length+"개"]);r.facts.push(["공매상태",Object.keys(ps).map(function(x){return x+" "+f0(ps[x]);}).join(" · ")]);}
+  if(k==="auc"){var as=col("경매상태"),ad=col("경매일"),byd={};ad.forEach(function(d,i){d=d.slice(0,10);var o=byd[d]||(byd[d]={n:0,w:0,c:0});if(as[i]!=="미실시"&&as[i]!=="")o.n++;if(as[i]==="낙찰"||as[i]==="후상담낙찰")o.w++;if(as[i]==="낙찰취소")o.c++;});
+    Object.keys(byd).sort().forEach(function(d){var o=byd[d];r.facts.push([d.slice(5).replace("-","/")+" 경매","실시 "+f0(o.n)+"대 · 낙찰 "+f0(o.w)+"대 · 낙찰률 "+(o.n?(o.w/o.n*100).toFixed(1):"–")+"%"+(o.c?" · 낙찰취소 "+o.c:"")]);});
+    var ld=Object.keys(byd).sort().pop();if(r.st&&ld&&r.st.d===ld&&+r.st.t.slice(0,2)<18)r.ck.push(["warn","경매 당일 18시 전에 받은 파일 · 후상담낙찰이 더 들어올 수 있어 18시 이후 파일이나 다음 날 파일 권장"]);}
+  if(k==="inv"){var bt=col("매입구분"),cs=nums("매입원가(공급가)"),rows=body.filter(function(_,i){return bt[i];});var tot=sum(cs.filter(function(_,i){return bt[i];}));
+    r.facts.push(["재고",f0(rows.length)+"대 · 매입원가 "+e2(tot)+"억원"]);
+    var gi=cnt(bt.filter(Boolean));r.facts.push(["매입구분",Object.keys(gi).map(function(x){return x+" "+f0(gi[x]);}).join(" · ")]);
+    if(gi["위탁매입"])r.ck.push(["info","위탁매입 "+gi["위탁매입"]+"대 포함 · 재무 기준에 맞춰 일보 재고에서는 제외"]);}
+  return r;
+});}
+function render(){
+  if(!FILES.length){$("out").innerHTML="";return;}
+  var have={};FILES.forEach(function(f){if(f.kind){var o=have[f.kind];if(!o||(f.st&&o.st&&f.st.d+f.st.t>o.st.d+o.st.t))have[f.kind]=f;}});
+  var miss=[];Object.keys(KIND).forEach(function(k){if(!have[k]&&(KIND[k].need||(k==="auc"&&needAuc())))miss.push(KIND[k].nm+(k==="auc"?"(경매 다음 날까지 최신 회차 결과 필요)":""));});
+  var dupk=Object.keys(KIND).filter(function(k){return FILES.filter(function(f){return f.kind===k;}).length>1;}).map(function(k){return KIND[k].nm;});
+  var all=[];FILES.forEach(function(f){f.ck.forEach(function(c){all.push(c[0]);});});
+  var nb=all.filter(function(x){return x==="bad";}).length+miss.length,nw=all.filter(function(x){return x==="warn";}).length;
+  var h='<div class="sum">'+[["올린 파일",FILES.length,"개",""],["빠진 파일",miss.length,"개",miss.length?"bad":"ok"],["오류",nb,"건",nb?"bad":"ok"],["주의",nw,"건",nw?"warn":"ok"]].map(function(a){return'<div class="k '+a[3]+'"><div class="l">'+a[0]+'</div><div class="v">'+a[1]+'<small>'+a[2]+'</small></div></div>';}).join("")+'</div>';
+  if(miss.length||dupk.length)h+='<div class="card"><div class="ch"><b>파일 구성</b><span class="pill '+(miss.length?"bad":"warn")+'">'+(miss.length?"빠진 파일 있음":"같은 종류 여러 개")+'</span></div><ul class="ck miss">'+miss.map(function(m){return'<li><span class="pill bad">없음</span><span>'+esc(m)+'</span></li>';}).join("")+dupk.map(function(m){return'<li><span class="pill info">참고</span><span>'+esc(m)+' 파일이 여러 개 · 가장 늦게 받은 파일 기준(일보는 같은 종류 여러 파일을 모두 읽음)</span></li>';}).join("")+'</ul></div>';
+  h+='<h2>파일별 점검 <small>받은 시각 순</small></h2>';
+  FILES.slice().sort(function(a,b){return(KIND[a.kind]?Object.keys(KIND).indexOf(a.kind):9)-(KIND[b.kind]?Object.keys(KIND).indexOf(b.kind):9);}).forEach(function(f){
+    var worst=f.ck.some(function(c){return c[0]==="bad";})?"bad":(f.ck.some(function(c){return c[0]==="warn";})?"warn":"ok");
+    h+='<div class="card"><div class="ch"><b>'+esc(f.kind?KIND[f.kind].nm:"알 수 없는 파일")+'<span class="fn">'+esc(f.name)+' · '+f0(f.rows)+'행 · '+(f.size/1048576).toFixed(1)+'MB</span></b><span class="pill '+worst+'">'+{ok:"이상 없음",warn:"주의",bad:"오류"}[worst]+'</span></div>'
+      +(f.facts.length?'<div class="facts">'+f.facts.map(function(x){return'<span><span class="s">'+esc(x[0])+'</span> <b>'+esc(x[1])+'</b></span>';}).join("")+'</div>':'')
+      +'<ul class="ck">'+f.ck.map(function(c){return'<li><span class="pill '+c[0]+'">'+{ok:"통과",warn:"주의",bad:"오류",info:"참고"}[c[0]]+'</span><span>'+esc(c[1])+'</span></li>';}).join("")+'</ul></div>';});
+  var ok=!nb;var names=FILES.filter(function(f){return f.kind;}).map(function(f){return f.name;}).join(", ");
+  h+='<h2>Claude에게 보낼 문구 <small>파일과 함께 붙여 넣기</small></h2><div class="card"><textarea class="msg" id="msg" readonly>'+esc((ok?"일간보고 업데이트 진행":"일간보고 업데이트 진행 (사전 점검 오류 "+nb+"건 확인 필요)")+"\n사전 점검: 파일 "+FILES.length+"개 · 빠진 파일 "+(miss.length?miss.join(", "):"없음")+" · 오류 "+nb+" · 주의 "+nw+(have.out&&have.out.n!=null?"\n출품관리 출품등록 + 출품접수 "+f0(have.out.n)+"대(제휴 접수 포함)":"")+(have.inv?"\n재고관리 포함":""))+'</textarea><div style="margin-top:8px"><button id="cp">문구 복사</button></div><p class="note">파일: '+esc(names)+'</p></div>';
+  $("out").innerHTML=h;
+  $("cp").onclick=function(){var t=$("msg");t.select();try{navigator.clipboard.writeText(t.value);}catch(e){document.execCommand("copy");}$("cp").textContent="복사됨";};
+}
+var d=$("drop");["dragenter","dragover"].forEach(function(e){d.addEventListener(e,function(ev){ev.preventDefault();d.classList.add("on");});});
+["dragleave","drop"].forEach(function(e){d.addEventListener(e,function(ev){ev.preventDefault();d.classList.remove("on");});});
+d.addEventListener("drop",function(ev){addFiles(ev.dataTransfer.files);});
+$("fi").addEventListener("change",function(ev){addFiles(ev.target.files);ev.target.value="";});
+})();
+</script>
+</body>
+</html>
