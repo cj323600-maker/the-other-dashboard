@@ -204,7 +204,7 @@ function renderNav(cur){
 }
 function renderHome(){
   document.getElementById("ttl").textContent="홈";
-  var lv=LIVE.daily,dl=lv&&lv.sub?lv.sub.split("·").slice(0,3).join("·"):"",up=MODS.filter(fresh);
+  var lv=LIVE.daily,dl=lv&&lv.sub?lv.sub.split("·").slice(0,3).join("·"):"",up=MODS.filter(function(m){return !m.noList&&fresh(m);});
   var bd=(lv&&lv.sub.match(/기준일\s*(\d{4})\.(\d{2})\.(\d{2})/))||null,stale="";
   if(bd){var exp=new Date(now.getFullYear(),now.getMonth(),now.getDate());do{exp.setDate(exp.getDate()-1);}while(exp.getDay()===0||exp.getDay()===6);// 2026-11-14: 직전 영업일보다 오래된 일보면 경고
     if(new Date(+bd[1],+bd[2]-1,+bd[3])<exp)stale='<span class="stale">최신 일보 아님 · 기준일 '+(+bd[2])+'/'+(+bd[3])+'</span>';}
@@ -212,7 +212,8 @@ function renderHome(){
   if(KPI){KPI.forEach(function(k){html+='<a class="kpi" href="#daily"><div class="kt"><span>'+esc(k.lab)+'</span>'+(k.pill?'<span class="pill '+(k.ok?"ok":"bad")+'">'+esc(k.pill.replace("주 목표 대비 달성률","달성률"))+'</span>':'')+'</div><div class="kv"><span class="'+(k.inv?"":(k.ok?"ok":"bad"))+'">'+esc(k.v)+'</span><small>'+esc(k.unit)+'</small></div><div class="kd">'+esc(k.d)+'</div>'+(k.rg?'<div class="kr">예상 범위 '+esc(k.rg)+'</div>':'')+(k.fin?'<div class="kr">'+esc(k.fin)+'</div>':'')+'</a>';});}
   else{for(var i=0;i<3;i++)html+='<div class="kpi"><div class="kv" style="font-size:16px;color:var(--mut)">'+(LIVE.daily?"표시할 항목 없음":"불러오는 중")+'</div></div>';}
   html+='</div><h3 class="sec"><span>보고서와 분석</span><small>'+(up.length?"최근 36시간 갱신 "+up.map(function(m){return m.name;}).join(" · "):"최신본 기준")+'</small></h3><div class="grid">';
-  MODS.forEach(function(m){var v=LIVE[m.key],list=DATA?DATA[m.key]:null;
+  MODS.forEach(function(m){if(m.noList)return;// 2026-11-14: 관리 메뉴(보고서 점검)는 홈 카드에서 제외
+    var v=LIVE[m.key],list=DATA?DATA[m.key]:null;
     html+='<a class="mod" href="#'+m.key+'" style="--c:'+m.c+'"><div class="ic">'+ico(m.ic)+'</div><div><h4>'+esc(m.name)+'</h4><div class="upd'+(fresh(m)?" fresh":"")+'">'+(v&&v.lm?"업데이트 "+esc(ago(v.lm)):"")+'</div></div>'
       +'<div><div class="lt">'+esc(v?(brief(m,v.sub)||v.title):"불러오는 중")+'</div></div><div class="ft">열기 →<span>'+(m.noList?"열 때마다 자동 대조":"지난 보고서 "+(list?list.length:"-")+"건")+'</span></div></a>';});
   html+='</div>'+(ERR?'<div class="panel err" style="margin-top:16px">지난 보고서 목록: '+esc(ERR)+'</div>':'')
