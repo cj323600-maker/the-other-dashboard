@@ -101,12 +101,13 @@ svg{display:block;max-width:100%}
 .ins-s{padding-top:2px}.ins-r{display:grid;grid-template-columns:76px minmax(0,1fr);gap:10px;padding:4px 0;font-size:13.5px;line-height:1.55;color:var(--ink)}
 .ins-k{font-weight:700;color:var(--muted);font-size:12.5px}.ins-t{margin-top:2px;background:color-mix(in srgb,var(--ac) 7%,#fff);border-radius:8px;padding:8px 12px}.ins-tt{font-size:13px;font-weight:800;color:var(--ac);margin-bottom:2px}
 .ins-t .ins-k{color:var(--ac)}@media(max-width:520px){.ins-r{grid-template-columns:1fr;gap:0}}
-.seg{display:inline-block;max-width:100%}.sep{color:var(--muted)}.ins-d{font-size:12px;color:var(--muted);margin:6px 0 0;line-height:1.5}
+.seg{display:inline-block;max-width:100%}.sep{color:var(--muted)}.ins-d .sl::before{background:var(--muted)}.ins-d{font-size:12px;color:var(--muted);margin:6px 0 0;line-height:1.5}
 .side .ins{margin-bottom:12px}details.dt>summary{cursor:pointer;font-weight:700;font-size:14px;padding:8px 10px;background:var(--soft);border-radius:8px;list-style-position:inside}details.dt[open]>summary{margin-bottom:10px}
 .cn1{font-weight:700;display:block}.cn2{display:block;font-size:12px;color:var(--muted);font-weight:500}.rp2{display:inline-block;vertical-align:1px;font-size:11px;font-weight:700;color:var(--ink);background:var(--soft);border:1px solid var(--line);border-radius:10px;padding:0 7px;margin-left:6px}
 .guide{background:var(--soft);border-radius:10px;padding:8px 14px;margin:-2px 0 10px}.g-r{display:grid;grid-template-columns:84px minmax(0,1fr);gap:10px;padding:3px 0;font-size:13px;line-height:1.7;color:var(--ink)}
 .g-k{font-weight:800;font-size:12.5px;color:var(--muted)}.guide .pill{font-size:11.5px}@media(max-width:520px){.g-r{grid-template-columns:1fr;gap:0}}
 details.dr>summary{cursor:pointer;display:flex;flex-wrap:wrap;align-items:baseline;gap:10px;list-style:none}details.dr>summary::-webkit-details-marker{display:none}details.dr>summary h2{margin:0}details.dr>summary h2::before{content:'▸ ';color:var(--muted)}details.dr[open]>summary h2::before{content:'▾ '}
+.sl{display:block;position:relative;padding-left:11px}.sl::before{content:'';position:absolute;left:0;top:.72em;width:4px;height:4px;border-radius:50%;background:var(--ac);opacity:.6}.sl+.sl{margin-top:2px}.seg{white-space:normal}
 /* 2026-11-14: 좌우 스크롤 없이 폭에 맞춤. 표는 칸 이름 줄바꿈, 좁으면 행을 카드처럼 쌓음 */
 .scroll{overflow-x:visible;container-type:inline-size}
 table.t th{white-space:normal;vertical-align:bottom;word-break:keep-all}
@@ -221,11 +222,14 @@ function syncFilters(){const w=st.r1-st.r0+1;let n=0,ww=0;for(let r=st.r0;r<=st.
   $('filters').querySelectorAll('[data-gran]').forEach(b=>b.classList.toggle('on',st.gran===b.dataset.gran))}
 const RED=['#fdf1ee','#f9d9d2','#f2b5a8','#e68a78','#d25f4b','#b3261e'];
 function redOf(t){const k=t<=0?0:Math.min(5,Math.ceil(t*5));return{bg:RED[k],fg:k>=4?'#fff':'var(--ink)',sub:k>=4?'rgba(255,255,255,.85)':'var(--muted)'}}
+// 2026-11-16 사용자 지시: 시사점은 문장마다 한 줄, 괄호 묶음은 통째로 다음 줄로(중간에서 끊기지 않게)
+const paren=t=>t.replace(/\([^()]*\)/g,m=>`<span class="seg">${m}</span>`);
+const sent=v=>v.split(/(?<=[.])\s+(?=\S)/).filter(x=>x).map(x=>`<span class="sl">${paren(x)}</span>`).join('');
 function insight(C,Cp){const s0=st.sel;if(!s0)return'';  // 2026-11-16 사용자 지시: 칸 상세 자료 요약 + 시사점(판단 · 근거 · 조치), 지도 위
   const pick=X=>X.I.filter(i=>YB(D.y[i])===s0.y&&(s0.k<0||KB(D.k[i])===s0.k)&&(s0.p<0||PB(D.s[i])===s0.p));
   const I=pick(C),s=stat(I,C.R,C.weeks,C.ref),ok=s.per>=MIN_CELL,[dl,dc]=diag(s,ok);
   const nm=cellName(s0.y,s0.k,s0.p),gp=Math.abs(s.idx*100).toFixed(0),ac=dc==='over'?'#B3261E':dc==='short'?'#1F4E8C':'#5B6773';
-  const box=(sum,ins)=>`<div class="ins" style="--ac:${ac}"><div class="ins-h"><b>칸 요약</b><span class="ins-n">${nm}</span><span class="pill ${dc}">${dl}</span></div><div class="ins-t"><div class="ins-tt">시사점</div>${ins.map(([k,v])=>`<div class="ins-r"><span class="ins-k">${k}</span><span>${v}</span></div>`).join('')}</div>${sum?'<div class="ins-tt" style="color:var(--muted);margin:10px 0 0">근거 자료</div>'+sum:''}</div>`;
+  const box=(sum,ins)=>`<div class="ins" style="--ac:${ac}"><div class="ins-h"><b>칸 요약</b><span class="ins-n">${nm}</span><span class="pill ${dc}">${dl}</span></div><div class="ins-t"><div class="ins-tt">시사점</div>${ins.map(([k,v])=>`<div class="ins-r"><span class="ins-k">${k}</span><span>${sent(v)}</span></div>`).join('')}</div>${sum?'<div class="ins-tt" style="color:var(--muted);margin:10px 0 0">근거 자료</div>'+sum:''}</div>`;
   if(!s.n)return box('',[['판단','선택한 기간 · 거르기 조건에서 이 칸 출품이 없습니다.'],['조치','기간을 넓히거나 가로축 · 시작가 거르기를 풀어서 다시 봅니다.']]);
   const gm=group(I,i=>D.m[i]),ml=[...gm].map(([m,J])=>({m,s:stat(J,C.R,C.weeks,C.ref)})).filter(x=>x.s.n>=10).sort((x,y)=>y.s.w-x.s.w||y.s.n-x.s.n);
   const top3=ml.slice(0,3).map(x=>`${D.models[x.m]} ${f0(x.s.w)}대`).join(' · ');
@@ -246,7 +250,7 @@ function insight(C,Cp){const s0=st.sel;if(!s0)return'';  // 2026-11-16 사용자
     +li('가져온 쪽',`${SRC[sk]} ${pct(sc[sk]/I.length)} · 재출품 ${B(pct(rer))}`+(s.xn+s.fn?` · 비싼 차 ${f0(s.xn)}대(낙찰률 ${B(s.xn?pct(s.xr):'–')}) · 적정가 차 ${f0(s.fn)}대(낙찰률 ${B(s.fn?pct(s.fr):'–')})`:'')+(vt?` · 최신 회차 비싼 유찰 차 ${vt}`:''))
     +(rpA.length?li('값',`기준가 중앙값 ${B(man(med(rpA)))}`+(fS.length?` · 적정가 차 시작가 중앙값 ${B(man(med(fS)))}(기준가 대비 ${pm(med(fG))})`:'')+(xS.length?` · 비싼 차 시작가 중앙값 ${B(man(med(xS)))}(기준가 대비 ${pm(med(xG))})`:'')):'')
     +li('사는 쪽',wn?`낙찰 회원사 ${f0(bz.size)}곳 · 상위 5곳 비중 ${pct(t5s)} · 수출 ${B(pct(exr))}`+(r1?` · ${D.regions[r1[0]]} ${f0(r1[1])}대`:''):'낙찰 없음')
-    +`<p class="ins-d"><b>기준가</b> = 같은 차종 · 최초등록 연도 · 주행 구간에서 기간 안에 낙찰된 차의 낙찰가 중앙값(낙찰 3대 이상일 때만 계산). <b>적정가 차</b> = 시작가가 기준가의 1.10배 미만, <b>비싼 차</b> = 1.10배 이상.${rpA.length?` 이 칸은 기준가 중앙값이 ${man(med(rpA))}이므로 시작가 약 ${man(med(rpA)*1.1)} 미만이면 적정가로 봅니다(차량마다 기준가가 달라 실제 판정은 차량별).`:''}</p></div>`;
+    +`<div class="ins-d">${sent(`<b>기준가</b> = 같은 차종 · 최초등록 연도 · 주행 구간에서 기간 안에 낙찰된 차의 낙찰가 중앙값(낙찰 3대 이상일 때만 계산). <b>적정가 차</b> = 시작가가 기준가의 1.10배 미만, <b>비싼 차</b> = 1.10배 이상.${rpA.length?` 이 칸은 기준가 중앙값이 ${man(med(rpA))}이므로 시작가 약 ${man(med(rpA)*1.1)} 미만이면 적정가로 봅니다(차량마다 기준가가 달라 실제 판정은 차량별).`:''}`)}</div></div>`;
   // 시사점: 판단 · 근거 · 조치(+ 함께 볼 점)
   const xg=s.xn&&s.fn?`적정가 차 낙찰률 ${pct(s.fr)} / 비싼 차 ${pct(s.xr)}(차이 ${((s.fr-s.xr)*100).toFixed(1)}%p)`:'',buyer=wn?(exr>=0.6?`수출 회원 위주(수출 ${pct(exr)}${r1?', '+D.regions[r1[0]]+' 중심':''})`:exr<=0.4?`내수 회원 위주(수출 ${pct(exr)})`:`내수 · 수출 회원이 섞여 있음(수출 ${pct(exr)}${r1?', 수출은 '+D.regions[r1[0]]+' 중심':''})`):'',ins=[];
   const extra=[];if(rer>0.6)extra.push(`재출품이 ${pct(rer)}로 같은 차가 반복 출품되고 있어 유찰 차의 희망가 조정 여부를 먼저 확인`);if(t5s>0.6)extra.push(`낙찰의 ${pct(t5s)}가 상위 5곳에 몰려 있어 한두 곳이 빠지면 낙찰률이 크게 흔들림`);if(hasP&&Math.abs(dv)>=0.05)extra.push(`수급지수가 한 회차 전 기간보다 ${dv>0?'올라':'내려'}가는 중(${ix2(sp.idx)} → ${ix2(s.idx)})`);
