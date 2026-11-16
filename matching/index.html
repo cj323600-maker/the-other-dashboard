@@ -205,18 +205,33 @@ function syncFilters(){const w=st.r1-st.r0+1;let n=0,ww=0;for(let r=st.r0;r<=st.
   $('filters').querySelectorAll('[data-gran]').forEach(b=>b.classList.toggle('on',st.gran===b.dataset.gran))}
 const RED=['#fdf1ee','#f9d9d2','#f2b5a8','#e68a78','#d25f4b','#b3261e'];
 function redOf(t){const k=t<=0?0:Math.min(5,Math.ceil(t*5));return{bg:RED[k],fg:k>=4?'#fff':'var(--ink)',sub:k>=4?'rgba(255,255,255,.85)':'var(--muted)'}}
-function insight(C){const s0=st.sel;if(!s0)return'';  // 2026-11-16 사용자 지시: 지도 칸을 누르면 지도 아래에 간략 시사점
+function insight(C){const s0=st.sel;if(!s0)return'';  // 2026-11-16 사용자 지시: 칸을 누르면 오른쪽 칸 상세 자료를 요약하고 시사점까지(지도 위)
   const I=C.I.filter(i=>YB(D.y[i])===s0.y&&(s0.k<0||KB(D.k[i])===s0.k)&&(s0.p<0||PB(D.s[i])===s0.p));const s=stat(I,C.R,C.weeks,C.ref),ok=s.per>=MIN_CELL,[dl,dc]=diag(s,ok);
-  const nm=cellName(s0.y,s0.k,s0.p),gp=Math.abs(s.idx*100).toFixed(0);let t;
-  if(!s.n)t='이 칸은 선택한 기간에 출품이 없습니다.';
-  else if(!ok)t=`회당 출품 ${f0(s.per)}대로 표본이 적어 판단하지 않습니다.`;
-  else if(dl===LB.S)t=`평균보다 ${gp}% 더 팔리는 칸(수급지수 ${ix2(s.idx)}), 회당 ${sg(s.opp)}대 더 팔려 차가 모자라므로 이 칸 출품 확대가 우선입니다.`;
-  else if(dl===LB.M)t=`평균보다 ${gp}% 덜 팔림(수급지수 ${ix2(s.idx)}, 회당 ${sg(s.opp)}대). 값보다 회원 쪽 요인이 커서 이 칸 차를 사는 매수 회원 모집 · 재방문이 필요합니다.`;
-  else if(dl===LB.P)t=`평균보다 ${gp}% 덜 팔림(수급지수 ${ix2(s.idx)}, 회당 ${sg(s.opp)}대). 기준가보다 비싸게 나온 차(낙찰률 ${s.xn?pct(s.xr):'–'})가 원인이라 시작가 · 희망가 재협의가 먼저입니다.`;
-  else if(dl===LB.B)t=`평균보다 ${gp}% 덜 팔림(수급지수 ${ix2(s.idx)}, 회당 ${sg(s.opp)}대). 회원 부족과 높은 시작가가 함께 작용해 회원 모집과 시작가 재협의를 같이 진행해야 합니다.`;
-  else if(Math.abs(s.idx)<TW)t=`수급지수 ${ix2(s.idx)}, 경매장 평균 수준(회당 출품 ${f0(s.per)}대 · 낙찰률 ${pct(s.rate)}). 지금 출품 · 시작가 수준을 유지하면 됩니다.`;
-  else t=`수급지수 ${ix2(s.idx)}, 평균보다 ${gp}% ${s.idx>0?'더':'덜'} 팔리지만 진단 기준(1.10 이상 · 0.90 이하) 안입니다. 다음 회차에 ${s.idx>0?'1.10 이상으로 올라가는지':'0.90 이하로 내려가는지'} 지켜봅니다.`;
-  return`<div class="note" style="border-left:3px solid var(--ink);background:var(--soft);border-radius:6px;padding:8px 12px;margin-top:10px;word-break:keep-all"><b style="color:var(--ink)">시사점 · ${nm}</b> <span class="pill ${dc}">${dl}</span><br>${t}</div>`}
+  const nm=cellName(s0.y,s0.k,s0.p),gp=Math.abs(s.idx*100).toFixed(0),box=(t,sum)=>`<div class="note" style="border-left:3px solid var(--ink);background:var(--soft);border-radius:6px;padding:8px 12px;margin-bottom:8px;word-break:keep-all"><b style="color:var(--ink)">칸 요약 · ${nm}</b> <span class="pill ${dc}">${dl}</span>${sum||''}<div style="margin-top:6px;color:var(--ink)"><b>시사점</b> ${t}</div></div>`;
+  if(!s.n)return box('이 칸은 선택한 기간에 출품이 없습니다.');
+  // 오른쪽 칸 상세와 같은 자료: 차종 · 가져온 쪽 · 사는 쪽 · 추이
+  const gm=group(I,i=>D.m[i]),ml=[...gm].map(([m,J])=>({m,s:stat(J,C.R,C.weeks,C.ref)})).filter(x=>x.s.n>=10).sort((x,y)=>y.s.w-x.s.w||y.s.n-x.s.n);
+  const top3=ml.slice(0,3).map(x=>`${D.models[x.m]} ${f0(x.s.w)}대`).join(' · ');
+  const bad=ml.filter(x=>x.s.refN>=3&&x.s.gapM>=0.10&&x.s.idx<0).sort((x,y)=>y.s.gapM-x.s.gapM).slice(0,2).map(x=>`${D.models[x.m]} +${(x.s.gapM*100).toFixed(0)}%`).join(' · ');
+  const sc=[0,0,0];let re=0;for(const i of I){sc[D.c[i]]++;if(D.n[i]>0)re++}const sk=sc.indexOf(Math.max(...sc));
+  const L=I.filter(i=>i>=LAST0),vx=new Map();for(const i of L){if(D.we[i]||D.s[i]<=0)continue;const rp=C.ref.get(D.m[i]+'|'+D.y[i]+'|'+RK(D.k[i]));if(!rp||D.s[i]/rp<1.10)continue;const v=D.vend[i-LAST0];vx.set(v,(vx.get(v)||0)+1)}
+  const vl=[...vx].sort((x,y)=>y[1]-x[1]).slice(0,2),vt=vl.map(([v,c])=>`${D.vd[v]} ${c}대`).join(' · ');
+  const bz=new Map(),rg=new Map();let wn=0,ex=0;for(const i of I)if(D.we[i]){wn++;const z=D.z[i];bz.set(z,(bz.get(z)||0)+1);if(D.we[i]===2)ex++;if(z>=0&&D.zx[z]>=0){const r=D.zx[z];rg.set(r,(rg.get(r)||0)+1)}}
+  const t5s=wn?[...bz.values()].sort((x,y)=>y-x).slice(0,5).reduce((x,y)=>x+y,0)/wn:0,r1=[...rg].sort((x,y)=>y[1]-x[1])[0];
+  const li=(k,v)=>`<div style="display:flex;gap:8px;margin-top:3px"><span style="flex:0 0 62px;color:var(--muted);font-weight:600">${k}</span><span style="min-width:0">${v}</span></div>`;
+  const sum=li('물량',`회당 출품 ${f0(s.per)}대 · 낙찰 ${f0(s.w/C.weeks)}대 · 유찰 ${f0(s.un_/C.weeks)}대 · 낙찰률 ${pct(s.rate)}(전체 ${pct(C.R)}) · 수급지수 ${ix2(s.idx)}`)
+    +li('차종',(top3?`낙찰 상위 ${top3}`:'기간 출품 10대 이상 차종 없음')+(bad?` · 값 차이 큰 차종 ${bad}`:''))
+    +li('가져온 쪽',`${SRC[sk]} ${pct(sc[sk]/I.length)} · 재출품 ${pct(re/I.length)}`+(ok?` · 비싼 차 ${f0(s.xn)}대(낙찰률 ${s.xn?pct(s.xr):'–'}) / 적정가 차 ${f0(s.fn)}대(${s.fn?pct(s.fr):'–'})`:'')+(vt?` · 최신 회차 비싼 유찰 차 ${vt}`:''))
+    +li('사는 쪽',wn?`낙찰 회원사 ${f0(bz.size)}곳 · 상위 5곳 비중 ${pct(t5s)} · 수출 ${pct(ex/wn)}`+(r1?` · ${D.regions[r1[0]]} ${f0(r1[1])}대`:''):'낙찰 없음');
+  let t;
+  if(!ok)t=`회당 출품 ${f0(s.per)}대로 표본이 적어 판단하지 않습니다.`;
+  else if(dl===LB.S)t=`평균보다 ${gp}% 더 팔려 차가 모자랍니다(회당 ${sg(s.opp)}대).${top3?` ${D.models[ml[0].m]} 등 잘 팔리는 차종 중심으로`:''} 이 칸 출품 확대가 우선입니다.`;
+  else if(dl===LB.M)t=`평균보다 ${gp}% 덜 팔리고(회당 ${sg(s.opp)}대) 값보다 회원 쪽 요인이 큽니다(회원 ${sg(s.mem)} / 값 ${sg(s.prc)}대).${t5s>0.6?' 낙찰이 상위 5곳에 몰려 있어':''} 이 칸 차를 사는 매수 회원 모집 · 재방문이 필요합니다.`;
+  else if(dl===LB.P)t=`평균보다 ${gp}% 덜 팔리며(회당 ${sg(s.opp)}대) 적정가 차는 ${s.fn?pct(s.fr):'–'} 팔리는데 비싼 차는 ${s.xn?pct(s.xr):'–'}에 그칩니다.${vt?` ${D.vd[vl[0][0]]} 등`:''} 비싸게 나온 차의 시작가 · 희망가 재협의가 먼저입니다.`;
+  else if(dl===LB.B)t=`평균보다 ${gp}% 덜 팔리고(회당 ${sg(s.opp)}대) 회원 부족과 높은 시작가가 함께 작용합니다(회원 ${sg(s.mem)} / 값 ${sg(s.prc)}대). 매수 회원 모집과 시작가 재협의를 같이 진행해야 합니다.`;
+  else if(Math.abs(s.idx)<TW)t=`경매장 평균 수준입니다. 지금 출품 · 시작가 수준을 유지하면 됩니다.`;
+  else t=`평균보다 ${gp}% ${s.idx>0?'더':'덜'} 팔리지만 진단 기준(1.10 이상 · 0.90 이하) 안입니다. 다음 회차에 ${s.idx>0?'1.10 이상으로 올라가는지':'0.90 이하로 내려가는지'} 지켜봅니다.`;
+  return box(t,ok?sum:'')}
 function heat(C){const byP=st.axis==='p',cols=byP?PL:KL,fine=cols.length>4;const g=group(C.I,i=>{const c=byP?PB(D.s[i]):KB(D.k[i]);return c<0?null:YB(D.y[i])+'|'+c});
   const S={};let mx=0;for(let y=0;y<YL.length;y++)for(let c=0;c<cols.length;c++){const I=g.get(y+'|'+c)||[],s=stat(I,C.R,C.weeks,C.ref);S[y+'|'+c]=s;const v=st.color==='n'?s.n:st.color==='u'?s.un_:s.w;if(v>mx)mx=v}
   let h=`<table class="heat${cols.length>4?' fine':''}"><thead><tr><th class="row"></th>${cols.map(c=>`<th>${byP?'시작가 ':'주행거리 '}${c}</th>`).join('')}</tr></thead><tbody>`;
@@ -359,8 +374,9 @@ function render(){syncFilters();const C=ctx(0),Cp=ctx(1);
       <div class="panel p-map"><div class="hd"><h2>매칭 지도 — 연식 × ${st.axis==='p'?'시작가':'주행거리'}</h2><span class="fg"><span class="fl">가로축</span><button class="chip${st.axis==='k'?' on':''}" data-ax="k">주행거리</button><button class="chip${st.axis==='p'?' on':''}" data-ax="p">시작가</button><span class="fl" style="margin-left:8px">색 기준</span><button class="chip${st.color==='w'?' on':''}" data-col="w">낙찰 대수</button><button class="chip${st.color==='n'?' on':''}" data-col="n">출품 대수</button><button class="chip${st.color==='u'?' on':''}" data-col="u">유찰 대수</button><button class="chip${st.color==='ix'?' on':''}" data-col="ix">수급지수</button></span></div>
       <p class="note" style="margin:-4px 0 8px">${st.color==='ix'?`칸의 큰 숫자 = 수급지수(칸 낙찰률 ÷ 경매장 전체 낙찰률 ${pct(C.R)}, 경매장 평균 = 1.00). 1.00보다 크면 평균보다 잘 팔려 차가 모자란 칸(파랑), 작으면 덜 팔려 차가 남는 칸(빨강)입니다. 예: 1.20 = 평균보다 20% 더 팔림, 0.80 = 20% 덜 팔림. 아래는 낙찰률과 회당 출품 · 유찰 대수입니다.`:st.color==='n'?'칸의 큰 숫자 = 회당 출품 대수, 그 아래는 회당 낙찰 대수와 낙찰률. 붉은색이 짙을수록 출품이 많은 칸입니다.':st.color==='u'?'칸의 큰 숫자 = 회당 유찰 대수(출품 − 낙찰), 그 아래는 회당 출품 대수와 낙찰률. 붉은색이 짙을수록 안 팔리고 남는 차가 많은 칸입니다.':'칸의 큰 숫자 = 회당 낙찰 대수, 그 아래는 회당 출품 대수와 낙찰률. 붉은색이 짙을수록 낙찰이 많은 주력 칸입니다. 칸 안의 표시는 진단입니다.'}</p>
       <div class="note" style="background:var(--soft);border-radius:8px;padding:8px 12px;margin-bottom:8px"><b style="color:var(--ink)">수급지수란</b> 칸 낙찰률 ÷ 경매장 전체 낙찰률(현재 ${pct(C.R)}). <b>1.00 = 경매장 평균</b>, 1.10 이상 = 평균보다 10% 넘게 잘 팔림(차량 공급 부족), 0.90 이하 = 10% 넘게 덜 팔림(차가 남음, 원인은 회원 부족 또는 값이 비쌈으로 진단). 표 · 칸 상세 · 회의 화면의 지수는 모두 이 값입니다.</div>
+      ${insight(C)}
       <div class="scroll">${heat(C)}</div>
-      <div class="legend">${st.color==='ix'?'<span><i class="c-o2"></i>0.90 이하 차가 남음</span><span><i class="c-o1"></i>0.90~0.97</span><span><i class="c-e"></i>0.97~1.03 평균 수준</span><span><i class="c-s1"></i>1.03~1.10</span><span><i class="c-s2"></i>1.10 이상 차량 공급 부족</span><span>빗금 = 회당 출품 '+MIN_CELL+'대 미만</span>':'<span>적음</span>'+RED.map(c=>`<i style="background:${c};margin:0 -2px"></i>`).join('')+`<span>많음 (${st.color==='n'?'출품':st.color==='u'?'유찰':'낙찰'} 대수, 가장 많은 칸 대비)</span>`}</div>${insight(C)}</div>
+      <div class="legend">${st.color==='ix'?'<span><i class="c-o2"></i>0.90 이하 차가 남음</span><span><i class="c-o1"></i>0.90~0.97</span><span><i class="c-e"></i>0.97~1.03 평균 수준</span><span><i class="c-s1"></i>1.03~1.10</span><span><i class="c-s2"></i>1.10 이상 차량 공급 부족</span><span>빗금 = 회당 출품 '+MIN_CELL+'대 미만</span>':'<span>적음</span>'+RED.map(c=>`<i style="background:${c};margin:0 -2px"></i>`).join('')+`<span>많음 (${st.color==='n'?'출품':st.color==='u'?'유찰':'낙찰'} 대수, 가장 많은 칸 대비)</span>`}</div></div>
       <div class="panel p-rank"><div class="hd"><h2>먼저 볼 ${st.f2==='cell'?'칸':'차종'}</h2><span><button class="chip${st.f2==='cell'?' on':''}" data-f2="cell">칸</button> <button class="chip${st.f2==='model'?' on':''}" data-f2="model">차종</button></span></div>${f2table(C,Cp)}</div>
     </div>${detail(C,Cp)}</div>`}
   else if(st.tab==='meet')h=meet(C,Cp);else if(st.tab==='exp')h=expo(C);else h=rule();
