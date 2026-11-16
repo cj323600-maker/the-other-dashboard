@@ -192,9 +192,9 @@ function readKpi(doc){
     out.push({rg:rg,lab:txt(c.querySelector(".ct > span")),pill:txt(pill),ok:!!(pill&&/v-ok/.test(pill.className)),v:txt(cv.querySelector("span")),unit:txt(cv.querySelector("small")),d:txt(b)+" "+(cd?txt(cd).replace(txt(b),"").split("·")[0].trim():"")});
   });
   // 2026-11-14: 일보 "재고 자산 현황" 섹션을 네 번째 카드로(달성/미달 판정 없음)
-  var h=[].filter.call(doc.querySelectorAll("h2"),function(e){return /^재고 자산 현황/.test(txt(e));})[0];
+  var h=[].filter.call(doc.querySelectorAll("h2, details > summary"),function(e){return /^재고 자산 현황/.test(txt(e));})[0];  // 2026-11-16: 일보에서 접이식(summary)으로 바뀜
   if(h&&out.length){var s=txt(h),m=s.match(/ERP 재고\s*([\d,]+)대\s*·\s*([\d,.]+)억원\(매입원가,\s*([^)]*?)\s*기준\)\s*·\s*이번 회차 출품\s*([\d,]+)대\s*·\s*([\d,.]+)억원/),
-    f=(txt(h.parentNode).match(/재무 재고 평가액\((\d+\/\d+)\)\s*([\d,.]+)억원/)||[]);
+    f=(txt(h.closest("details")||h.parentNode).match(/재무 재고 평가액\((\d+\/\d+)\)\s*([\d,.]+)억원/)||[]);
     if(m)out.push({inv:true,lab:"재고 자산 (ERP 매입원가)",pill:"",v:m[2],unit:"억원",d:m[1]+"대 · "+m[3]+" 기준 · 이번 회차 출품 "+m[4]+"대 · "+m[5]+"억원",rg:f[2]?"":"",fin:f[2]?("재무 재고 평가액("+f[1]+") "+f[2]+"억원"):""});}
   return out.length?out:null;
 }
