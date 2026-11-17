@@ -85,6 +85,8 @@ table.heat td.dk .ix,table.heat td.dk .n{color:#fff!important}
 .vh{display:flex;align-items:flex-end;gap:4px;height:124px}.vh-c{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;font-size:11px;font-variant-numeric:tabular-nums}.vh-c i{display:block;width:100%;background:#c5d6e6;border-radius:3px 3px 0 0;min-height:2px}.vh-c.on i{background:#1f5f8b}.vh-x{color:var(--muted);margin-top:3px;white-space:nowrap}
 .pb{position:relative;padding-top:20px}.pb-t{position:relative;height:16px;border-radius:4px;background:#c5d6e6}.pb-t .band{position:absolute;top:0;bottom:0;background:#1f5f8b;border-radius:3px}.pb-t .avg{position:absolute;top:-5px;bottom:-5px;width:3px;margin-left:-1.5px;background:#d92d20;border-radius:2px}.pb-a{position:absolute;top:0;transform:translateX(-50%);font-size:12px;font-weight:700;color:#d92d20;white-space:nowrap}
 .cz{background:var(--soft);border-radius:8px;padding:8px 10px;margin:6px 0 10px}.czl{display:flex;flex-wrap:wrap;gap:2px 14px;font-size:12.5px;margin-top:4px}.czv{margin:6px 0 0;font-size:13px;font-weight:600;line-height:1.6}.czn{margin:3px 0 0;font-size:11.5px;color:var(--muted)}table.heat td .rt{font-weight:600}
+.vd{margin:6px 0 10px;padding:7px 12px;background:var(--soft);border-left:4px solid var(--accent);border-radius:0 8px 8px 0;font-size:14px;font-weight:700}.t3{margin-top:10px;border-top:1px solid var(--line)}.t1{display:grid;grid-template-columns:92px minmax(0,1fr);gap:10px;padding:7px 0;border-bottom:1px dashed var(--line);font-size:13.5px}.t1 span{font-weight:600}
+.bl{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:10px;font-size:13px;padding:3px 0;border-bottom:1px dashed var(--line)}.bl i{font-style:normal;color:var(--muted)}.bl b{font-variant-numeric:tabular-nums}
 .sx{display:flex;height:16px;border-radius:4px;overflow:hidden;background:var(--soft)}.sx i{display:block;height:100%}.sxl{display:flex;justify-content:space-between;flex-wrap:wrap;gap:2px 10px;font-size:12.5px;margin-top:3px}
 .tms{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px;margin-top:12px}.tm{border:1px solid var(--line);border-top:4px solid var(--tc);border-radius:8px;padding:8px 10px;min-width:0}.tm h3{font-size:13.5px;color:var(--tc)}.tm .tj{font-weight:700;font-size:13.5px;margin:4px 0 6px;line-height:1.5}.tm ul{margin:0;padding:0;list-style:none;font-size:12.5px}.tm li{padding:3px 0;border-top:1px dashed var(--line);line-height:1.5}.tm li span{color:var(--muted);font-weight:700;margin-right:6px}
 .mh{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;border-top:1px solid var(--line);padding-top:10px;margin-top:4px}.mh i{width:12px;height:12px;border-radius:3px}.mh b.nm{font-size:16px}.mh .ix{font-size:18px;font-weight:800}
@@ -325,7 +327,7 @@ function cellPanel(C){const s0=st.sel;  // 2026-11-17 사용자 지시: 칸 → 
   const byR=group(I,i=>RR[i]);let sd='',sn=0,chips='';for(let r=C.r1;r>=Math.max(C.r0,C.r1-7);r--){const K=byR.get(r);if(!K||!K.length)break;const q=K.filter(WON).length/K.length,e=q>BASE?'s':q<LOW?'o':'';if(!e||(sd&&e!==sd))break;sd=e;sn++}
   for(let r=Math.max(C.r0,C.r1-7);r<=C.r1;r++){const K=byR.get(r)||[];if(!K.length){chips+=`<span class="rc">${md(D.rounds[r])}<b>–</b></span>`;continue}const v=1-K.filter(WON).length/K.length/BASE,kc=colOf(v);chips+=`<span class="rc${kc.dk?' dk':''}" style="background:${kc.bg}">${md(D.rounds[r])}<b>${ix2(v)}</b></span>`}
   const why=isNaN(s.idx)?'':s.idx<0?`기준보다 ${Math.abs(s.idx*100).toFixed(0)}% 더 팔림`:`기준보다 ${(s.idx*100).toFixed(0)}% 덜 팔림`;
-  const head=`<div class="dh"><h2>${cellName(s0.y,s0.k,s0.p).split(' / ').filter(x=>!/전체$/.test(x)).join(' · ')}</h2><div class="dh2"><span class="ix ${ok?tcl(s.idx):''}">${ix2(s.idx)}</span><span class="pill ${dc}">${dl}</span>${sn>=2?`<span class="rp2"${sn>=4?` style="border-color:var(--${sd==='s'?'short':'over'});color:var(--${sd==='s'?'short':'over'})"`:''}>${sn}주 연속 ${sd==='s'?'공급 부족':'공급 과다'}</span>`:''}<span class="muted">${why} · 낙찰률 ${pct(s.rate)} (기준 ⟦B⟧) · 회당 출품 ${f0(s.per)}대</span></div></div><div class="ct2">회차별 수급지수 (최근 ${Math.min(8,C.weeks)}회차)</div><div class="rcs">${chips}</div>${ok?causeBox(s,'원인 판정'):''}`;
+  const head=`<div class="dh"><h2>${cellName(s0.y,s0.k,s0.p).split(' / ').filter(x=>!/전체$/.test(x)).join(' · ')}</h2><div class="dh2"><span class="ix ${ok?tcl(s.idx):''}">${ix2(s.idx)}</span><span class="pill ${dc}">${dl}</span>${sn>=2?`<span class="rp2">${sn}주 연속</span>`:''}<span class="muted">낙찰률 ${pct(s.rate)} · 회당 출품 ${f0(s.per)}대</span></div></div>`;
   if(!I.length)return`<div class="panel side">${head}<p class="muted">이 칸 출품이 없습니다.</p></div>`;
   const gg=[...group(I,i=>D.mg[D.m[i]])].sort((a,b)=>b[1].length-a[1].length);
   if(st.mgp==null||!gg.some(x=>x[0]===st.mgp))st.mgp=gg[0][0];
@@ -346,12 +348,12 @@ function cellPanel(C){const s0=st.sel;  // 2026-11-17 사용자 지시: 칸 → 
   const ych=yr.slice(0,7).map(([y,K])=>{const w=K.filter(WON).length;return`<div class="hb-r"><span>${y}년</span><div class="hb-t"><i class="a" style="width:${(K.length/ymx*100).toFixed(1)}%"></i><i class="b" style="width:${(w/ymx*100).toFixed(1)}%"></i></div><span class="hb-v">${f0(K.length)} · ${f0(w)}대 · ${pct(w/K.length)}</span></div>`}).join('');
   // 낙찰가 막대(분포)
   let hist='<p class="note">낙찰 3대 미만</p>';if(has){const lo=Math.min(...pr),hi=Math.max(...pr),sp=Math.max(1,hi-lo),ps=v=>((v-lo)/sp*100).toFixed(1),ap=+ps(avg);  // 2026-11-17 사용자 지시: 가로 막대 + 평균 빨간 줄
-    hist=`<div class="pb"><span class="pb-a" style="left:${Math.max(14,Math.min(86,ap))}%">평균 ${f0(avg)}만원</span><div class="pb-t"><i class="band" style="left:${ps(q1)}%;width:${(ps(q3)-ps(q1)).toFixed(1)}%"></i><i class="avg" style="left:${ap}%"></i></div><div class="sxl"><span>최저 ${f0(lo)}만원</span><span>최고 ${f0(hi)}만원</span></div><div class="hb-k"><i style="background:#1f5f8b;margin-left:0"></i>가운데 50% ${rgt}<i style="background:#d92d20;width:3px"></i>평균 ${f0(avg)}만원 · 낙찰 ${f0(pr.length)}대</div></div>`}
+    hist=`<div class="pb"><span class="pb-a" style="left:${Math.max(14,Math.min(86,ap))}%">평균 ${f0(avg)}만원</span><div class="pb-t"><i class="band" style="left:${ps(q1)}%;width:${(ps(q3)-ps(q1)).toFixed(1)}%"></i><i class="avg" style="left:${ap}%"></i></div><div class="sxl"><span>최저 ${f0(lo)}만원</span><span>최고 ${f0(hi)}만원</span></div><div class="hb-k">진한 구간 = 가운데 50% ${rgt}</div></div>`}
   // 내수 · 수출, 회원사 표
   let d1=0,d2=0;for(const i of J){if(D.we[i]===1)d1++;else if(D.we[i]===2)d2++}const dx=d1+d2,exr=dx?d2/dx:0;
   const bz=[...group(W,i=>D.z[i])].sort((p,q)=>q[1].length-p[1].length),t5=bz.slice(0,5),t5s=W.length?t5.reduce((a,x)=>a+x[1].length,0)/W.length:0;
-  const brow=([z,K])=>{const e=K.filter(i=>D.we[i]===2).length,pp=K.filter(i=>D.p[i]>0).map(i=>D.p[i]);return`<tr><td style="white-space:normal;text-align:left">${D.bizN[z]||'미상'}</td><td>${e*2>=K.length?'수출':'내수'}</td><td>${f0(K.length)}</td><td>${pct(K.length/W.length)}</td><td>${pp.length?f0(pp.reduce((a,b)=>a+b,0)/pp.length):'–'}</td></tr>`};
-  const btab=W.length?`<div class="scroll"><table class="t"><thead><tr><th style="text-align:left">회원사</th><th>구분</th><th>낙찰 (대)</th><th>비중</th><th>평균 낙찰가 (만원)</th></tr></thead><tbody>${t5.map(brow).join('')}${bz.length>5?`<tr><td style="text-align:left" class="muted">그 외 ${f0(bz.length-5)}곳</td><td>–</td><td>${f0(W.length-t5.reduce((a,x)=>a+x[1].length,0))}</td><td>${pct(1-t5s)}</td><td>–</td></tr>`:''}</tbody></table></div>`:'<p class="note">낙찰 없음</p>';
+  const brow=([z,K])=>{const e=K.filter(i=>D.we[i]===2).length;return`<div class="bl"><span>${D.bizN[z]||'미상'}</span><i>${e*2>=K.length?'수출':'내수'}</i><b>${f0(K.length)}대</b></div>`};
+  const btab=W.length?`<div class="ct2">가져간 회원사 상위 5곳 (낙찰)</div>${t5.map(brow).join('')}`:'<div class="ct2">가져간 회원사</div><p class="note">낙찰 없음</p>';
   const rgm=new Map();for(const i of W){const z=D.z[i];if(D.we[i]===2&&z>=0&&D.zx[z]>=0)rgm.set(D.zx[z],(rgm.get(D.zx[z])||0)+1)}const rgl=[...rgm].sort((a,b)=>b[1]-a[1]).slice(0,2).map(([r,c])=>`${D.regions[r]} ${f0(c)}대`).join(' · ');
   // 팀별 카드
   const n=J.length,F=J.filter(i=>D.n[i]===0),RJ=J.filter(i=>D.n[i]>0),r0=F.length?F.filter(WON).length/F.length:NaN,r1=RJ.length?RJ.filter(WON).length/RJ.length:NaN,rer=n?RJ.length/n:0;
@@ -361,20 +363,22 @@ function cellPanel(C){const s0=st.sel;  // 2026-11-17 사용자 지시: 칸 → 
   const by=yr.filter(x=>x[1].length>=10).map(([y,K])=>[y,K.filter(WON).length/K.length,K.length]).sort((a,b)=>b[1]-a[1])[0];
   const own=J.filter(i=>D.c[i]===0),ownr=own.length?own.filter(WON).length/own.length:NaN;
   const few=n<10,price=ml_===LB.P||ml_===LB.B;
-  const j1=few?'표본이 적어 참고만 합니다.':sm.rate>BASE?'출품 확대 대상입니다. 기준보다 잘 팔려 차가 모자랍니다.':price?`가격 조정이 먼저입니다. 비싼 차 ${f0(sm.xn)}대의 낙찰률이 ${pct(sm.xr)}입니다.`:(sm.rate>=LOW?'물량을 유지합니다. 낙찰률이 기준 바로 아래입니다.':'물량을 늘리지 않습니다. 적정가 이하 차도 기준에 못 미칩니다.');
-  const who=exr>=0.6?'수출':exr<=0.4?'내수':'내수 · 수출',j2=few?'표본이 적어 참고만 합니다.':!dx?'낙찰이 없어 사는 회원을 알 수 없습니다.':(ml_===LB.M||ml_===LB.B?'회원 부족 차종입니다. ':'')+(exr>=0.6?`수출 회원이 사는 차입니다. ${rgl?rgl.split(' ')[0]+' 권역 ':''}수출 회원 모집 대상입니다.`:exr<=0.4?'내수 회원이 사는 차입니다. 내수 회원 모집 대상입니다.':'내수와 수출 회원이 함께 사는 차입니다. 양쪽 모두 모집 대상입니다.');
-  const j3=few||isNaN(r0)?'표본이 적어 참고만 합니다.':r0>BASE?`매입 가능 차종입니다. 초회 낙찰률이 ${pct(r0)}로 기준을 넘습니다.`:r0>=LOW?`선별 매입합니다. 초회 낙찰률이 ${pct(r0)}로 기준에 조금 못 미칩니다.`:`매입에 주의합니다. 초회 낙찰률이 ${pct(r0)}로 기준 아래입니다.`;
-  const li=(k,v)=>`<li><span>${k}</span>${v}</li>`,tm=(t,c,j,ls)=>`<div class="tm" style="--tc:${c}"><h3>${t}</h3><div class="tj">${j}</div><ul>${ls.join('')}</ul></div>`;
-  const teams=tm('출품영업팀','#1f5f8b',j1,[li('출품 가격 가이드',has?`낙찰가 ${rgt}`:'낙찰 3대 미만'),li('시작가',ss.length&&pr.length?`중앙값 ${f0(sM)}만원 (낙찰가 중앙값 ${f0(pM)}만원 대비 ${(sM/pM-1>=0?'+':'−')+Math.abs((sM/pM-1)*100).toFixed(0)}%)`:'–'),li('적정가 차 · 비싼 차 낙찰률',`${sm.fn?pct(sm.fr):'–'} · ${sm.xn?pct(sm.xr):'–'}`),li('재출품 비중',pct(rer)),li('가격 조정 대상 (최신 회차)',vt||'없음')])
-   +tm('회원운영팀','#2f8f6b',j2,[li('내수 · 수출',dx?`내수 ${pct(d1/dx)} · 수출 ${pct(exr)}`:'–'),li('낙찰 회원사',`${f0(bz.length)}곳`),li('상위 5곳 비중',W.length?`${pct(t5s)}${t5s>=0.6?' (의존 큼)':''}`:'–'),li('수출 권역',rgl||'–')])
-   +tm('플랫폼매입팀','#7a5aa8',j3,[li('매입 참고 낙찰가',has?`${rgt} (평균 ${f0(avg)}만원)`:'낙찰 3대 미만'),li('초회 · 재출품 낙찰률',`${isNaN(r0)?'–':pct(r0)} · ${isNaN(r1)?'–':pct(r1)}`),li('잘 팔리는 연식',by?`${by[0]}년 (낙찰률 ${pct(by[1])}, 출품 ${f0(by[2])}대)`:'–'),li('자사 출품',own.length?`${f0(own.length)}대 · 낙찰률 ${pct(ownr)}`:'없음')]);
-  return`<div class="panel side">${head}<div class="mini">차군을 누르면 ② 차종이 바뀌고, 차종을 누르면 아래 정보가 그 차로 바뀝니다</div><div class="dgr">${dn1}${dn2}</div>
-  <div class="mh"><i style="background:${msel.c}"></i><b class="nm">${D.models[st.mm]}</b><span class="ix ${mok?tcl(sm.idx):''}">${ix2(sm.idx)}</span><span class="pill ${mc_}">${ml_}</span><span class="muted">출품 ${f0(n)}대 · 낙찰 ${f0(W.length)}대 · 낙찰률 ${pct(sm.rate)} (기준 ⟦B⟧)</span></div>${mok?causeBox(sm,'원인 판정'):''}
-  <div class="g2"><div class="cb"><div class="ct2">연식별 출품 · 낙찰 (대) · 낙찰률</div>${ych}<div class="hb-k"><i style="background:#c5d6e6;margin-left:0"></i>출품<i style="background:#1f5f8b"></i>낙찰</div></div>
-  <div class="cb"><div class="ct2">낙찰가 범위 (만원)</div>${hist}</div></div>
-  <div class="cb"><div class="ct2">내수 · 수출 낙찰 비중</div>${dx?`<div class="sx"><i style="width:${(d1/dx*100).toFixed(1)}%;background:#1f5f8b"></i><i style="width:${(exr*100).toFixed(1)}%;background:#d29a2c"></i></div><div class="sxl"><span><b style="color:#1f5f8b">■</b> 내수 ${f0(d1)}대 · ${pct(d1/dx)}</span><span><b style="color:#d29a2c">■</b> 수출 ${f0(d2)}대 · ${pct(exr)}</span></div>`:'<p class="note">낙찰 없음</p>'}</div>
-  <div class="cb" style="margin-top:10px"><div class="ct2">가져간 회원사 — 낙찰 많은 순 상위 5곳</div>${btab}</div>
-  <div class="ct2" style="margin-top:12px">팀별로 볼 것 — ${D.models[st.mm]}</div><div class="tms" style="margin-top:0">${teams}</div></div>`}
+  const Pc=(a,c)=>c?pct(a/c):'–',vd=!mok?'표본이 적어 판정하지 않음':ml_===LB.S?'기준보다 잘 팔림 → 물량 확보':ml_===LB.W?'기준 바로 아래 → 회원을 조금 더':ml_===LB.P?`적정가 이하 차는 ${Pc(sm.fw,sm.fn)} 팔리는데 고가 차 ${f0(sm.xn)}대는 ${Pc(sm.xw,sm.xn)} → 가격 고가`:`적정가 이하 차도 ${Pc(sm.fw,sm.fn)}만 팔림 → 회원 부족`+(ml_===LB.B?` · 고가 차 비중 ${pct(sm.xn/sm.kn)}`:'');
+  const j1=few?'표본 적음':sm.rate>BASE?`출품 확대${has?' · 가격 가이드 '+rgt:''}`:price?`시작가 조정${has?' · 낙찰가 '+rgt+'에 맞춤':''}`:'물량 유지';
+  const who=exr>=0.6?'수출':exr<=0.4?'내수':'내수 · 수출',j2=few?'표본 적음':!dx?'낙찰 없음':`${who} 회원 모집${ml_===LB.M||ml_===LB.B?' (회원 부족)':''}${exr>=0.6&&rgl?' · '+rgl.split(' ')[0]:''}`;
+  const j3=few||isNaN(r0)?'표본 적음':`${r0>BASE?'매입 가능':r0>=LOW?'선별 매입':'매입 주의'} · 초회 낙찰률 ${pct(r0)}${has?' · 낙찰가 '+rgt:''}`;
+  const tm=(t,c,j)=>`<div class="t1"><b style="color:${c}">${t}</b><span>${j}</span></div>`;
+  const teams=tm('출품영업팀','#1f5f8b',j1)
+   +tm('회원운영팀','#2f8f6b',j2)
+   +tm('플랫폼매입팀','#7a5aa8',j3);
+  return`<div class="panel side">${head}<div class="dgr">${dn1}${dn2}</div>
+  <div class="mh"><i style="background:${msel.c}"></i><b class="nm">${D.models[st.mm]}</b><span class="ix ${mok?tcl(sm.idx):''}">${ix2(sm.idx)}</span><span class="pill ${mc_}">${ml_}</span><span class="muted">낙찰률 ${pct(sm.rate)} · 출품 ${f0(n)}대</span></div>
+  <p class="vd">${vd}</p>
+  <div class="g2"><div class="cb"><div class="ct2">연식 — 출품 · 낙찰 (대) · 낙찰률</div>${ych}</div>
+  <div class="cb"><div class="ct2">낙찰가 (만원)</div>${hist}</div>
+  <div class="cb"><div class="ct2">내수 · 수출</div>${dx?`<div class="sx"><i style="width:${(d1/dx*100).toFixed(1)}%;background:#1f5f8b"></i><i style="width:${(exr*100).toFixed(1)}%;background:#d29a2c"></i></div><div class="sxl"><span><b style="color:#1f5f8b">■</b> 내수 ${pct(d1/dx)}</span><span><b style="color:#d29a2c">■</b> 수출 ${pct(exr)}</span></div>`:'<p class="note">낙찰 없음</p>'}</div>
+  <div class="cb">${btab}</div></div>
+  <div class="t3">${teams}</div></div>`}
 function detail(C,Cp){const b=detailBody(C,Cp);if(!st.sel)return b;  // 2026-11-16: 오른쪽 = 칸 요약 · 시사점, 상세 자료는 접어 둠
   const inner=b.replace(/^<div class="panel side">/,'').replace(/<\/div>\s*$/,'');
   return`<div class="panel side">${insight(C,Cp)}<details class="dt"${st.dopen?' open':''}><summary>상세 자료 <span class="note">차종 · 가져온 쪽 · 사는 쪽 · 추이</span></summary>${inner}</details></div>`}
