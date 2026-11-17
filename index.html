@@ -267,7 +267,7 @@ function chkBanner(){if(!CHK)return CHKBUSY?'<div class="cban run">보고서 점
   if(it.length)return'<a class="cban bad" href="#check"><b>보고서 점검 경고 · 불일치 · 갱신 필요 '+it.length+'건</b><span>'+esc(it.join(" · "))+'</span><em>마지막 점검 '+tm+' · 보고서 점검 프로그램 열기 →</em></a>';
   return'<a class="cban ok" href="#check"><b>보고서 점검 이상 없음</b><span>'+(CHK.c.ok+CHK.c.info)+'건 중 '+CHK.c.ok+'건 일치 · 최신'+(CHK.c.wait?' · 갱신 대기 '+CHK.c.wait+'건':'')+'</span><em>마지막 점검 '+tm+'</em></a>';}
 function runChk(){if(!window.RCHECK||CHKBUSY)return;CHKBUSY=true;renderNav(NAVCUR);RCHECK.run(RCHECK.browserGet,new Date()).then(function(x){CHK=x;CHKBUSY=false;renderNav(NAVCUR);if(NAVCUR==="home")renderHome();},function(){CHKBUSY=false;renderNav(NAVCUR);});}
-(function(){var s=document.createElement("script");s.src="check/engine.js";s.onload=function(){runChk();setInterval(runChk,10*60*1000);};document.head.appendChild(s);})();
+(function(){var s=document.createElement("script");s.src="check/engine.js?v=20261117b";s.onload=function(){runChk();setInterval(runChk,10*60*1000);};document.head.appendChild(s);})();
 Promise.all(MODS.map(function(m){return loadLive(m).then(function(){if(!m.self)return;return selfTime(m).then(function(v){if(v&&LIVE[m.key])LIVE[m.key].lm=v;});});})).then(function(){route(false);});
 loadTree().then(function(p){DATA=group(p);}).catch(function(e){ERR=e.message||"목록 조회 실패";}).then(function(){route(false);});
 })();
