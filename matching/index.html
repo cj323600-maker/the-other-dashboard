@@ -352,7 +352,7 @@ function cellPanel(C){const s0=st.sel;  // 2026-11-17 사용자 지시: 칸 → 
   const ev=[...group(I,i=>D.m[i])].filter(([m,J])=>J.length>=10).map(([m,J])=>Object.assign({mdl:m},mEval(J))),rg_=e=>isNaN(e.avg)?'':`${f0(e.avg*0.9)}~${f0(e.avg*1.1)}만원`;
   const o1=ev.filter(e=>e.x.rate>BASE).sort((a,b)=>(b.x.rate-BASE)*b.x.n-(a.x.rate-BASE)*a.x.n).slice(0,3),o2=ev.filter(e=>e.x.rate<LOW&&e.c.price).sort((a,b)=>b.x.xn-a.x.xn).slice(0,3),o3=ev.filter(e=>e.x.rate<LOW&&e.c.mem).sort((a,b)=>b.m.cut-a.m.cut).slice(0,3);
   const ol=(e,t)=>`<div class="od-r" data-mm="${e.mdl}" tabindex="0" role="button"><b>${D.models[e.mdl]}</b><span>${t}</span></div>`,og=(t,who,L,f)=>`<div class="od-g"><div class="od-t">${t}<small>${who}</small></div>${L.map(e=>ol(e,f(e))).join('')||'<div class="od-r none">해당 차종 없음</div>'}</div>`;
-  const orders=`<div class="od"><h3>오더 — 이 칸에서 할 일</h3>${og('더 확보할 차','출품영업 · 플랫폼매입',o1,e=>`${f0(e.x.n)}대 중 ${f0(e.x.w)}대 낙찰 ${pct(e.x.rate)}${rg_(e)?' · 시작가 '+rg_(e):''}`)}${og('시작가 낮출 차','출품영업',o2,e=>`비싸게 나온 차 ${f0(e.x.xn)}대 낙찰률 ${e.x.xn?pct(e.x.xw/e.x.xn):'–'}${rg_(e)?' → '+rg_(e)+'으로':''}`)}${og('회원 붙일 차','회원운영',o3,e=>`${f0(e.x.n)}대 중 ${f0(e.x.w)}대 낙찰 ${pct(e.x.rate)} → 회원사 +${f0(Math.max(1,e.m.need-e.m.cur))}곳 또는 출품 −${f0(e.m.cut)}대`)}</div>`;
+  const orders=`<div class="od"><h3>총평</h3>${og('더 확보할 차','출품영업 · 플랫폼매입',o1,e=>`${f0(e.x.n)}대 중 ${f0(e.x.w)}대 낙찰 ${pct(e.x.rate)}${rg_(e)?' · 시작가 '+rg_(e):''}`)}${og('시작가 낮출 차','출품영업',o2,e=>`비싸게 나온 차 ${f0(e.x.xn)}대 낙찰률 ${e.x.xn?pct(e.x.xw/e.x.xn):'–'}${rg_(e)?' → '+rg_(e)+'으로':''}`)}${og('회원 붙일 차','회원운영',o3,e=>`${f0(e.x.n)}대 중 ${f0(e.x.w)}대 낙찰 ${pct(e.x.rate)} → 회원사 +${f0(Math.max(1,e.m.need-e.m.cur))}곳 또는 출품 −${f0(e.m.cut)}대`)}</div>`;
   // 2026-11-17 사용자 지시: 총평은 맨 위, 문장 대신 짧은 항목(판정 · 원인 · 할 일 · 행선)
   const cM=memStat(I,exC),cC=causes(s),cmore=Math.max(0,Math.ceil(cM.rn*BASE-cM.rw-1e-9)),nm3=L=>L.map(e=>D.models[e.mdl]).join(' · ');
   const ccm=new Map();let cen=0;for(const i of I){if(D.we[i]!==2)continue;cen++;const z=D.z[i],c=z>=0&&D.zc?D.zc[z]:-1;if(c>=0)ccm.set(c,(ccm.get(c)||0)+1)}
@@ -411,7 +411,7 @@ function cellPanel(C){const s0=st.sel;  // 2026-11-17 사용자 지시: 칸 → 
   const teams=tm('출품영업팀','#1f5f8b',j1)
    +tm('회원운영팀','#2f8f6b',j2)
    +tm('플랫폼매입팀','#7a5aa8',j3);
-  return`<div class="panel side">${head}${tot}${orders}${dn}
+  return`<div class="panel side">${head}${orders}${dn}
   <div class="mh"><i style="background:${msel.c}"></i><b class="nm">${D.models[st.mm]}</b><span class="ix ${mok?tcl(sm.idx):''}">${ix2(sm.idx)}</span><span class="pill ${mc_}">${ml_}</span><span class="muted">낙찰률 ${pct(sm.rate)} · ${wk} 출품 ${f0(n)}대 · 낙찰 ${f0(W.length)}대</span></div>
   ${critBox(sm2,mmS,wk)}
   <div class="pbx"><h3>가격 — 평균 낙찰가 ±10% 기준</h3>${hist}</div>
