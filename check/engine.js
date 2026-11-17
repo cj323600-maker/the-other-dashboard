@@ -22,6 +22,10 @@ function run(get, now) {
   var R = [], F = [];
   function judge(vals, tol) { var v = vals.filter(function (x) { return x.v != null; }).map(function (x) { return x.v; }); if (v.length < vals.length) return "bad"; if (v.length < 2) return "info"; return (Math.max.apply(null, v) - Math.min.apply(null, v)) <= (tol || 0) + 1e-9 ? "ok" : "bad"; }
   function addNum(t, sub, vals, dec, j) { R.push({t: t, sub: sub, vals: vals, dec: dec || 0, j: j || judge(vals)}); }
+  // 2026-11-17: 추이는 경매 뒤 들어오는 낙찰취소를 반영해 갱신하므로, 먼저 발행된 보고서의 낙찰이 추이보다 조금(3% 이내) 많으면 불일치가 아니라 참고로 본다
+  function canc(tr, rp) { return tr != null && rp != null && rp > tr && (rp - tr) / rp <= 0.03; }
+  function cj(tr, rp) { return tr == null || rp == null ? "bad" : tr === rp ? "ok" : canc(tr, rp) ? "info" : "bad"; }
+  function cn(tr, rp) { return canc(tr, rp) ? " · 발행 뒤 낙찰취소 " + (rp - tr) + "대 반영(추이 기준이 최신)" : ""; }
   function addFresh(nm, last, need, j, why) { F.push({t: nm, last: last, need: need, j: j, sub: why}); }
   var keys = Object.keys(SRC);
   return Promise.all(keys.map(function (k) { return get(k).then(function (h) { return [k, h]; }, function () { return [k, null]; }); })).then(function (arr) {
@@ -47,14 +51,14 @@ function run(get, now) {
     addFresh("국내 경매장 시장", km ? km[2] + "월 월간 · " + km[4] + "월 " + km[5] + "주 속보" : "찾지 못함", "협회 공개 일정", km ? "info" : "bad", "협회 자료 공개 시점에 따라 갱신(참고)");
     if (L) {
       var wN = T.weekly && T.weekly.match(/출품 ([\d,]+) \/ [\d,]+대\([\d.]+%\) · 낙찰 ([\d,]+) \/ [\d,]+대/), dW = wd ? RD.filter(function (r) { return r.d === wd; })[0] : null;
-      if (dW) { addNum("주간보고 회차 출품", md(wd) + " 경매 · 단위 대", [{s: "추이", v: dW.n}, {s: "주보", v: wN && num(wN[1])}]); addNum("주간보고 회차 낙찰", md(wd) + " 경매 · 단위 대", [{s: "추이", v: dW.w}, {s: "주보", v: wN && num(wN[2])}]); }
+      if (dW) { addNum("주간보고 회차 출품", md(wd) + " 경매 · 단위 대", [{s: "추이", v: dW.n}, {s: "주보", v: wN && num(wN[1])}]); var wW = wN && num(wN[2]); addNum("주간보고 회차 낙찰", md(wd) + " 경매 · 단위 대" + cn(dW.w, wW), [{s: "추이", v: dW.w}, {s: "주보", v: wW}], 0, cj(dW.w, wW)); }
       var dm = T.daily && T.daily.match(/월 누적 팀별 성적표.*?합계 ([\d,]+) ([\d,]+) \d+% [\d.]+% ([\d,]+) ([\d,]+) /), dmo = sumMo(dd ? dd[1] + "-" + dd[2] : iso(today).slice(0, 7));
       addNum("이번 달 누적 출품", (dd ? (+dd[2]) + "월" : "") + " · 경매가 지난 회차 합계 · 단위 대", [{s: "추이 합산", v: dmo.n}, {s: "일보 월 누적", v: dm && num(dm[2])}]);
-      addNum("이번 달 누적 낙찰", (dd ? (+dd[2]) + "월" : "") + " · 단위 대", [{s: "추이 합산", v: dmo.w}, {s: "일보 월 누적", v: dm && num(dm[4])}]);
+      var dMW = dm && num(dm[4]); addNum("이번 달 누적 낙찰", (dd ? (+dd[2]) + "월" : "") + " · 단위 대" + cn(dmo.w, dMW), [{s: "추이 합산", v: dmo.w}, {s: "일보 월 누적", v: dMW}], 0, cj(dmo.w, dMW));
       var wc = T.weekly && T.weekly.match(/(\d{1,2})월 누적 출품 ([\d,]+) \/ [\d,]+대\([\d.]+%\) · 낙찰 ([\d,]+) \//);
-      if (wc && wd) { var wm = sumMo(wd.slice(0, 7), wd); addNum("주간보고 월 누적 출품 · 낙찰", wc[1] + "월 · " + md(wd) + "까지 · 단위 대", [{s: "추이 출품", v: wm.n}, {s: "주보 출품", v: num(wc[2])}, {s: "추이 낙찰", v: wm.w}, {s: "주보 낙찰", v: num(wc[3])}], 0, (wm.n === num(wc[2]) && wm.w === num(wc[3])) ? "ok" : "bad"); }
+      if (wc && wd) { var wm = sumMo(wd.slice(0, 7), wd); addNum("주간보고 월 누적 출품 · 낙찰", wc[1] + "월 · " + md(wd) + "까지 · 단위 대" + cn(wm.w, num(wc[3])), [{s: "추이 출품", v: wm.n}, {s: "주보 출품", v: num(wc[2])}, {s: "추이 낙찰", v: wm.w}, {s: "주보 낙찰", v: num(wc[3])}], 0, wm.n === num(wc[2]) ? cj(wm.w, num(wc[3])) : "bad"); }
       var mN = T.monthly && T.monthly.match(/출품 ([\d,]+) \/ [\d,]+대\([\d.]+%\) · 낙찰 ([\d,]+) \/ [\d,]+대/);
-      if (mo) { var m2 = sumMo("2026-" + pad(+mo[1])); addNum("월간보고 월 출품 · 낙찰", mo[1] + "월 · " + m2.k + "회차 · 단위 대", [{s: "추이 출품", v: m2.n}, {s: "월보 출품", v: mN && num(mN[1])}, {s: "추이 낙찰", v: m2.w}, {s: "월보 낙찰", v: mN && num(mN[2])}], 0, (mN && m2.n === num(mN[1]) && m2.w === num(mN[2])) ? "ok" : "bad"); }
+      if (mo) { var m2 = sumMo("2026-" + pad(+mo[1])); addNum("월간보고 월 출품 · 낙찰", mo[1] + "월 · " + m2.k + "회차 · 단위 대" + cn(m2.w, mN && num(mN[2])), [{s: "추이 출품", v: m2.n}, {s: "월보 출품", v: mN && num(mN[1])}, {s: "추이 낙찰", v: m2.w}, {s: "월보 낙찰", v: mN && num(mN[2])}], 0, (mN && m2.n === num(mN[1])) ? cj(m2.w, num(mN[2])) : "bad"); }
       var yr = T.trend && T.trend.match(/2026년 \(\d{1,2}\/\d{1,2}까지\) (\d+)회 ([\d,]+)대 ([\d,]+)대/), mem = S.member && S.member.match(/전사 ([\d,]+)대의/);
       addNum("2026년 누적 낙찰", "추이 회차 합산 = 추이 연도 요약 = 회원사 분석 전사 · 단위 대", [{s: "추이 회차 합산", v: RD.filter(function (r) { return r.d >= "2026"; }).reduce(function (a, r) { return a + r.w; }, 0)}, {s: "추이 연도 요약", v: yr && num(yr[3])}, {s: "회원사 분석", v: mem && num(mem[1])}]);
       var ex = S.member && S.member.match(/누적 낙찰대수[^\d]{0,40}([\d,]+)/), em = T.market && T.market.match(/수출 회원사 낙찰 ([\d,]+) ?대/);
