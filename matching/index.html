@@ -400,7 +400,7 @@ const gp=gapOf(s.n,s.w,C.weeks),ms=[...group(I,i=>D.m[i])].filter(([m,J])=>J.len
   let sh=teamSh(I);if(!sh.some(x=>x))sh=teamSh(C.I);const al=lr(Math.round(Math.abs(gp)),sh);
   const alc=D.teams.map((t,i)=>al[i]?`<span class="alc" style="--tc:${TCOL[i]}">${t} <b>${al[i]}</b></span>`:'').join('');
   return`<div class="cbx"><h3><span class="stp">4</span>칸 안 차종 <small>월(4회차) 기준 부족 · 과다 · 누르면 아래가 그 차종으로 바뀜</small></h3>
-  <div class="cbs"><b class="${gp>=0?'t-s':'t-o'}">이 칸 ${gp>=0?'부족':'과다'} ${gtx(gp)}</b>${Math.round(Math.abs(gp))?`<span class="muted">조직별 ${gp>=0?'확보':'축소'} (최신 회차 출품 비중):</span>${alc}`:''}</div>
+  <div class="cbs"><b class="${gp>=0?'t-s':'t-o'}">이 칸 ${gp>=0?'부족':'과다'} ${gtx(gp)}</b></div>
   ${dn}</div>`}
 function cellPanel(C){const s0=st.sel;  // 2026-11-17 사용자 지시: 칸 → 차군 · 차종 도넛 → 연식 · 낙찰가 막대, 회원사 표, 팀별 카드
   if(!s0)return`<div class="panel side"><h2>칸 상세</h2><p class="muted" style="margin-top:8px">왼쪽 지도에서 칸을 누르면 그 칸의 차군 · 차종과 팀별 정보가 나옵니다.</p></div>`;
