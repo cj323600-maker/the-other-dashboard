@@ -60,7 +60,7 @@ var $=function(i){return document.getElementById(i);},E=RCHECK;
 var esc=function(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});};
 var pad=function(n){return(n<10?"0":"")+n;},hm=function(d){return pad(d.getHours())+":"+pad(d.getMinutes())+":"+pad(d.getSeconds());};
 var LBL={ok:"일치",bad:"불일치",wait:"갱신 대기",info:"참고"},FL={ok:"최신",bad:"갱신 필요",wait:"갱신 대기",info:"참고"};
-var fmt=function(v,dec){return v==null?"찾지 못함":(dec?v.toFixed(dec):Math.round(v).toLocaleString("ko-KR"));};
+var fmt=function(v,dec){return v==null?"찾지 못함":typeof v==="string"?v:(dec?v.toFixed(dec):Math.round(v).toLocaleString("ko-KR"));};
 var last=null,LM={},busy=false,next=60,runs=0;
 function render(x){
   var c=x.c;

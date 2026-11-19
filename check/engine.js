@@ -65,9 +65,11 @@ function run(get, now) {
       addNum("2026년 수출 회원사 낙찰", "회원사 분석 = 수출시장 환경모니터 · 단위 대", [{s: "회원사 분석", v: ex && num(ex[1])}, {s: "환경모니터", v: em && num(em[1])}]);
     }
     var dg = T.daily && T.daily.match(/전사 매출이익 재무 확정 .*? ([\d.]+) ([\d.]+) [▲▼]/), wg = T.weekly && T.weekly.match(/낙찰 [\d,]+ \/ [\d,]+대\([\d.]+%\) · 매출이익 ([\d.]+) \/ [\d.]+억원/);
-    addNum("이번 달 누적 매출이익(재무 확정)", "일보 월 누적 전사 = 주보 월 누적 · 단위 억원", [{s: "일보", v: dg && +dg[2]}, {s: "주보", v: wg && +wg[1]}], 2);
+    // 2026-11-19: 주보가 재무 입력 전("입력 대기")이면 불일치가 아니라 갱신 대기로 본다(재무회계팀 입력은 경매 다음 날 오후)
+    var wwait = !!(T.weekly && /매출이익 · 영업이익 입력 대기|재무 확정 입력 대기|W3 입력 대기/.test(T.weekly));
+    addNum("이번 달 누적 매출이익(재무 확정)", "일보 월 누적 전사 = 주보 월 누적 · 단위 억원" + (wwait && !wg ? " · 주보 재무 입력 대기" : ""), [{s: "일보", v: dg && +dg[2]}, {s: "주보", v: wg ? +wg[1] : (wwait ? "입력 대기" : null)}], 2, wwait && !wg ? "wait" : undefined);
     var di = T.daily && T.daily.match(/재무 재고 평가액\((\d+\/\d+)\) ([\d.]+)억원/), wi = T.weekly && T.weekly.match(/재고 평가액 ([\d.]+)억원/);
-    addNum("재무 재고 평가액", "일보 재고 자산 각주 = 주보 · 단위 억원", [{s: "일보" + (di ? "(" + di[1] + ")" : ""), v: di && +di[2]}, {s: "주보", v: wi && +wi[1]}], 2);
+    addNum("재무 재고 평가액", "일보 재고 자산 각주 = 주보 · 단위 억원" + (wwait && !wi ? " · 주보 재무 입력 대기" : ""), [{s: "일보" + (di ? "(" + di[1] + ")" : ""), v: di && +di[2]}, {s: "주보", v: wi ? +wi[1] : (wwait ? "입력 대기" : null)}], 2, wwait && !wi ? "wait" : undefined);
     var c = {ok: 0, bad: 0, wait: 0, info: 0}; R.concat(F).forEach(function (x) { c[x.j]++; });
     return {F: F, R: R, c: c, err: ERR, L: L && L.d, at: now.toISOString()};
   });
