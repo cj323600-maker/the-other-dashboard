@@ -276,9 +276,8 @@ function headInit(){const m=DATA.meta,f=n=>Number(n).toLocaleString('ko-KR');
  {const rs=m.rs,mx=Math.max(...rs.map(r=>r[1])),n0=rs.length-m.W,wi=WINS.indexOf(m.W);
   document.getElementById('sbw').textContent=`최근 ${m.W}회차${m.W===16?' (기본)':''}`;
   document.getElementById('pd').innerHTML=`<div class="pd-h"><b>판정 기간</b><span class="pd-v">최근 ${m.W}회차 <small>${m.r0md}~${m.lastmd} / 출품 ${f(m.n16)}대 / 낙찰률 ${(m.w16/m.n16*100).toFixed(1)}%</small></span>${m.W===16?'<span class="tag t-hi">기본</span>':'<button class="btn" id="pdr">기본 16 회차로</button><span class="tag t-mid">비교용, 과제 발행은 16 회차 기준</span>'}</div>
-  <div class="pd-c" aria-hidden="true">${rs.map((r,i)=>`<i class="${i>=n0?'on':''}" style="height:${Math.max(8,r[1]/mx*100).toFixed(0)}%" title="${r[0]} 출품 ${f(r[1])}대"></i>`).join('')}</div>
   <input class="pd-r" id="pds" type="range" min="0" max="${WINS.length-1}" step="1" value="${wi}" aria-label="판정 기간(회차 수)">
-  <div class="pd-t"><span>${rs[0][0]}</span><span>막대 = 회차별 출품 대수, 파랑 = 판정에 쓰는 기간. 손잡이를 왼쪽으로 끌면 기간이 늘어남 (${WINS.join(', ')}회차)</span><span>${rs[rs.length-1][0]}</span></div>`;
+  <div class="pd-t"><span>${rs[0][0]}</span><span>손잡이를 왼쪽으로 끌면 기간이 늘어남 (${WINS.join(', ')}회차)</span><span>${rs[rs.length-1][0]}</span></div>`;
   const sl=document.getElementById('pds');sl.onchange=()=>setWin(WINS[+sl.value]);const rb=document.getElementById('pdr');if(rb)rb.onclick=()=>setWin(16);}
  document.getElementById('sub').textContent=`최근 ${m.W}회차(${m.r0md}~${m.lastmd}) / 출품 ${f(m.n16)}대 / 전체 낙찰률 ${(m.w16/m.n16*100).toFixed(1)}% / 데이터 ${m.last.replace(/-/g,'.')} 경매까지`;
  document.getElementById('sbr').textContent=`${m.r0md}~${m.lastmd}`;
