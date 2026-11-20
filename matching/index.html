@@ -216,6 +216,8 @@ tbody tr:hover td{background:#fafbfc}th{letter-spacing:0}td,th{padding:9px 10px}
 .modal{border-radius:14px;overflow:hidden}.mh{position:sticky;top:0;background:var(--bg);z-index:2}.guide{border-radius:10px}.why3 .w{border-radius:8px}.why3 .w .v{font-size:20px;font-weight:800}
 .sb-i.on{box-shadow:inset 3px 0 0 var(--accent)}.sb-m::before{content:"화면";font-size:11px;color:#6f7984;font-weight:700;padding:0 10px 2px}
 .foot{line-height:1.7;max-width:1100px}
+.gc .pf{font-size:10.5px;padding:0 4px}
+@media (max-width:560px){.kt .d{display:none}.kt{padding:8px 12px}.head>div>.sub:not(#sub){display:none}.pill{font-size:12px;padding:3px 8px}.flow{display:none}}
 @media (max-width:1000px){.kp{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (max-width:900px){.sb-m::before{display:none}}
 @media (max-width:560px){.kt .v{font-size:20px}.head h1{font-size:20px}.sr{font-size:15px}.sb1{flex-direction:column;gap:0;font-size:10.5px}.sc{padding:6px 5px}}
@@ -565,7 +567,7 @@ function checkView(){
    <div class="sbox dark"><span class="k">진행 점검</span><div class="v">1주차 <small>${DATA.meta.wk[0]} 경매 후 첫 집계</small></div><div class="d">누적 실적이 페이스의 70% 아래면 "지연", 50% 아래면 "위험"</div></div>
    <div class="sbox gray"><span class="k">가이드 유효성</span><div class="v">매주 다시 판정</div><div class="d">새 회차가 쌓이면 판정을 다시 계산해 과제 근거가 그대로인지 확인</div></div></div>`;
   // progress table
-  h+=`<div class="card"><div class="ch"><h2><span class="no">1</span>과제 진행 (팀별, 매주 경매 후 갱신)</h2><span class="why">수요일 팀장 미팅에서는 "지연"과 "위험"만 짚음</span></div><div class="cb"><div class="tw"><table><thead><tr><th>팀</th><th>과제</th><th class="n">4주 목표</th><th class="n">1주차</th><th class="n">2주차</th><th class="n">3주차</th><th class="n">4주차</th><th>진행</th><th>가이드</th></tr></thead><tbody>
+  h+=`<div class="card"><div class="ch"><h2><span class="no">1</span>과제 진행 (팀별, 매주 경매 후 갱신)</h2><span class="why">수요일 팀장 미팅에서는 "지연"과 "위험"만 짚음</span></div><div class="cb"><div class="tw"><table><thead><tr><th>팀</th><th>과제</th><th class="n">4주 목표</th>${DATA.meta.wk.map((w,i)=>`<th class="n">${i+1}주차<br><span style="font-weight:500">${w}</span></th>`).join('')}<th>진행</th><th>가이드</th></tr></thead><tbody>
   ${rows.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td><td class="n">${r[2]}</td><td class="n">-</td><td class="n">-</td><td class="n">-</td><td class="n">-</td><td><span class="tag t-gray">집계 전</span></td><td><span class="tag t-hi">유지</span></td></tr>`).join('')}
   </tbody></table></div></div></div>`;
   // validity rules
