@@ -243,6 +243,13 @@ tbody tr:hover td{background:#fafbfc}th{letter-spacing:0}td,th{padding:9px 10px}
 .sc.take .sr.hot,.sc.cut .sr.hot{color:#fff;text-decoration:underline;text-decoration-color:#ff8f9b;text-decoration-thickness:3px;text-underline-offset:4px}
 .sc.take .st,.sc.cut .st{background:rgba(255,255,255,.22)}.sc.take .st i.bt,.sc.cut .st i.bt{background:#fff}.sc.take .st i.bc,.sc.cut .st i.bc{background:rgba(255,255,255,.55)}
 .sc.sel{outline:3px solid #f0a000;outline-offset:1px}
+/* 차군 접기(2026-11-20) */
+.gt .grp td{padding:0;border-bottom:none;color:var(--ink)}.gt .grp td.gh{padding:0}.gt .grp td.sumc{padding:4px 6px;font-size:12px;font-weight:500}
+.ghb{appearance:none;font:inherit;width:100%;height:100%;min-height:46px;text-align:left;background:#e9eef5;border:1px solid #c9d5e4;border-radius:8px;padding:6px 8px;cursor:pointer;display:block;color:var(--ink)}
+.ghb:hover{background:#dde6f1}.ghb i{font-style:normal;color:var(--accent);margin-right:5px;font-size:12px}.ghb b{font-size:14.5px;font-weight:800;color:var(--accent)}.ghb small{display:block;font-size:11.5px;color:var(--muted);font-weight:500;padding-left:17px}
+.gt .grp.op .ghb{background:var(--accent);border-color:var(--accent)}.gt .grp.op .ghb b,.gt .grp.op .ghb i{color:#fff}.gt .grp.op .ghb small{color:rgba(255,255,255,.85)}
+.gc.ga{border-style:dashed}.gc.ga.v-hold{background:#f6f8fb}.gt .grp+tr:not(.grp) td{padding-top:2px}.gt .grp td.gh{position:sticky;left:0;z-index:1;background:var(--bg)}
+.gt th.rh{width:168px}
 </style>
 </head>
 <body>
@@ -469,7 +476,7 @@ function memberView(){
   </tbody></table></div></div></div>`;
   return h;
 }
-let gmode='n', gteam='전체', gsel=null, ssel=null;
+let gmode='n', gteam='전체', gsel=null, ssel=null, gopen=new Set();
 const VLAB={'강함':'더 가져올 차','보류':'판단 보류','약함':'받기 전 확인','중단':'받지 않는 차','표본':'표본 적음'};
 function vcls(c){if(!c)return 'none';if(c.v==='강함')return c.sure==='높음'?'v-take2':'v-take1';if(c.v==='약함')return c.sure==='높음'?'v-weak2':'v-weak1';if(c.v==='중단')return 'v-stop';if(c.v==='표본')return 'v-thin';return 'v-hold';}
 function vchip(v,sure){const m={'강함':['var(--accent)','#fff'],'약함':['#7d848c','#fff'],'중단':['var(--ink)','#fff'],'보류':['var(--soft)','var(--muted)'],'표본':['var(--soft)','var(--muted)']}[v]||['var(--soft)','var(--muted)'];return `<span class="vchip" style="background:${m[0]};color:${m[1]}">${VLAB[v]||v}${sure&&v!=='보류'&&v!=='표본'?' ('+sure+')':''}</span>`;}
@@ -502,12 +509,22 @@ function carGrid(){
   let h='';
   if(gfocus) h+=`<div class="warnbox" style="margin-bottom:8px">세그먼트 <b>${gfocus.label}</b> 안 차종만 강조 중 <button class="btn" data-clearfocus="1">전체 보기</button></div>`;
   h+=`<div class="gtool"><span class="lab2">칸 숫자</span><span class="seg"><button aria-pressed="${gmode==='n'}" data-gm="n">주 출품 대수</button><button aria-pressed="${gmode==='q'}" data-gm="q">더 받을 / 남는 대수</button><button aria-pressed="${gmode==='fr'}" data-gm="fr">제값 낙찰률</button></span>
-  <span class="lab2" style="margin-left:8px">팀 보기</span>${['전체',...Object.keys(DATA.teams)].map(t=>`<button class="chip" aria-pressed="${t===gteam}" data-gteam="${t}">${t}</button>`).join('')}</div>
+  <span class="seg" style="margin-left:8px"><button data-gall="1" aria-pressed="false">모두 펼치기</button><button data-gall="0" aria-pressed="false">모두 접기</button></span><span class="lab2" style="margin-left:8px">팀 보기</span>${['전체',...Object.keys(DATA.teams)].map(t=>`<button class="chip" aria-pressed="${t===gteam}" data-gteam="${t}">${t}</button>`).join('')}</div>
   <div class="legend"><span style="color:var(--ink)"><b>칸을 누르면 상세 팝업</b></span><span><i style="background:var(--accent)"></i>더 가져올 (확실)</span><span><i style="background:#c7d6ea"></i>더 가져올 (보통)</span><span><i style="background:#fff"></i>판단 보류</span><span><i style="background:#d3d6da"></i>받기 전 확인 (보통)</span><span><i style="background:#7d848c"></i>받기 전 확인 (확실)</span><span><i style="background:var(--ink)"></i>받지 않는 차</span><span><i style="background:repeating-linear-gradient(135deg,#f3f5f7 0 4px,#e7eaee 4px 8px)"></i>표본 적음</span><span>주 8대 이상 계열 = 출품 ${DATA.gridCov}%, 나머지 주 약 ${DATA.gridRest}대는 차군 묶음 참고</span></div>`;
-  h+=`<div><div class="card" style="margin:0"><div class="cb tw"><table class="gt"><thead><tr><th class="rh">차종 계열 (주 출품)</th>${YLs.map(y=>`<th>${y}</th>`).join('')}<th class="sm">이번 주 지시</th></tr></thead><tbody>`;
+  h+=`<div><div class="card" style="margin:0"><div class="cb tw"><table class="gt"><thead><tr><th class="rh">차군 / 차종 계열 (주 출품)</th>${YLs.map(y=>`<th>${y}</th>`).join('')}<th class="sm">이번 주 지시</th></tr></thead><tbody>`;
   DATA.grid.forEach((g,gi)=>{
-    h+=`<tr class="grp"><td colspan="8">${g.group}</td></tr>`;
+    const fhit=gfocus&&g.rows.some(r=>gfocus.names.includes(r.name));
+    const open=gopen.has(gi)||fhit;
+    const ag=[0,1,2,3,4,5].map(y=>{const a={n:0,t:0,w:0,s:0,q:0};g.rows.forEach(r=>{const c=r.cells[y];if(!c)return;a.n+=c.n;if(c.v==='강함'){a.t++;a.q+=c.q}else if(c.v==='약함'){a.w++;a.q-=c.q}else if(c.v==='중단'){a.s++;a.q-=c.q}});return a});
+    const T=ag.reduce((x,a)=>({n:x.n+a.n,t:x.t+a.t,w:x.w+a.w,s:x.s+a.s}),{n:0,t:0,w:0,s:0});
+    const fam=g.rows.filter(r=>!/ (하이브리드|전기)$/.test(r.name)).length;
+    const agc=ag.map(a=>{const neg=a.w+a.s;const cls=a.n===0?'none':(a.t&&!neg?'v-take2':(neg&&!a.t?'v-weak2':'v-hold'));
+      const subt=[a.t?'더 가져올 '+a.t:'',neg?'확인 '+neg:''].filter(Boolean).join(' / ')||'지시 없음';
+      return a.n===0?`<td><div class="gc none"></div></td>`:`<td><button class="gc ga ${cls}" data-gtog="${gi}" title="${g.group}: 누르면 ${open?'접기':'차종 펼치기'}"><b>${(Math.round(a.n*10)/10).toFixed(1)}대</b><span>${subt}</span></button></td>`}).join('');
+    const gsm=[T.t?`<b>더 가져올 ${T.t}</b>`:'',T.w?`확인 ${T.w}`:'',T.s?`받지 않음 ${T.s}`:''].filter(Boolean).join(' / ')||'지시 없음';
+    h+=`<tr class="grp ${open?'op':''}"><td class="gh"><button class="ghb" data-gtog="${gi}" aria-expanded="${open}"><i>${open?'▾':'▸'}</i><b>${g.group}</b><small>${fam}개 계열 / 주 ${(Math.round(T.n*10)/10).toFixed(1)}대</small></button></td>${agc}<td class="sumc">${gsm}</td></tr>`;
     g.rows.forEach((r,ri)=>{
+      if(!open) return;
       const sub=/ (하이브리드|전기)$/.test(r.name);
       const share=gteam==='전체'?null:(r.teams[gteam]||0);
       const inFocus=!gfocus||gfocus.names.includes(r.name);
@@ -663,7 +680,7 @@ function modalHTML(){
       ['입찰','입찰하지 않음']];}
   else if(c.v==='중단'){gcls='stop';g1=`받지 않는 차: 제값에 나와도 100대 중 ${c.fr}대만 팔리고 산 회원 ${c.nb}곳`;
     acts=[['영업','출품 전 차주와 다른 채널 논의. 경매로 받지 않음'],['회원운영','모집 안 함 (회원을 늘려서 풀 문제가 아님)']];}
-  else {g1=`판단 보류: 제값 낙찰률 ${c.fr}%로 기준선(50~55%) 근처라 이번 달 지시 없음`; acts=[['모든 팀','지시 없음. 매주 다시 판정해 방향이 정해지면 다음 달 과제에 반영']]+(c.pf?[['영업',`비싸게 나온 차가 ${c.over}%라 희망가 조정은 필요`]]:[]);}
+  else {g1=`판단 보류: 제값 낙찰률 ${c.fr}%로 기준선(50~55%) 근처라 이번 달 지시 없음`; acts=[['모든 팀','지시 없음. 매주 다시 판정해 방향이 정해지면 다음 달 과제에 반영']].concat(c.pf?[['영업',`비싸게 나온 차가 ${c.over}%라 희망가 조정은 필요`]]:[]);}
   const prev=c.prev?`<span class="pill">4주 전 판정: <b>${VLAB[c.prev]}</b> → 지금 <b>${VLAB[c.v]}</b> ${c.prev===c.v?'(유지)':'(변화)'}</span>`:'';
   let h=`<div class="modal-bg" data-close="1"><div class="modal" role="dialog" aria-modal="true" aria-label="${r.name} ${YLs[y]} 상세">
   <div class="mh"><div><h3>${r.name} <span class="muted" style="font-size:15px;font-weight:400">${YLs[y]}</span></h3><div style="margin-top:6px;display:flex;gap:6px;flex-wrap:wrap">${vchip(c.v,c.sure)}${prev}<span class="pill">${g.group}, 주 출품 ${c.n}대</span></div></div><button class="mx" data-close="1" aria-label="닫기">×</button></div>
@@ -703,6 +720,8 @@ document.addEventListener('click',e=>{
   const tc=e.target.closest('[data-tocar]'); if(tc&&ssel){const c=DATA.segc[schg].find(x=>x.y===ssel.y&&x.k===ssel.k);const YLs=['2023년 이후','2021~22년','2019~20년','2017~18년','2014~16년','2013년 이전'],KLs=['5만 km 미만','5~10만 km','10~15만 km','15~20만 km','20만 km 이상'];gfocus={names:c.top.map(t=>t.name),y:ssel.y,label:YLs[ssel.y]+' / '+KLs[ssel.k]};gview='car';render();return;}
   const gm=e.target.closest('[data-gm]'); if(gm){gmode=gm.dataset.gm;render();return;}
   const gt=e.target.closest('[data-gteam]'); if(gt){gteam=gt.dataset.gteam;render();return;}
+  const gt_=e.target.closest('[data-gtog]'); if(gt_){const i=+gt_.dataset.gtog; if(gopen.has(i))gopen.delete(i);else gopen.add(i); if(gfocus&&!gopen.has(i))gfocus=null; render();return;}
+  const ga_=e.target.closest('[data-gall]'); if(ga_){gopen=new Set(ga_.dataset.gall==='1'?DATA.grid.map((_,i)=>i):[]);gfocus=null;render();return;}
   const gc=e.target.closest('.gc[data-g]'); if(gc){const g=+gc.dataset.g,ri=+gc.dataset.r,y=+gc.dataset.y;gsel={g,ri,y,r:DATA.grid[g].rows[ri]};render();return;}
   const sc=e.target.closest('.sc'); if(sc){ssel={y:+sc.dataset.sy,k:+sc.dataset.sk};render();return;}
   const c=e.target.closest('.chip[data-team]'); if(c){team=c.dataset.team;render();return;}
