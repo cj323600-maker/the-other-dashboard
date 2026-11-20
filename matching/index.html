@@ -250,6 +250,13 @@ tbody tr:hover td{background:#fafbfc}th{letter-spacing:0}td,th{padding:9px 10px}
 .gt .grp.op .ghb{background:var(--accent);border-color:var(--accent)}.gt .grp.op .ghb b,.gt .grp.op .ghb i{color:#fff}.gt .grp.op .ghb small{color:rgba(255,255,255,.85)}
 .gc.ga{border-style:dashed}.gc.ga.v-hold{background:#f6f8fb}.gt .grp+tr:not(.grp) td{padding-top:2px}.gt .grp td.gh{position:sticky;left:0;z-index:1;background:var(--bg)}
 .gt th.rh{width:168px}
+/* 세그먼트 칸 압축(2026-11-20) */
+.sc{padding:6px 9px;gap:2px}.s1{display:flex;align-items:baseline;justify-content:space-between;gap:6px}.s1 .sr{margin:0;font-size:18px}.s1 .h{font-size:11.5px;white-space:nowrap}
+.s2{display:grid;grid-template-columns:42px minmax(0,1fr) 44px;align-items:center;gap:6px;font-size:11.5px;line-height:1.3}.s2>span:first-child{color:var(--muted)}.s2 b{text-align:right;font-variant-numeric:tabular-nums}.s2 .st{margin:0;height:7px}
+.s3{font-size:10.5px!important;line-height:1.2}
+.sc.take .s2>span:first-child,.sc.cut .s2>span:first-child{color:rgba(255,255,255,.82)}.sc.take .s2 b,.sc.cut .s2 b{color:#fff}
+.s2>span:first-child{white-space:nowrap}
+@media (max-width:560px){.s1{flex-direction:column;gap:0}.s1 .sr{font-size:15px}.s2{grid-template-columns:34px minmax(0,1fr) auto;font-size:10px;gap:3px}.s2 b{font-size:10px}.sc{padding:5px}}
 </style>
 </head>
 <body>
@@ -565,7 +572,7 @@ function segGrid(){
       const cls=thin?'':(p>=2*m&&p>=0.5?'take':(m>=2*p&&m>=0.5?'cut':''));
       const lab=thin?'표본 적음':(cls==='take'?'더 받을 쪽 우세':(cls==='cut'?'남는 쪽 우세':(p+m<0.5?'판단 보류':'혼재')));
       const sel=ssel&&ssel.y===y&&ssel.k===k;
-      h+=`<td><button class="sc ${cls} ${sel?'sel':''}" data-sy="${y}" data-sk="${k}"><span class="sr0">낙찰률</span><span class="sr${c.rate>=55?' hot':''}">${c.rate==null?'-':c.rate.toFixed(1)+'%'}</span><span class="sb1"><span>더 받을 차</span><b>${p.toFixed(1)}대</b></span><span class="st"><i class="bt" style="width:${(p/mxs*100).toFixed(1)}%"></i></span><span class="sb1"><span>남는 차</span><b>${m.toFixed(1)}대</b></span><span class="st"><i class="bc" style="width:${(m/mxs*100).toFixed(1)}%"></i></span><span class="h">${lab}</span><span class="muted"> / 주 출품 ${c.n}대</span></button></td>`;
+      h+=`<td><button class="sc ${cls} ${sel?'sel':''}" data-sy="${y}" data-sk="${k}"><span class="s1"><span class="sr${c.rate>=55?' hot':''}">${c.rate==null?'-':c.rate.toFixed(1)+'%'}</span><span class="h">${lab}</span></span><span class="s2"><span>더 받을</span><span class="st"><i class="bt" style="width:${(p/mxs*100).toFixed(1)}%"></i></span><b>${p.toFixed(1)}대</b></span><span class="s2"><span>남는</span><span class="st"><i class="bc" style="width:${(m/mxs*100).toFixed(1)}%"></i></span><b>${m.toFixed(1)}대</b></span><span class="muted s3">주 출품 ${c.n}대</span></button></td>`;
     }
     h+=`</tr>`;
   }
