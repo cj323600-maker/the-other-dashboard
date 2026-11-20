@@ -267,6 +267,12 @@ tbody tr:hover td{background:#fafbfc}th{letter-spacing:0}td,th{padding:9px 10px}
 .hrow .kt .k{width:100%;font-size:12px}.hrow .kt .v{font-size:21px;line-height:1.2}.hrow .kt .d{font-size:11.5px}
 @media (max-width:1250px){.hrow{grid-template-columns:1fr}}
 @media (max-width:700px){.hrow .kp{grid-template-columns:repeat(2,minmax(0,1fr))}.hrow .kt .d{display:inline}}
+/* 영업 · 회원운영 화면 정리(2026-11-20) */
+.card.fd>:not(.ch){display:none}.card.fd>.ch{border-bottom:none}.card.fd{background:#f6f8fb}.ch[data-vf]{cursor:pointer}.ch[data-vf]:hover h2{color:var(--accent)}.vfi{font-style:normal;color:var(--accent);margin-right:6px;font-size:12px}
+.ruled{margin:0 0 10px}.ruled>summary{cursor:pointer;font-size:12.5px;font-weight:700;color:var(--muted);padding:2px 0}.ruled[open]>summary{margin-bottom:6px}
+.sbox[data-jump]{cursor:pointer;transition:box-shadow .12s}.sbox[data-jump]:hover{box-shadow:0 2px 10px rgba(20,24,28,.16)}.sbox[data-jump] .k::after{content:"  ↓";color:var(--accent)}
+.flow{padding:6px 10px;margin:8px 0}.flow .fb{padding:5px 10px;display:flex;flex-wrap:wrap;gap:2px 8px;align-items:baseline}.flow .fb b{display:inline}
+.card{scroll-margin-top:10px}
 </style>
 </head>
 <body>
@@ -722,8 +728,21 @@ function modalHTML(){
   return h;
 }
 
+let vfold={}, ropen=new Set();
+const VFOLD0={sales:[3,4],member:[3]}, VJUMP={sales:[0,1,2],member:[0,2,3]};
+function enhanceView(){
+  if(view!=='sales'&&view!=='member') return;
+  const V=document.getElementById('view');
+  const cards=[...V.querySelectorAll('.card')].filter(c=>c.querySelector(':scope > .ch h2'));
+  cards.forEach((c,i)=>{const k=view+':'+i; if(!(k in vfold)) vfold[k]=(VFOLD0[view]||[]).includes(i);
+    c.classList.toggle('fd',vfold[k]); c.id='sec-'+i; const ch=c.querySelector(':scope > .ch'); ch.dataset.vf=k; ch.setAttribute('aria-expanded',String(!vfold[k])); ch.title=vfold[k]?'누르면 펼침':'누르면 접음';
+    ch.querySelector('h2').insertAdjacentHTML('afterbegin',`<i class="vfi">${vfold[k]?'▸':'▾'}</i>`);});
+  [...V.querySelectorAll('.rule')].forEach((r,i)=>{const k=view+':r'+i, d=document.createElement('details'); d.className='ruled'; const b=r.querySelector('b'); const sm=document.createElement('summary'); sm.textContent=(b?b.textContent.replace(/:$/,''):'기준')+' 보기'; d.appendChild(sm); r.parentNode.insertBefore(d,r); d.appendChild(r); d.open=ropen.has(k); d.addEventListener('toggle',()=>{d.open?ropen.add(k):ropen.delete(k)});});
+  [...V.querySelectorAll('.sbox')].forEach((b,i)=>{const t=(VJUMP[view]||[])[i]; if(t==null||!cards[t]) return; b.dataset.jump=t; b.title='누르면 아래 해당 목록으로 이동'; b.setAttribute('role','button');});
+}
 function render(){
   document.getElementById('view').innerHTML=TX(view==='sales'?salesView():view==='member'?memberView():view==='grid'?gridView():view==='rule'?ruleView():checkView());
+  enhanceView();
   document.getElementById('modal').innerHTML=TX((view==='grid'&&gview==='car')?modalHTML():(view==='grid'&&gview==='seg')?segModalHTML():'');
   document.querySelectorAll('.sb-i').forEach(t=>{const on=t.dataset.v===view&&(!t.dataset.gv||t.dataset.gv===gview);t.classList.toggle('on',on);t.setAttribute('aria-current',on?'page':'false')});
 }
@@ -736,6 +755,8 @@ document.addEventListener('click',e=>{
   const tc=e.target.closest('[data-tocar]'); if(tc&&ssel){const c=DATA.segc[schg].find(x=>x.y===ssel.y&&x.k===ssel.k);const YLs=['2023년 이후','2021~22년','2019~20년','2017~18년','2014~16년','2013년 이전'],KLs=['5만 km 미만','5~10만 km','10~15만 km','15~20만 km','20만 km 이상'];gfocus={names:c.top.map(t=>t.name),y:ssel.y,label:YLs[ssel.y]+' / '+KLs[ssel.k]};gview='car';render();return;}
   const gm=e.target.closest('[data-gm]'); if(gm){gmode=gm.dataset.gm;render();return;}
   const gt=e.target.closest('[data-gteam]'); if(gt){gteam=gt.dataset.gteam;render();return;}
+  const vf_=e.target.closest('.ch[data-vf]'); if(vf_&&!e.target.closest('button,select,a,input,summary')){vfold[vf_.dataset.vf]=!vfold[vf_.dataset.vf];render();return;}
+  const vj_=e.target.closest('.sbox[data-jump]'); if(vj_&&!e.target.closest('button,select,a')){const t=vj_.dataset.jump;vfold[view+':'+t]=false;render();const el=document.getElementById('sec-'+t);if(el)el.scrollIntoView({behavior:'smooth',block:'start'});return;}
   const gt_=e.target.closest('[data-gtog]'); if(gt_){const i=+gt_.dataset.gtog; if(gopen.has(i))gopen.delete(i);else gopen.add(i); if(gfocus&&!gopen.has(i))gfocus=null; render();return;}
   const ga_=e.target.closest('[data-gall]'); if(ga_){gopen=new Set(ga_.dataset.gall==='1'?DATA.grid.map((_,i)=>i):[]);gfocus=null;render();return;}
   const gc=e.target.closest('.gc[data-g]'); if(gc){const g=+gc.dataset.g,ri=+gc.dataset.r,y=+gc.dataset.y;gsel={g,ri,y,r:DATA.grid[g].rows[ri]};render();return;}
