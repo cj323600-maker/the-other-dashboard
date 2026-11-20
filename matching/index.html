@@ -116,6 +116,16 @@ details.tt>summary{cursor:pointer;font-size:16px;line-height:1.7;word-break:keep
 table.tk{font-size:13.5px}table.tk tbody tr:nth-child(even) td{background:#f7f9fb}table.tk td:first-child{font-weight:700}table.tk th{background:var(--soft);color:var(--ink);border-bottom:2px solid var(--line)}
 table.tk td.dbc{background-image:linear-gradient(90deg,var(--c) var(--w),transparent var(--w))!important;background-repeat:no-repeat;background-size:100% 62%;background-position:0 50%;min-width:110px}
 @media (min-width:1400px) and (max-width:1733px){.wrap{zoom:.9}}
+.vt{display:flex;flex-wrap:wrap;gap:8px 10px;align-items:center;font-size:12.5px}.vtb{font:inherit;font-size:15px;font-weight:800;padding:8px 18px;border-radius:10px;border:1.5px solid var(--line);background:#fff;color:var(--muted);cursor:pointer}.vtb.on{background:var(--ink);border-color:var(--ink);color:#fff}
+.kpis.km{grid-template-columns:repeat(2,minmax(0,1fr))}.kpis.km .kpi:nth-child(n+3){display:none}
+.p-map .hd .fg,.p-map details.gd,.p-map .lgd{display:none}
+table.heat td.sgc{background:#fff;box-shadow:inset 0 0 0 1px var(--line)}table.heat td.sgc.dtk{background:#fdf1ee}table.heat td.sgc.dct{background:#eef4fb}table.heat td.sgc.hot{box-shadow:inset 0 0 0 2px #d4573d}table.heat td.sgc .ix{color:var(--ink)}table.heat td.sgc .ix.t-s{color:#c4472f}table.heat td.sgc .n{color:var(--ink)}table.heat.sgg td.sgc{cursor:pointer}table.heat td.sgc.sel{outline:3px solid var(--ink);outline-offset:-3px}
+.sgs{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,620px),1fr));gap:12px;margin-top:12px;align-items:start}.sgp{min-width:0}.sgh{font-size:13.5px;margin:14px 0 4px;line-height:1.7;word-break:keep-all}.sgh small{display:block;font-size:12px;font-weight:500;color:var(--muted)}
+.sgr{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1.2fr);gap:2px 14px;padding:8px 8px;border-bottom:1px solid var(--line);cursor:pointer;font-size:13px;border-radius:6px}.sgr:hover,.sgr.on{background:var(--soft)}.sgr.on{box-shadow:inset 3px 0 0 var(--ink)}
+.sg1 b{font-size:14.5px}.sg1 span{display:block;font-size:12px}.sg2{align-self:center}.sg3{display:flex;align-items:center;gap:8px}.sg3 b{white-space:nowrap}.sgb{flex:1;height:12px;background:var(--soft);border-radius:3px;overflow:hidden;min-width:40px}.sgb i{display:block;height:100%;border-radius:3px}
+.sg4{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.xb{display:inline-block;width:90px;height:10px;background:#2f8f6b;border-radius:3px;overflow:hidden;flex:none}.xb i{display:block;height:100%;background:#d29a2c}.xbt{font-size:12px}
+.sgd{margin-top:12px}.sgd .side{position:static}
+@media(max-width:640px){.sgr{grid-template-columns:1fr}.vtb{font-size:14px;padding:7px 12px}}
 details.rl.mo{margin-top:6px}details.rl.gd{margin:0 0 8px}
 .cc{border-top:3px solid var(--ink)}.cj{font-size:16px;font-weight:700;line-height:1.6;margin:6px 0 10px;word-break:keep-all}.cn{font-size:12.5px;color:var(--muted);margin-top:10px;line-height:1.6;word-break:keep-all}
 .cbar{display:flex;height:30px;border-radius:6px;overflow:hidden;gap:1px}.cbar span{display:flex;align-items:center;justify-content:center;font-size:12.5px;font-weight:700;white-space:nowrap;overflow:hidden}
@@ -219,7 +229,7 @@ const GDL=['A 내수 소매 적합','B 혼합','C 수출 적합'],GDD=['차령 5
 const PL=['500만원 미만','500~999만원','1,000~1,999만원','2,000만원 이상'];
 const PB=s=>s<=0?-1:s<500?0:s<1000?1:s<2000?2:3;
 const SRC=['자사','유도','출품대행'];
-const st={view:'gap',lf:'all',r1:NR-1,r0:Math.max(0,NR-13),pf:-1,org:-1,grp:-1,nr:-1,src:-1,axis:'k',color:'ix',gran:'fine',gd:-1,sel:null,tab:'main',f2:'cell'};
+const st={vt:'seg',view:'sg',lf:'all',r1:NR-1,r0:Math.max(0,NR-13),pf:-1,org:-1,grp:-1,nr:-1,src:-1,axis:'k',color:'ix',gran:'fine',gd:-1,sel:null,tab:'main',f2:'cell'};
 const $=id=>document.getElementById(id),f0=v=>Math.round(v).toLocaleString('ko-KR'),f1=v=>v.toFixed(1),pct=v=>(v*100).toFixed(1)+'%';
 const MIN_N=20,ix2=v=>isNaN(v)?'–':(v>=0?'+':'−')+Math.abs(v).toFixed(2),sg=v=>(v>=0?'+':'−')+f0(Math.abs(v));
 const md=d=>{const a=d.split('-');return (+a[1])+'/'+(+a[2])};
@@ -409,7 +419,7 @@ function requestBoard(C){  // 2026-11-18 사용자 지시: 매칭 리퀘스트 �
   return`<div class="panel rq p-rank"><div class="hd"><h2><span class="stp">3</span>매칭 리퀘스트 <small class="h2s">영업 조직 → 회원운영 · 이 차를 살 회원을 붙여 달라</small></h2><span class="note">최근 ${C.weeks}회차(${md(D.rounds[C.r0])}~${md(D.rounds[C.r1])}) · ${C.weeks}회차 합계 대수 · 전체 ${f0(top.length)}건 · 남는 차 +${f0(sg)}대 · 회원사 +${f0(sn)}곳</span></div>
   <div class="rqg">${G.map(card).join('')||'<p class="muted">해당 차종 없음</p>'}</div>
   <p class="note" style="margin-top:8px">대상 = 낙찰률 50% 미만 칸에서 출품 10대 이상 · 회원 기준 미달 · 기간 합계 회차당 0.5대 이상(8회차면 4대 이상) 남는 차종(남는 차 큰 순 10건). 묶음 = 낙찰의 수출 비중 50% 이상이면 수출(주된 수출국), 아니면 내수. 회원사 = 비싸지 않은 차를 기준만큼 팔 때 필요한 실구매 회원사 − 지금 실구매 회원사(차종별 합이라 같은 회원사가 겹칠 수 있음). 낙찰가 = 평균 ±5%. 요청 = 최신 회차 출품이 가장 많은 조직. 줄을 누르면 지도 · 오른쪽이 그 차종으로.</p></div>`}
-function cellBars(C,I,s,dn){  // 2026-11-18 사용자 지시: 차종은 막대보다 도넛이 낫다 → 도넛(범례에 부족 · 과다 대수)
+function cellBarsOld(C,I,s,dn){  // 2026-11-18 사용자 지시: 차종은 막대보다 도넛이 낫다 → 도넛(범례에 부족 · 과다 대수)
 const gp=gapOf(s.n,s.w,C.weeks),ms=[...group(I,i=>D.m[i])].map(([m,J])=>({m,n:J.length,g:gapOf(J.length,J.filter(WON).length,C.weeks)}));
   const pos=ms.filter(x=>x.g>=0.5).sort((a,b)=>b.g-a.g).slice(0,6),neg=ms.filter(x=>x.g<=-0.5).sort((a,b)=>a.g-b.g).slice(0,6),mx=Math.max(1,...pos.concat(neg).map(x=>Math.abs(x.g)));
   const row=x=>`<div class="cbr${x.m===st.mm?' on':''}" data-mm="${x.m}" tabindex="0" role="button"><span>${D.models[x.m]} <small class="muted">출품 ${f0(x.n)}대</small></span><div class="cbt"><i class="${x.g>0?'p':'n'}" style="width:${(Math.abs(x.g)/mx*100).toFixed(1)}%"></i></div><b class="${x.g>0?'t-s':'t-o'}">${x.g>0?'부족 ':'과다 '}${gtx(x.g)}</b></div>`;
@@ -453,7 +463,7 @@ function cellPanel(C){const s0=st.sel;  // 2026-11-17 사용자 지시: 칸 → 
   const seg=[...top.map(([m,J],j)=>({id:m,n:J.length,c:DCOL[j],l:D.models[m]})),...(oth>0?[{id:-1,n:oth,c:'#c9d1d9',l:`그 외 ${f0(g.length-top.length)}개 차종`}]:[])],msel=seg.find(x=>x.id===st.mm)||{id:st.mm,n:base.filter(i=>D.m[i]===st.mm).length,c:'#5b6876',l:D.models[st.mm]};
   let a0=-Math.PI/2,sv='';for(const x of seg){const a1=a0+x.n/T*Math.PI*2,on=x.id===st.mm;sv+=`<path d="${arcP(100,100,on?96:90,on?52:56,a0,a1)}" fill="${x.c}" ${x.id>=0?`data-mm="${x.id}" class="dseg${on?' on':''}" tabindex="0" role="button" aria-label="${x.l} ${x.n}대"`:''} opacity="${on||x.id<0?1:0.55}"><title>${x.l} ${f0(x.n)}대</title></path>`;a0=a1}
   sv+=`<text x="100" y="96" text-anchor="middle" class="dc1">${D.models[st.mm]}</text><text x="100" y="116" text-anchor="middle" class="dc2">${un} ${f0(msel.n)}대 · ${pct(msel.n/T)}</text>`;
-  const dn=`<div class="dbx"><div class="dt2">${un} 상위 차종 · 오른쪽 = 낙찰 대수 · 비중 · 낙찰률(기준 ⟦B⟧) · 부족 · 과다</div><div class="dnw"><svg viewBox="0 0 200 200" class="dsv" role="img" aria-label="${un} 상위 차종">${sv}</svg><ul class="dlg">${seg.map(x=>`<li${x.id>=0?` data-mm="${x.id}" class="dseg${x.id===st.mm?' on':''}" tabindex="0" role="button"`:''}><i style="background:${x.c}"></i><span>${x.l}</span><b>${f0(x.n)}대 · ${pct(x.n/T)}${x.id>=0?(()=>{const J=I.filter(i=>D.m[i]===x.id),g=gapOf(J.length,J.filter(WON).length,C.weeks);return ` <span class="dlr">낙찰률 <b class="${J.filter(WON).length/J.length>BASE?'t-s':J.filter(WON).length/J.length<LOW?'t-o':''}">${pct(J.filter(WON).length/J.length)}</b></span> <em class="${g<=-0.5?'t-o':g>=0.5?'t-s':'muted'}">${Math.abs(g)<0.5?'균형':(g<0?'과다 ':'부족 ')+gtx(g)}</em>`})():''}</b></li>`).join('')}</ul></div></div>`;
+  const dn=`<div class="dbx"><div class="dt2">${un} 상위 차종 · 오른쪽 = 낙찰 대수 · 비중 · 낙찰률(기준 ⟦B⟧) · 차종 × 연식 판정</div><div class="dnw"><svg viewBox="0 0 200 200" class="dsv" role="img" aria-label="${un} 상위 차종">${sv}</svg><ul class="dlg">${seg.map(x=>`<li${x.id>=0?` data-mm="${x.id}" class="dseg${x.id===st.mm?' on':''}" tabindex="0" role="button"`:''}><i style="background:${x.c}"></i><span>${x.l}</span><b>${f0(x.n)}대 · ${pct(x.n/T)}${x.id>=0?(()=>{const J=I.filter(i=>D.m[i]===x.id),g=gapOf(J.length,J.filter(WON).length,C.weeks);return ` <span class="dlr">낙찰률 <b class="${J.filter(WON).length/J.length>BASE?'t-s':J.filter(WON).length/J.length<LOW?'t-o':''}">${pct(J.filter(WON).length/J.length)}</b></span> <em class="muted">${(()=>{const q=SGE().M.get(x.id+'|'+st.sel.y);return q?TAGL[q.tag]:''})()}</em>`})():''}</b></li>`).join('')}</ul></div></div>`;
   // ----- 선택 차종 -----
   const J=I.filter(i=>D.m[i]===st.mm),sm=stat(J,C.R,C.weeks,C.ref),mok=J.length>0,W=J.filter(i=>WON(i));
   const pr=W.filter(i=>D.p[i]>0).map(i=>D.p[i]),avg=pr.length?pr.reduce((p,q)=>p+q,0)/pr.length:NaN,has=pr.length>=1,q1=has?qt(pr,0.25):NaN,q3=has?qt(pr,0.75):NaN,rgt=has?`${f0(avg*0.95)}~${f0(avg*1.05)}만원`:'';
@@ -519,6 +529,9 @@ function heat(C){const byP=st.axis==='p',cols=byP?PL:KL,fine=cols.length>4;const
   for(let y=0;y<YL.length;y++){h+=`<tr><th class="row">${YL[y].replace('~','~<wbr>')}</th>`;for(let c=0;c<cols.length;c++){const s=S[y+'|'+c],ok=s.n>=MIN_N,[dl,dc]=diag(s,ok);
       const sel=st.sel&&st.sel.y===y&&(byP?(st.sel.p===c&&st.sel.k<0):(st.sel.k===c&&(st.sel.p<0||st.sel.p===st.pf)));
       const par=!sel&&st.sel&&st.sel.y===y&&(byP?st.sel.p===c:st.sel.k===c);const cc=sel?' sel':par?' sel par':'';const al=`${YL[y]} ${cols[c]}`;
+      if(st.view==='sg'){const a=SGE().cell[y+'|'+c]||{more:0,less:0,pu:0};if(!s.n){h+=`<td class="thin${cc}" data-y="${y}" data-c="${c}" tabindex="0" role="button" aria-label="${al}"><span class="n">출품 없음</span></td>`;continue}
+        const mo=Math.round(a.more),le=Math.round(a.less),thin=s.n<MIN_N,hot=s.rate>=0.55,dom=thin?'표본 적음':mo>0&&mo>=2*le?'더 받을 쪽 우세':le>0&&le>=2*mo?'남는 쪽 우세':'섞여 있음';
+        h+=`<td class="sgc ${mo>0&&mo>=2*le?'dtk':le>0&&le>=2*mo?'dct':''}${hot?' hot':''}${cc}" data-y="${y}" data-c="${c}" tabindex="0" role="button" aria-label="${al}"><span class="ix${hot?' t-s':''}">${pct(s.rate)}</span><span class="n">더 받을 차 <b>${f0(mo)}대</b></span><span class="n">남는 차 <b>${f0(le)}대</b></span><span class="dg"><span class="pill" style="background:#fff">${dom}</span></span></td>`;continue}
       if(!s.n){h+=`<td class="thin${cc}" data-y="${y}" data-c="${c}" tabindex="0" role="button" aria-label="${al}"><span class="n">출품 없음</span></td>`;continue}
       if(!ok){h+=`<td class="thin${cc}" data-y="${y}" data-c="${c}" tabindex="0" role="button" aria-label="${al}"><span class="n">–</span></td>`;continue}
       if(st.color==='ix'&&st.view==='gap'){const kc=colOf(s.idx),gp=gapOf(s.n,s.w,C.weeks),gw=Math.min(100,Math.abs(gp)/GMX*100);h+=`<td class="${kc.dk?'dk':''}${cc}" style="background:${kc.bg}" data-y="${y}" data-c="${c}" tabindex="0" role="button" aria-label="${al}"><span class="ix ${kc.dk?'':gp>0?'t-s':'t-o'}">${gp>=0.5?'부족 ':gp<=-0.5?'과다 ':''}${gtx(gp)}</span><span class="gb2"><i class="${gp>0?'p':'n'}" style="width:${gw.toFixed(1)}%"></i></span><span class="n rt">낙찰률 ${pct(s.rate)}</span><span class="dg"><span class="pill ${dc}" style="background:#fff">${dl}</span></span></td>`}
@@ -689,29 +702,105 @@ function concl(){if(!CA)return'';const U=CA.unsold,nu=CA.nu,K=[['가격 불일�
    ${todo(3,'회원 모집','회원운영',`회원 부족 차종 <b>${CA.member.length}개</b>(출품 ${f0(mn)}대). 수출국 · 내수 유형은 아래 표`)}
   </div>
   <p class="cn">판정 보류 ${f0(v[3])}대(${pc(3)})는 가격 · 회원 기준으로 원인이 갈리지 않는 유찰로, 회원운영팀 · 경매운영팀과 기준 검증 뒤 세분 예정.</p></div>`}
+// ===== 2026-11-20 차종 × 연식 단일 판정 엔진(실장 재설계안 · 11/20 통화): 분기 13회차 고정 · 출품 30대 이상만 판정 · 95% 신뢰 수준 · 시세 5% =====
+const SGW=13,ZC=1.96,SGMIN=30,TAGL={strong:'더 받을 차',price:'가격 불일치',mem:'회원 부재',weak:'수요 약함',hold:'판정 보류',thin:'판단 불가'};
+const wil=(w,n)=>{if(!n)return[0,1];const p=w/n,z=ZC,d=1+z*z/n,c=p+z*z/(2*n),h=z*Math.sqrt(p*(1-p)/n+z*z/(4*n*n));return[(c-h)/d,(c+h)/d]};
+let _SG=null;
+function SGE(){if(_SG)return _SG;const r1=NR-1,r0=Math.max(0,NR-SGW),ref=refPrices(r0,r1),M=new Map(),cell={};let n=0,w=0;
+  for(let i=0;i<N;i++){if(RR[i]<r0)continue;n++;const won=D.we[i]>0;if(won)w++;const yb=YB(D.y[i]),key=D.m[i]+'|'+yb;let s=M.get(key);if(!s){s={m:D.m[i],y:yb,n:0,w:0,fn:0,fw:0,hn:0,hw:0,ex:0,by:new Map(),ct:new Map(),fc:{},hc:{}};M.set(key,s)}
+    const rp=ref.get(D.m[i]+'|'+D.y[i]+'|'+RK(D.k[i])),hi=D.s[i]>0&&!!rp&&D.s[i]/rp>1.05,kb=KB(D.k[i]),ck=yb+'|'+kb;if(!cell[ck])cell[ck]={more:0,less:0,pu:0};
+    s.n++;if(won){s.w++;if(D.we[i]===2)s.ex++;const z=D.z[i];if(z>=0){s.by.set(z,(s.by.get(z)||0)+1);if(D.we[i]===2&&D.zc[z]>=0)s.ct.set(D.zc[z],(s.ct.get(D.zc[z])||0)+1)}}
+    if(hi){s.hn++;if(won)s.hw++;else s.hc[kb]=(s.hc[kb]||0)+1}else{s.fn++;if(won)s.fw++;s.fc[kb]=(s.fc[kb]||0)+1}}
+  const L=[...M.values()],T={strong:[],price:[],mem:[],weak:[],hold:[],thin:[]},NT={strong:0,price:0,mem:0,weak:0,hold:0,thin:0};
+  for(const s of L){const [lo,up]=wil(s.fw,s.fn);s.lo=lo;s.up=up;s.fr=s.fn?s.fw/s.fn:NaN;s.hr=s.hn?s.hw/s.hn:NaN;s.pu=s.hn-s.hw;
+    const b=[...s.by.values()].sort((a,c)=>c-a);s.nb=b.length;s.top3=s.w?b.slice(0,3).reduce((a,x)=>a+x,0)/s.w:0;s.exr=s.w?s.ex/s.w:NaN;s.cts=[...s.ct].sort((a,c)=>c[1]-a[1]).slice(0,2).map(x=>D.ctrys[x[0]]);
+    s.amt=0;s.pr=false;
+    if(s.n<SGMIN)s.tag='thin';
+    else{s.pr=s.hn/s.n>=0.30&&s.fn>0&&(s.fr-s.hr)>=0.15;
+      if(lo>0.55){s.tag='strong';s.amt=s.fw/0.55-s.fn}
+      else if(up<0.50){s.amt=s.fn-s.fw/0.55;s.tag=(s.nb<=5||s.top3>=0.60)?'mem':'weak'}
+      else if(s.pr){s.tag='price';s.amt=s.pu}
+      else s.tag='hold'}
+    s.a=Math.round(s.amt);T[s.tag].push(s);NT[s.tag]+=s.n;
+    if(s.tag==='price')for(const kb in s.hc){cell[s.y+'|'+kb].less+=s.hc[kb]}
+    if(s.tag==='strong'&&s.fn)for(const kb in s.fc)cell[s.y+'|'+kb].more+=s.amt*s.fc[kb]/s.fn;
+    if((s.tag==='mem'||s.tag==='weak')&&s.fn)for(const kb in s.fc)cell[s.y+'|'+kb].less+=s.amt*s.fc[kb]/s.fn}
+  for(const k in T)T[k].sort((a,c)=>c.amt-a.amt||c.n-a.n);
+  return _SG={r0,r1,n,w,L,T,NT,M,cell}}
+const sgName=s=>`${D.models[s.m]} <small class="muted">${YL[s.y]}</small>`;
+const sgEx=s=>isNaN(s.exr)?'<span class="muted">낙찰 없음</span>':`<span class="xb"><i style="width:${(s.exr*100).toFixed(1)}%"></i></span><span class="xbt">수출 ${pct(s.exr)} · 내수 ${pct(1-s.exr)}${s.cts.length&&s.exr>=0.3?' <small class="muted">'+s.cts.join(' · ')+'</small>':''}</span>`;
+function sgRow(s,mx,kind){const on=st.sgs&&st.sgs.m===s.m&&st.sgs.y===s.y,col=kind==='strong'?'#c4472f':kind==='price'?'#d29a2c':'#3f7fc4';
+  const mid=kind==='price'?`비싸게 나온 차 ${f0(s.hn)}대 낙찰률 <b>${pct(s.hr)}</b> · 제값 차 ${pct(s.fr)}`:`제값 차 낙찰률 <b>${pct(s.fr)}</b> <small class="muted">(95% 구간 ${(s.lo*100).toFixed(0)}~${(s.up*100).toFixed(0)}%)</small>`;
+  const lab=kind==='strong'?'더 받을 차':kind==='price'?'비싼 차 유찰':'남는 차';
+  return`<div class="sgr${on?' on':''}" data-sm="${s.m}" data-sy="${s.y}" tabindex="0" role="button"><div class="sg1"><b>${sgName(s)}</b><span class="muted">출품 ${f0(s.n)}대 · 낙찰 ${f0(s.w)}대 · 사 간 회원사 ${f0(s.nb)}곳${kind==='strong'&&s.pr?' · 비싼 차 유찰 '+f0(s.pu)+'대(가격 조정 병행)':''}</span></div>
+  <div class="sg2">${mid}</div><div class="sg3"><span class="sgb"><i style="width:${Math.max(3,s.a/mx*100).toFixed(1)}%;background:${col}"></i></span><b>${lab} ${f0(s.a)}대</b></div><div class="sg4">${sgEx(s)}</div></div>`}
+function sgList(L,kind,key,n0){if(!L.length)return'<p class="muted" style="font-size:13px;margin:6px 0">해당 차종 없음</p>';const mx=Math.max(1,...L.map(s=>s.a)),sh=n0||8;
+  return L.slice(0,sh).map(s=>sgRow(s,mx,kind)).join('')+(L.length>sh?`<details class="rl mo cbf" data-cf="${key}"${st['cf'+key]?' open':''}><summary>나머지 ${L.length-sh}개 보기</summary>${L.slice(sh).map(s=>sgRow(s,mx,kind)).join('')}</details>`:'')}
+const vtabs=()=>`<div class="vt"><button class="vtb${st.vt!=='km'?' on':''}" data-vt="seg">차종 × 연식</button><button class="vtb${st.vt==='km'?' on':''}" data-vt="km">연식 × 주행거리</button><span class="muted">판정은 두 화면 모두 차종 × 연식 기준 · 최근 분기 ${SGW}회차(${md(D.rounds[SGE().r0])}~${md(D.rounds[SGE().r1])}) 고정 · 출품 ${SGMIN}대 이상만 판정 · 95% 신뢰 수준</span></div>`;
+function sgTab(C){const E=SGE(),T=E.T,sum=L=>L.reduce((a,s)=>a+s.a,0),f=st.sgf,flt=L=>f?L.filter(s=>D.mg[s.m]===f.g&&s.y===f.y):L,W=SGW;
+  const sA=sum(T.strong),sP=sum(T.price),sM=sum(T.mem),sK=sum(T.weak),nJ=E.n-E.NT.thin;
+  // 차군 × 연식 그리드: 칸마다 더 받을 차 · 남는 차(가격 불일치 포함)를 따로, 순합계는 쓰지 않음
+  const G={};for(const s of E.L){const k=D.mg[s.m]+'|'+s.y;if(!G[k])G[k]={n:0,w:0,more:0,less:0};const g=G[k];g.n+=s.n;g.w+=s.w;if(s.tag==='strong')g.more+=s.a;else if(s.tag==='price'||s.tag==='mem'||s.tag==='weak')g.less+=s.a}
+  let gh=`<table class="heat fine sgg"><thead><tr><th class="row"></th>${YL.map(y=>`<th>${y}</th>`).join('')}</tr></thead><tbody>`;
+  D.groups.forEach((gn,gi)=>{gh+=`<tr><th class="row">${gn}</th>`;for(let y=0;y<YL.length;y++){const g=G[gi+'|'+y],sel=f&&f.g===gi&&f.y===y;
+      if(!g||g.n<SGMIN){gh+=`<td class="thin"><span class="n">${g?'출품 '+f0(g.n)+'대':'–'}</span></td>`;continue}
+      const r=g.w/g.n,hot=r>=0.55,dom=g.more>0&&g.more>=2*g.less?'dtk':g.less>0&&g.less>=2*g.more?'dct':'';
+      gh+=`<td class="sgc ${dom}${hot?' hot':''}${sel?' sel':''}" data-g="${gi}" data-y="${y}" tabindex="0" role="button" aria-label="${gn} ${YL[y]}"><span class="ix${hot?' t-s':''}">${pct(r)}</span><span class="n">더 받을 차 <b>${f0(g.more)}대</b></span><span class="n">남는 차 <b>${f0(g.less)}대</b></span><span class="n">출품 ${f0(g.n)}대</span></td>`}gh+='</tr>'});gh+='</tbody></table>';
+  const card=(k,v,d,c)=>`<div class="kpi" style="border-top:3px solid ${c}"><div class="k">${k}</div><div class="v num">${v}</div><div class="d">${d}</div></div>`;
+  if(st.sgs===undefined){const s=T.strong[0]||T.price[0];st.sgs=s?{m:s.m,y:s.y}:null}
+  let det='';if(st.sgs){st.sel={y:st.sgs.y,k:-1,p:-1};st.mm=st.sgs.m;det=`<div class="sgd">${cellPanel(C)}</div>`}
+  const fl=f?`<span class="pill weak" style="margin-left:8px">${D.groups[f.g]} · ${YL[f.y]}만 보는 중</span> <button class="chip" data-sgx="1">전체 보기</button>`:'';
+  return`${vtabs()}
+  <div class="kpis" style="margin-top:12px">
+   ${card('평균 낙찰률',`${pct(E.w/E.n)}<small> / 기준 55%</small>`,`분기 ${W}회차 출품 ${f0(E.n)}대 · 낙찰 ${f0(E.w)}대`,'#1f2933')}
+   ${card('더 받을 차',`${f0(sA)}<small> 대 · ${f0(T.strong.length)}개 차종</small>`,`회당 ${f0(sA/W)}대 · 제값 차 낙찰률이 55%를 확실히 넘는 차종`,'#c4472f')}
+   ${card('남는 차',`${f0(sP+sM+sK)}<small> 대 · ${f0(T.price.length+T.mem.length+T.weak.length)}개 차종</small>`,`가격 불일치 ${f0(sP)}대(${T.price.length}개) · 회원 부재 ${f0(sM)}대(${T.mem.length}개) · 수요 약함 ${f0(sK)}대(${T.weak.length}개)`,'#3f7fc4')}
+   ${card('판정 보류 · 판단 불가',`${f0(T.hold.length)}<small> 개 · </small>${f0(T.thin.length)}<small> 개 차종</small>`,`판정 보류 출품 ${f0(E.NT.hold)}대(${pct(E.NT.hold/E.n)}) · 출품 ${SGMIN}대 미만 ${f0(E.NT.thin)}대(${pct(E.NT.thin/E.n)})는 판정하지 않음`,'#9aa5b1')}
+  </div>
+  <div class="panel" style="margin-top:12px"><div class="hd"><h2>차군 × 연식 지도 <small class="h2s">큰 숫자 = 낙찰률(55% 이상 빨강) · 칸을 누르면 아래 목록이 그 칸 차종만 · 다시 누르면 전체</small></h2></div><div class="scroll">${gh}</div>
+   <p class="note" style="margin-top:6px">더 받을 차와 남는 차를 더하고 빼지 않고 따로 표시. 옅은 빨강 칸 = 더 받을 차가 남는 차의 2배 이상, 옅은 파랑 칸 = 남는 차가 2배 이상, 흰 칸 = 섞여 있음. 출품 ${SGMIN}대 미만 칸은 숫자를 표시하지 않음.</p></div>
+  <div class="sgs">
+   <div class="panel sgp" style="border-top:4px solid #c4472f"><div class="hd"><h2>더 받을 차 <small class="h2s">출품영업 · FC(시너지) · 법인영업 · 플랫폼매입 · 더 받아도 55%가 지켜지는 대수(분기 ${W}회차 합계)</small></h2>${fl}</div>${sgList(flt(T.strong),'strong','s1',10)}</div>
+   <div class="panel sgp" style="border-top:4px solid #3f7fc4"><div class="hd"><h2>남는 차 <small class="h2s">원인별 · 수출 · 내수 비중으로 찾을 회원 구분</small></h2>${fl}</div>
+    <h3 class="sgh"><span class="pill over">가격 불일치</span> 출품영업 · FC(시너지) · 법인영업 · 시작가를 시세 수준으로 <small>비싸게 나온 차가 출품의 30% 이상이고 제값 차보다 15%p 이상 덜 팔림</small></h3>${sgList(flt(T.price),'price','s2',5)}
+    <h3 class="sgh"><span class="pill weak">회원 부재</span> 회원운영 · 이 차를 살 회원 모집 <small>제값에도 50% 미만 · 사 간 회원사 5곳 이하 또는 3곳이 60% 이상</small></h3>${sgList(flt(T.mem),'mem','s3',5)}
+    <h3 class="sgh"><span class="pill" style="background:#eef1f4;color:#5B6773">수요 약함</span> 출품 전 확인 · 회원운영팀이 살 회원을 찾을 수 있는지 먼저 확인 <small>제값에도 50% 미만 · 회원사는 여러 곳</small></h3>${sgList(flt(T.weak),'weak','s4',5)}
+   </div>
+  </div>
+  ${det}`}
+function cellBars(C,I,s,dn){const E=SGE(),s0=st.sel,kk=s0.k,ms=new Set(I.map(i=>D.m[i]));  // 2026-11-20: 칸 안 차종도 차종 × 연식 판정표에서 가져옴(칸 순합계 · 소표본 판정 폐지)
+  const part=x=>kk<0?1:(x.tag==='price'?(x.hc[kk]||0)/(x.pu||1):(x.fc[kk]||0)/(x.fn||1));
+  const rows=t=>E.T[t].filter(x=>x.y===s0.y&&ms.has(x.m)).map(x=>({x,a:Math.round(x.amt*part(x))})).filter(r=>r.a>=1);
+  const A=rows('strong').sort((a,b)=>b.a-a.a),B=[...rows('price'),...rows('mem'),...rows('weak')].sort((a,b)=>b.a-a.a),mx=Math.max(1,...A.concat(B).map(r=>r.a));
+  const row=r=>`<div class="cbr${r.x.m===st.mm?' on':''}" data-mm="${r.x.m}" tabindex="0" role="button"><span>${D.models[r.x.m]} <small class="muted">${r.x.tag==='strong'?'':TAGL[r.x.tag]+' · '}출품 ${f0(r.x.n)}대</small></span><div class="cbt"><i class="${r.x.tag==='strong'?'p':'n'}" style="width:${(r.a/mx*100).toFixed(1)}%"></i></div><b class="${r.x.tag==='strong'?'t-s':'t-o'}">${f0(r.a)}대</b></div>`;
+  const blk=(lab,L,k)=>`<div class="cbk"><div class="ct2">${lab} <small style="font-weight:500">${L.length}개 차종 · ${f0(L.reduce((a,r)=>a+r.a,0))}대</small></div>${L.length?L.slice(0,6).map(row).join('')+(L.length>6?`<details class="rl mo cbf" data-cf="${k}"${st['cf'+k]?' open':''}><summary>나머지 ${L.length-6}개 보기</summary>${L.slice(6).map(row).join('')}</details>`:''):'<div class="muted" style="font-size:13px">해당 차종 없음</div>'}</div>`;
+  let nh=0,nt=0;for(const i of I){const q=E.M.get(D.m[i]+'|'+s0.y);if(!q||q.tag==='thin')nt++;else if(q.tag==='hold')nh++}
+  return`<div class="cbx"><h3><span class="stp">4</span>칸 안 차종 <small>차종 × 연식 판정(분기 ${SGW}회차 · 출품 ${SGMIN}대 이상)${kk<0?'':' 중 이 주행 구간 몫'} · 누르면 아래가 그 차종으로 바뀜</small></h3>
+  ${blk('더 받을 차',A,'m')}${blk('남는 차',B,'o')}
+  <div class="cbq">이 칸 출품 ${f0(I.length)}대 중 판정 보류 차종 ${f0(nh)}대 · 판단 불가(출품 ${SGMIN}대 미만 차종) ${f0(nt)}대</div>
+  <div class="ct2" style="margin-top:10px">낙찰이 많은 차종 <small style="font-weight:500">팔린 대수 순 · 판정은 차종 × 연식 기준</small></div>
+  ${dn}</div>`}
 function render(){syncFilters();BASE=0.55;LOW=0.50;SH=1;const C=ctx(0),Cp=ctx(1);
   if(MK!=='all'){let a1=0,a2=0;for(const i of C.I){if(D.we[i]===1)a1++;else if(D.we[i]===2)a2++}SH=(a1+a2)?(MK==='dom'?a1:a2)/(a1+a2):0;BASE=0.55*SH;LOW=0.50*SH}
   if(st.sel===undefined||st.sel===null&&!st.touched){let bst=null;for(const [k,I] of group(C.I,i=>YB(D.y[i])+'|'+KB(D.k[i]))){const x=stat(I,C.R,C.weeks,C.ref);if(x.n>=MIN_N&&(!bst||x.opp<bst.o)){const [y,kk]=k.split('|').map(Number);bst={y,k:kk,o:x.opp}}}if(bst)st.sel={y:bst.y,k:bst.k,p:-1};st.touched=true}  // 첫 화면: 지도 칸 중 차가 가장 많이 남는 칸
   $('sub').textContent=`${st.r0===0&&st.r1===NR-1?'전체':st.r1===NR-1?'최근':'선택'} ${C.weeks}회차(${md(D.rounds[C.r0])}~${md(D.rounds[C.r1])}) · 출품 ${f0(C.n)}대 · 전체 낙찰률 ${pct(C.R)} · 데이터 ${D.rounds[NR-1].replace(/-/g,'.')} 경매까지`;
   let h='';
-  if(st.tab==='main'){const a=ranked(C);const o=a.over[0],s=a.short[0];
+  if(st.tab==='main'&&st.vt!=='km'){h=sgTab(C)}
+  else if(st.tab==='main'){const a=ranked(C);const o=a.over[0],s=a.short[0];
     const sumrow=`<div class="sumrow" style="margin:8px 0 10px">${(()=>{const g=group(C.I,i=>{const p=PB(D.s[i]);return p<0?null:YB(D.y[i])+'|'+KB(D.k[i])+'|'+p});const c={};[LB.P,LB.M,LB.B,LB.W,LB.S].forEach(k=>c[k]=[0,0]);let thin=0;for(const [k,I] of g){const s=stat(I,C.R,C.weeks,C.ref);if(s.n<MIN_N){thin++;continue}const d=diag(s,true)[0];if(c[d]){c[d][0]++;c[d][1]+=s.opp}}
       const it=(k,cl)=>`<span><span class="pill ${cl}">${k}</span> ${c[k][0]}칸 · 기회 ${sg(c[k][1])}대</span>`;
       return`<b>${YL.length*KL.length*4}칸 진단 요약</b>${[[LB.P,'over'],[LB.M,'over'],[LB.B,'over'],[LB.W,'weak'],[LB.S,'short']].filter(([k])=>c[k][0]).map(([k,cl])=>it(k,cl)).join('')||'<span class="muted">진단 대상 칸 없음</span>'}<span class="muted">기간 출품 ${MIN_N}대 미만 ${thin}칸 제외 · 기회는 ⟦B⟧ 기준 회당 대수</span>`})()}</div>`;
-    h=`${concl()}<div class="kpis" style="margin-top:12px"><div class="kpi"><div class="k">회당 출품</div><div class="v num">${f0(C.n/C.weeks)}<small> 대</small></div><div class="d">기간 ${f0(C.n)}대 · ${C.weeks}회차</div></div>
+    h=`${vtabs()}<div class="kpis km" style="margin-top:12px"><div class="kpi"><div class="k">회당 출품</div><div class="v num">${f0(C.n/C.weeks)}<small> 대</small></div><div class="d">기간 ${f0(C.n)}대 · ${C.weeks}회차</div></div>
     <div class="kpi"><div class="k">전체 낙찰률</div><div class="v num">${pct(C.R)}</div><div class="d">회당 낙찰 ${f0(C.w/C.weeks)}대 · 기준 ⟦B⟧</div></div>
     <div class="kpi"><div class="k">공급 과다가 가장 큰 칸</div><div class="v t-o" style="font-size:16px">${o?cellName(o.y,o.kk,o.p):'–'}</div><div class="d">${o?'수급지수 '+ix2(o.s.idx)+' · 기회 '+sg(o.s.opp)+'대':''}</div></div>
     <div class="kpi"><div class="k">공급 부족이 가장 큰 칸</div><div class="v t-s" style="font-size:16px">${s?cellName(s.y,s.kk,s.p):'–'}</div><div class="d">${s?'수급지수 '+ix2(s.s.idx)+' · 기회 '+sg(s.s.opp)+'대':''}</div></div></div>
-    ${causeBoard()}
-    ${orderBoard(C)}
     <div class="cols" style="margin-top:16px"><div class="stack">
       <div class="panel p-map"><div class="hd"><h2><span class="stp">2</span>매칭 지도 — 연식 × ${st.axis==='p'?'시작가':'주행거리'}</h2><span class="fg"><span class="fl">가로축</span><button class="chip${st.axis==='k'?' on':''}" data-ax="k">주행거리</button><button class="chip${st.axis==='p'?' on':''}" data-ax="p">시작가</button><span class="fl" style="margin-left:8px">지수</span><button class="chip${st.view==='gap'?' on':''}" data-vw="gap">부족 · 과다 대수</button><button class="chip${st.view==='ix'?' on':''}" data-vw="ix">수급지수</button><button class="chip${st.view==='rt'?' on':''}" data-vw="rt">낙출품지수</button><span class="fl" style="margin-left:8px">회원</span>${[['all','전체'],['dom','내수'],['exp','수출']].map(([v,l])=>`<button class="chip${MK===v?' on':''}" data-mk="${v}">${l}</button>`).join('')}</span></div>
       <details class="rl gd"${st.gopen?' open':''}><summary>보는 법 · 칸 진단 요약</summary>${sumrow}<div class="guide">${st.view==='rt'?`<div class="g-r"><span class="g-k">낙출품지수</span><span><b>낙찰 ÷ 출품 = 낙찰률</b><span class="sep"> · </span><span class="seg"><b>기준 ⟦B⟧</b></span><span class="sep"> · </span><span class="seg"><b class="t-s">기준 미만 = 빨강</b>(목표에 못 미침)</span><span class="sep"> · </span><span class="seg"><b class="t-o">기준 이상 = 파랑</b>(목표 달성)</span><span class="sep"> · </span><span class="seg">색은 수급지수 보기와 반대 방향</span></span></div>`:''}${st.view==='gap'?`<div class="g-r"><span class="g-k">부족 · 과다</span><span><b>기준 ⟦B⟧만큼 팔리려면 빠져야(+) 하거나 더 들어와도(−) 되는 출품 대수</b><span class="sep"> · </span><span class="seg">선택 기간 합계(기본 분기 13회차) = 출품 − 낙찰 ÷ 기준</span><span class="sep"> · </span><span class="seg"><b class="t-o">과다 +</b> 남는 차</span><span class="sep"> · </span><span class="seg"><b class="t-s">부족 −</b> 더 가져와도 팔림</span><span class="sep"> · </span><span class="seg">막대 길이 = 규모</span></span></div>`:''}<div class="g-r"${st.view!=='ix'?' style="display:none"':''}><span class="g-k">수급지수</span><span><b>(기준 ⟦B⟧ − 칸 낙찰률) ÷ 기준</b><span class="sep"> · </span><span class="seg"><b>0 = 기준만큼 팔림</b></span><span class="sep"> · </span><span class="seg"><b class="t-s">− 공급 부족</b>(기준보다 잘 팔림, 차가 모자람)</span><span class="sep"> · </span><span class="seg"><b class="t-o">+ 공급 과다</b>(기준보다 덜 팔림, 차가 남음)</span><span class="sep"> · </span><span class="seg">예: +0.20 = 기준보다 20% 덜 팔림</span></span></div>
       ${MK==='all'?'':`<div class="g-r"><span class="g-k">${MK==='dom'?'내수':'수출'} 보기</span><span><span class="seg">${MK==='dom'?'내수':'수출'} 회원 낙찰만 셈</span><span class="sep"> · </span><span class="seg">기준 = 55% × 기간 낙찰 중 ${MK==='dom'?'내수':'수출'} 비중 ${pct(SH)} = <b>⟦B⟧</b></span></span></div>`}
       <div class="g-r"><span class="g-k">칸 태그</span><span><span class="seg"><span class="pill short">공급 부족</span> ${st.view==='rt'?'⟦B⟧ 초과':'0 미만'}, 출품 확대</span><span class="sep"> · </span><span class="seg"><span class="pill weak">수요 보강 필요</span> ${st.view==='rt'?'⟦L⟧~⟦B⟧':'0~+0.09'}, 회원 모집 우선</span><span class="sep"> · </span><span class="seg"><span class="pill over">가격 고가</span> <span class="pill over">회원 부족</span> ${st.view==='rt'?'⟦L⟧ 미만':'+0.09 초과'}, 원인</span></span></div></div>
-      </details><div class="scroll">${heat(C)}</div>
+      </details><div class="scroll">${heat(C)}</div><p class="note sgn" style="margin-top:6px">큰 숫자 = 선택 기간 낙찰률(55% 이상 빨강, 평균 ${pct(C.R)}). 더 받을 차 · 남는 차는 차종 × 연식 판정(분기 ${SGW}회차 고정)을 이 칸의 제값 차 대수만큼 나눈 값이고, 더하고 빼지 않고 따로 표시. 남는 차 = 가격 불일치 차종의 비싼 차 유찰 + 회원 부재 · 수요 약함 차종의 남는 대수. 칸을 누르면 오른쪽에 그 칸 차종.</p>
       ${st.view==='rt'?`<div class="lgd"><div class="lgh"><b class="t-s">◀ 기준 미만</b><span>색이 진할수록 기준 ⟦B⟧에서 멀어짐</span><b class="t-o">기준 이상 ▶</b></div><div class="lgb"></div><div class="lgt"><span>${pb(BASE*0.7)} 이하</span><span>${pb(BASE*0.85)}</span><span>${pb(BASE)}</span><span>${pb(BASE*1.15)}</span><span>${pb(BASE*1.3)} 이상</span></div></div>`:`<div class="lgd"><div class="lgh"><b class="t-s">◀ 공급 부족</b><span>색이 진할수록 0에서 멀어짐</span><b class="t-o">공급 과다 ▶</b></div><div class="lgb"></div><div class="lgt"><span>−0.30 이하</span><span>−0.15</span><span>0</span><span>+0.15</span><span>+0.30 이상</span></div></div>`}</div>
-      ${requestBoard(C)}
     </div>${cellPanel(C)}</div>`}
   else if(st.tab==='meet')h=meet(C,Cp);else if(st.tab==='exp')h=expo(C);else h=rule();
   const RL=MK==='dom'?'내수 낙찰률':MK==='exp'?'수출 낙찰률':'낙찰률',fx=t=>{t=t.replace(/⟦B6⟧/g,pb(BASE*60/55)).replace(/⟦L9⟧/g,pb(LOW*0.9)).replace(/⟦B⟧/g,pb(BASE)).replace(/⟦L⟧/g,pb(LOW));return MK!=='all'&&st.tab!=='rule'&&st.tab!=='exp'?t.replace(/낙찰률/g,RL):t};
@@ -722,6 +811,10 @@ function render(){syncFilters();BASE=0.55;LOW=0.50;SH=1;const C=ctx(0),Cp=ctx(1)
   $('view').querySelectorAll('tr.click[data-y]').forEach(tr=>tr.onclick=()=>{st.mm=null;st.mgp=null;st.sel={y:+tr.dataset.y,k:+tr.dataset.k,p:+tr.dataset.p};render()});
   {const dt=$('view').querySelector('details.dt');if(dt)dt.ontoggle=()=>{st.dopen=dt.open}}
   $('view').querySelectorAll('details.cbf').forEach(d=>d.ontoggle=()=>{st['cf'+d.dataset.cf]=d.open});
+  $('view').querySelectorAll('[data-vt]').forEach(b=>b.onclick=()=>{st.vt=b.dataset.vt;st.sel=null;st.mm=null;st.touched=false;render()});
+  $('view').querySelectorAll('.sgr').forEach(e=>{const f=()=>{st.sgs={m:+e.dataset.sm,y:+e.dataset.sy};render();const d=document.querySelector('.sgd');if(d)d.scrollIntoView({behavior:'smooth',block:'start'})};e.onclick=f;e.onkeydown=v=>{if(v.key==='Enter'||v.key===' '){v.preventDefault();f()}}});
+  $('view').querySelectorAll('.sgg td[data-g]').forEach(e=>{const f=()=>{const g=+e.dataset.g,y=+e.dataset.y;st.sgf=st.sgf&&st.sgf.g===g&&st.sgf.y===y?null:{g,y};render()};e.onclick=f;e.onkeydown=v=>{if(v.key==='Enter'||v.key===' '){v.preventDefault();f()}}});
+  $('view').querySelectorAll('[data-sgx]').forEach(b=>b.onclick=()=>{st.sgf=null;render()});
   {const tt=$('view').querySelector('details.tt');if(tt)tt.ontoggle=()=>{st.topen=tt.open}}
   {const gd=$('view').querySelector('details.gd');if(gd)gd.ontoggle=()=>{st.gopen=gd.open}}
   {const dr=$('view').querySelector('details.dr');if(dr)dr.ontoggle=()=>{st.ropen=dr.open}}
@@ -734,7 +827,7 @@ function render(){syncFilters();BASE=0.55;LOW=0.50;SH=1;const C=ctx(0),Cp=ctx(1)
   $('view').querySelectorAll('[data-vw]').forEach(b=>b.onclick=()=>{st.view=b.dataset.vw;render()});
   $('view').querySelectorAll('[data-mk]').forEach(b=>b.onclick=()=>{MK=b.dataset.mk;render()});
   $('view').querySelectorAll('[data-mgp]').forEach(e=>{const f=()=>{st.mgp=+e.dataset.mgp;st.mm=null;render()};e.onclick=f;e.onkeydown=v=>{if(v.key==='Enter'||v.key===' '){v.preventDefault();f()}}});
-  $('view').querySelectorAll('[data-mm]').forEach(e=>{const f=()=>{st.mm=+e.dataset.mm;render()};e.onclick=f;e.onkeydown=v=>{if(v.key==='Enter'||v.key===' '){v.preventDefault();f()}}});
+  $('view').querySelectorAll('[data-mm]').forEach(e=>{const f=()=>{st.mm=+e.dataset.mm;if(st.vt!=='km'&&st.sgs)st.sgs={m:st.mm,y:st.sgs.y};render()};e.onclick=f;e.onkeydown=v=>{if(v.key==='Enter'||v.key===' '){v.preventDefault();f()}}});
   $('view').querySelectorAll('[data-lf]').forEach(b=>b.onclick=()=>{st.lf=b.dataset.lf;render()});
   const cp=$('copy');if(cp)cp.onclick=()=>{const t=$('req');t.select();try{navigator.clipboard.writeText(t.value)}catch(e){document.execCommand('copy')}$('copied').textContent='복사했습니다.'};
   $('foot').textContent=`코오롱오토옥션 전략기획팀 · 대외비 · 시범 화면(1단계 일부) · 데이터 생성 ${D.gen} · ${D.src}`}
