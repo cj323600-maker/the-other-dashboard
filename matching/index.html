@@ -236,6 +236,13 @@ tbody tr:hover td{background:#fafbfc}th{letter-spacing:0}td,th{padding:9px 10px}
 @media (max-width:900px){.erp{grid-template-columns:1fr}.sb{position:static;height:auto;padding:12px}.sb-m{flex-direction:row;flex-wrap:wrap}.sb-i{flex:1 1 140px}.sb-i span{display:none}.sb-f{margin-top:0;flex-direction:row;flex-wrap:wrap;gap:4px 10px;align-items:center}.sb-f a{border:0;padding:0;margin:0 0 0 auto}}
 @media (max-width:560px){.app{padding:0 10px 40px}.gt{min-width:760px}.sgt{min-width:640px}.mapt{min-width:0}}
 .sgt{width:100%}.sgt th:first-child{white-space:nowrap;padding-right:8px}
+/* 2026-11-20 사용자 지시: 연식 × 주행거리 칸 색을 차종 × 연식 그리드와 통일(더 받을 쪽 = 진한 파랑, 남는 쪽 = 진한 회색, 글자 흰색) */
+.sc.take{background:var(--accent);border-color:var(--accent);color:#fff}.sc.cut{background:#7d848c;border-color:#7d848c;color:#fff}
+.sc.take .sr,.sc.cut .sr,.sc.take .sb1 b,.sc.cut .sb1 b,.sc.take .h,.sc.cut .h{color:#fff}
+.sc.take .sr0,.sc.cut .sr0,.sc.take .sb1 span,.sc.cut .sb1 span,.sc.take .muted,.sc.cut .muted{color:rgba(255,255,255,.82)}
+.sc.take .sr.hot,.sc.cut .sr.hot{color:#fff;text-decoration:underline;text-decoration-color:#ff8f9b;text-decoration-thickness:3px;text-underline-offset:4px}
+.sc.take .st,.sc.cut .st{background:rgba(255,255,255,.22)}.sc.take .st i.bt,.sc.cut .st i.bt{background:#fff}.sc.take .st i.bc,.sc.cut .st i.bc{background:rgba(255,255,255,.55)}
+.sc.sel{outline:3px solid #f0a000;outline-offset:1px}
 </style>
 </head>
 <body>
@@ -531,7 +538,7 @@ function segGrid(){
   const KLs=['5만 km 미만','5~10만 km','10~15만 km','15~20만 km','20만 km 이상'];
   const arr=DATA.segc[schg],mxs=Math.max(1,...arr.map(x=>Math.max(x.plus,x.minus)));
   let h=`<div class="gtool"><span class="lab2">차군</span>${Object.keys(DATA.segc).map(c=>`<button class="chip" aria-pressed="${c===schg}" data-schg="${c}">${c}</button>`).join('')}</div>
-  <div class="legend"><span><i style="background:var(--accent-soft)"></i>더 받을 쪽 우세 (2배 이상)</span><span><i style="background:#e3e5e8"></i>남는 쪽 우세 (2배 이상)</span><span><i style="background:#fff"></i>혼재</span><span>칸 위 숫자 = 낙찰률(55% 이상 빨강). 막대는 회당 대수이고, 칸 판정이 아니라 칸 안 차종 판정을 따로 더한 값</span></div>`;
+  <div class="legend"><span><i style="background:var(--accent)"></i>더 받을 쪽 우세 (2배 이상)</span><span><i style="background:#7d848c"></i>남는 쪽 우세 (2배 이상)</span><span><i style="background:#fff"></i>혼재</span><span>칸 위 숫자 = 낙찰률(55% 이상 빨강). 막대는 회당 대수이고, 칸 판정이 아니라 칸 안 차종 판정을 따로 더한 값</span></div>`;
   h+=`<div><div class="card" style="margin:0"><div class="cb tw"><table class="sgt"><colgroup><col style="width:92px"><col><col><col><col><col></colgroup><thead><tr><th></th>${KLs.map(k=>`<th>${k}</th>`).join('')}</tr></thead><tbody>`;
   for(let y=0;y<6;y++){
     h+=`<tr><th style="text-align:right">${YLs[y]}</th>`;
