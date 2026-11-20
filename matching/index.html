@@ -273,6 +273,10 @@ tbody tr:hover td{background:#fafbfc}th{letter-spacing:0}td,th{padding:9px 10px}
 .sbox[data-jump]{cursor:pointer;transition:box-shadow .12s}.sbox[data-jump]:hover{box-shadow:0 2px 10px rgba(20,24,28,.16)}.sbox[data-jump] .k::after{content:"  ↓";color:var(--accent)}
 .flow{padding:6px 10px;margin:8px 0}.flow .fb{padding:5px 10px;display:flex;flex-wrap:wrap;gap:2px 8px;align-items:baseline}.flow .fb b{display:inline}
 .card{scroll-margin-top:10px}
+/* 펼친 차군 구분(2026-11-20) */
+.gt tr.chi>td{background:#eef3fa}.gt tr.chi>td.rn{background:#eef3fa;box-shadow:inset 4px 0 0 var(--accent);padding-left:14px}.gt tr.chi>td.rn.sub{padding-left:24px}
+.gt tr.chi>td.sumc{padding-right:6px}.gt tr.chl>td{border-bottom:14px solid var(--bg)}.gt tr.chl>td.rn{border-bottom:14px solid var(--bg)}
+.gt .grp.op .ghb{border-radius:8px 8px 0 0}.gt tr.chi .gc.v-hold{background:#fff}
 </style>
 </head>
 <body>
@@ -566,7 +570,7 @@ function carGrid(){
         cells+=`<td><button class="gc ${vcls(c)} ${sel?'sel':''}" style="${fy?'box-shadow:0 0 0 2px #e0a100':''}" data-g="${gi}" data-r="${ri}" data-y="${y}" title="${r.name} ${YLs[y]}: ${VLAB[c.v]}">${c.pf?'<span class="pf">가격</span>':''}<b>${main}</b><span>${subt}</span></button></td>`;
       });
       const sm=[cnt.t?`<b>더 가져올 연식 ${cnt.t}개</b>`:'',cnt.w?`받기 전 확인 연식 ${cnt.w}개`:'',cnt.s?`받지 않는 연식 ${cnt.s}개`:'',cnt.p?`희망가 조정 연식 ${cnt.p}개`:''].filter(Boolean).join('<br>')||'지시 없음';
-      h+=`<tr class="${dim?'dim':''}"><td class="rn ${sub?'sub':''}">${sub?'└ ':''}${r.name}<small>주 ${r.vol}대${share!==null?' / '+gteam+' '+share+'%':''}</small></td>${cells}<td class="sumc">${sm}</td></tr>`;
+      h+=`<tr class="chi ${ri===g.rows.length-1?'chl':''} ${dim?'dim':''}"><td class="rn ${sub?'sub':''}">${sub?'└ ':''}${r.name}<small>주 ${r.vol}대${share!==null?' / '+gteam+' '+share+'%':''}</small></td>${cells}<td class="sumc">${sm}</td></tr>`;
     });
   });
   h+=`</tbody></table></div></div></div>`;
