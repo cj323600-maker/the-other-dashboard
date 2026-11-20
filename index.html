@@ -225,6 +225,8 @@ function renderHome(){
   document.getElementById("view").innerHTML=html;
 }
 function renderModule(m,sub){
+  // 2026-11-20: 매칭 테이블은 별도 ERP(자체 메뉴)로 운영. 메뉴를 누르면 그 화면으로 이동하고, 뒤로 가기는 홈으로 돌아옴
+  if(m.key==="matching"&&!sub){try{history.replaceState(null,"","#home");}catch(e){}location.href=liveUrl(m);return;}
   document.getElementById("ttl").textContent=m.name;
   var v=LIVE[m.key],list=DATA?DATA[m.key]:null,isList=sub==="list",file=sub&&sub.indexOf("f=")===0?decodeURIComponent(sub.slice(2)):null;
   var src=file?href(file):liveUrl(m)+"?v="+((v&&v.lm)||Date.now())+(sub&&sub.indexOf("r=")===0?"#"+sub:""),it=file&&list?list.filter(function(x){return x.path===file;})[0]:null;
