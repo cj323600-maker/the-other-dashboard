@@ -274,12 +274,15 @@ tbody tr:hover td{background:#fafbfc}th{letter-spacing:0}td,th{padding:9px 10px}
 .flow{padding:6px 10px;margin:8px 0}.flow .fb{padding:5px 10px;display:flex;flex-wrap:wrap;gap:2px 8px;align-items:baseline}.flow .fb b{display:inline}
 .card{scroll-margin-top:10px}
 /* 펼친 차군 구분(2026-11-20) */
-.gt tr.chi>td{background:#eef3fa}.gt tr.chi>td.rn{background:#eef3fa;box-shadow:inset 4px 0 0 var(--accent);padding-left:14px}.gt tr.chi>td.rn.sub{padding-left:24px}
-.gt tr.chi>td.sumc{padding-right:6px}.gt tr.chl>td{border-bottom:14px solid var(--bg)}.gt tr.chl>td.rn{border-bottom:14px solid var(--bg)}
+.gt tr.chi>td{background:#f4f7fb}.gt tr.chi>td.rn{background:#f4f7fb;padding-left:12px}.gt tr.chi>td.rn.sub{padding-left:22px}
+.gt tr.chi>td.sumc{padding-right:6px}
 .gt .grp.op .ghb{border-radius:8px 8px 0 0}.gt tr.chi .gc.v-hold{background:#fff}
 @media (max-width:820px){.dmt td.wide{grid-column:1 / -1}.dmt td small{display:inline;margin-left:4px}.dmt td:first-child small{display:block;margin-left:0}.dmt td.n{font-variant-numeric:tabular-nums}}
 /* 2026-11-20 사용자 지시: 오른쪽 빈 공간 없이 화면 전체 폭 사용 */
 .app{max-width:none}.gt{width:100%}.foot{max-width:none}
+/* 2026-11-20: 펼친 차군은 테두리 하나로 묶음(왼쪽 띠 대신) */
+.gt tbody.gb.op{outline:2px solid var(--accent);outline-offset:1px;border-radius:10px}
+.gt tbody.gb.op+tbody.gb tr:first-child>td{border-top:10px solid var(--bg)}.gt tbody.gb:has(+tbody.gb.op) tr:last-child>td{border-bottom:10px solid var(--bg)}
 </style>
 </head>
 <body>
@@ -551,7 +554,7 @@ function carGrid(){
       const subt=[a.t?'더 가져올 차량 '+a.t+'종':'',neg?'받기 전 확인 차량 '+neg+'종':''].filter(Boolean).join('<br>')||'지시 없음';
       return a.n===0?`<td><div class="gc none"></div></td>`:`<td><button class="gc ga ${cls}" data-gtog="${gi}" title="${g.group}: 누르면 ${open?'접기':'차종 펼치기'}"><b>${(Math.round(a.n*10)/10).toFixed(1)}대</b><span>${subt}</span></button></td>`}).join('');
     const gsm=[T.t?`<b>더 가져올 차량 ${T.t}종</b>`:'',T.w?`받기 전 확인 차량 ${T.w}종`:'',T.s?`받지 않는 차량 ${T.s}종`:''].filter(Boolean).join('<br>')||'지시 없음';
-    h+=`<tr class="grp ${open?'op':''}"><td class="gh"><button class="ghb" data-gtog="${gi}" aria-expanded="${open}"><i>${open?'▾':'▸'}</i><b>${g.group}</b><small>${fam}개 계열 / 주 ${(Math.round(T.n*10)/10).toFixed(1)}대</small></button></td>${agc}<td class="sumc">${gsm}</td></tr>`;
+    h+=`</tbody><tbody class="gb ${open?'op':''}"><tr class="grp ${open?'op':''}"><td class="gh"><button class="ghb" data-gtog="${gi}" aria-expanded="${open}"><i>${open?'▾':'▸'}</i><b>${g.group}</b><small>${fam}개 계열 / 주 ${(Math.round(T.n*10)/10).toFixed(1)}대</small></button></td>${agc}<td class="sumc">${gsm}</td></tr>`;
     g.rows.forEach((r,ri)=>{
       if(!open) return;
       const sub=/ (하이브리드|전기)$/.test(r.name);
