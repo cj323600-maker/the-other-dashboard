@@ -18,7 +18,62 @@ th{font-size:12px;color:var(--mut);font-weight:700;background:var(--soft)}th.l,t
 .sl:before{content:"";position:absolute;left:0;right:0;top:12px;height:4px;border-radius:2px;background:var(--line)}.rs{font-size:13px;font-weight:700;white-space:nowrap}
 .ch{position:relative}.tip{position:absolute;pointer-events:none;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:7px 10px;font-size:12.5px;line-height:1.6;box-shadow:0 4px 14px rgba(0,0,0,.15);white-space:nowrap;display:none;z-index:2}.tip b{font-size:13px}
 .nt{font-size:12px;color:var(--mut);line-height:1.7;margin-top:14px}
-@media (max-width:820px){.kpis{grid-template-columns:repeat(2,1fr)}}@media (max-width:420px){.kpis{grid-template-columns:1fr}.kv{font-size:24px}h1{font-size:20px}}</style></head><body><div class="w">
+@media (max-width:820px){.kpis{grid-template-columns:repeat(2,1fr)}}@media (max-width:420px){.kpis{grid-template-columns:1fr}.kv{font-size:24px}h1{font-size:20px}}</style><!--SKIN--><style>
+@media screen{
+html{background:#0E2A63!important}
+body{background:transparent!important}
+body:before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(900px 600px at 85% -10%,rgba(120,170,255,.45),transparent 60%),radial-gradient(700px 500px at 10% 110%,rgba(70,120,230,.45),transparent 60%),linear-gradient(135deg,#081A44 0%,#123A8A 52%,#2863C8 100%)}
+.sk-x{background:transparent!important;box-shadow:none!important;border-color:transparent!important}
+.sk-t{color:#F3F7FD!important}.sk-m{color:#B7C7E2!important}.sk-r{color:#FFA39B!important}.sk-g{color:#6BE3A7!important}.sk-b{color:#9CC2FF!important}
+.sk-l{border-color:rgba(255,255,255,.2)!important}
+.sk-c{border-radius:14px!important;border-color:rgba(255,255,255,.55)!important;box-shadow:0 10px 30px rgba(3,12,40,.30)!important}
+.sk-w{background:#fff!important;border-radius:14px!important;box-shadow:0 10px 30px rgba(3,12,40,.30)!important}
+canvas.sk-w{padding:10px;box-sizing:border-box}
+.fxnav{background:rgba(9,26,66,.62)!important;border-bottom-color:rgba(255,255,255,.17)!important}
+.fxnav a{background:rgba(255,255,255,.10)!important;color:#D5DFEF!important;border-color:rgba(255,255,255,.2)!important}
+.fxnav a:hover{color:#fff!important;border-color:#9CC2FF!important}.fxnav a.on{background:linear-gradient(90deg,#2F6FD6,#4A8CF5)!important;border-color:transparent!important;color:#fff!important}
+}
+</style><script>(function(){
+  var D=document,MODE="cards";
+  function col(s){var m=(s||"").match(/[\d.]+/g);if(!m)return[0,0,0,0];m=m.map(Number);if(m.length<4)m[3]=1;return m;}
+  function lum(c){return(0.2126*c[0]+0.7152*c[1]+0.0722*c[2])/255;}
+  function solid(el){var c=col(getComputedStyle(el).backgroundColor);return c[3]>0.5?c:null;}
+  var SK=/\bsk-[tmrgblcwx]\b/;
+  function run(){
+    var B=D.body,dh=Math.max(D.documentElement.scrollHeight,innerHeight),vw=innerWidth;
+    // 1) 화면 전체를 덮는 밝은 회색 바탕 상자는 걷어냄(카드가 아닌 것)
+    [].forEach.call(B.querySelectorAll(":scope > *, :scope > * > *, :scope > * > * > *"),function(el){
+      if(el.classList.contains("sk-x")||/^(SCRIPT|STYLE|TABLE|CANVAS|SVG|NAV)$/i.test(el.tagName))return;
+      var c=solid(el);if(!c||lum(c)<0.8)return;
+      if(el.offsetWidth>=vw*0.9&&el.offsetHeight>=Math.min(dh*0.6,innerHeight*1.2)&&(MODE!=="sheet"||lum(c)<0.99))el.classList.add("sk-x");});
+    // 2) 바탕 위에 바로 놓인 것 처리
+    var memo=new WeakMap();
+    function onDark(el){// 가장 가까운 불투명 배경이 없으면 진한 바탕 위
+      var p=el,chain=[];while(p&&p!==B&&p.nodeType===1){if(memo.has(p)){var r=memo.get(p);chain.forEach(function(x){memo.set(x,r);});return r;}
+        chain.push(p);var cs=getComputedStyle(p);
+        if(!p.classList.contains("sk-x")){var c=col(cs.backgroundColor);if(c[3]>0.5||cs.backgroundImage!=="none"||p.classList.contains("sk-w")){chain.forEach(function(x){memo.set(x,false);});return false;}}
+        p=p.parentElement;}
+      chain.forEach(function(x){memo.set(x,true);});return true;}
+    var all=B.getElementsByTagName("*");
+    for(var i=0;i<all.length;i++){var el=all[i],tg=el.tagName;
+      if(/^(SCRIPT|STYLE|BR|OPTION)$/i.test(tg)||el.closest(".fxnav")||el.closest("svg"))continue;
+      if(/^(TABLE|CANVAS)$/i.test(tg)||tg==="svg"){if(!el.classList.contains("sk-w")&&el.offsetWidth>120&&onDark(el)){el.classList.add("sk-w");memo.set(el,false);}continue;}
+      var cs=null,c=solid(el);
+      if(c&&lum(c)>0.9&&el.offsetWidth>=180&&el.offsetHeight>=40&&!el.classList.contains("sk-c")&&!el.classList.contains("sk-x")&&!el.closest("table")&&el.parentElement&&onDark(el.parentElement))el.classList.add("sk-c");
+      var hasText=false;for(var n=el.firstChild;n;n=n.nextSibling)if(n.nodeType===3&&n.nodeValue.trim()){hasText=true;break;}
+      if(!hasText&&!/^(HR)$/i.test(tg))continue;
+      if(SK.test(el.className&&el.className.baseVal===undefined?el.className:""))continue;
+      if(!onDark(el))continue;
+      cs=getComputedStyle(el);var t=col(cs.color);
+      if(hasText&&lum(t)<0.62){var mx=Math.max(t[0],t[1],t[2]),mn=Math.min(t[0],t[1],t[2]),k="sk-t";
+        if(mx-mn>70){k=t[0]===mx?(t[1]>t[0]*0.72?"sk-m":"sk-r"):t[1]===mx?"sk-g":"sk-b";}else if(lum(t)>0.3)k="sk-m";
+        el.classList.add(k);}
+      if(parseFloat(cs.borderBottomWidth)>0||parseFloat(cs.borderTopWidth)>0||tg==="HR")el.classList.add("sk-l");}
+  }
+  var tm=null;function later(){clearTimeout(tm);tm=setTimeout(run,80);}
+  if(D.readyState==="loading")D.addEventListener("DOMContentLoaded",run);else run();
+  addEventListener("load",function(){run();new MutationObserver(later).observe(D.body,{childList:true,subtree:true});});
+})();</script><!--/SKIN--></head><body><div class="w">
 <h1 style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">국내 경매장 시장<span style="border:1.5px solid #B3261E;color:#B3261E;font-size:12px;font-weight:700;border-radius:4px;padding:2px 8px;white-space:nowrap;letter-spacing:0">[대외비]</span></h1><div class="sub">한국자동차경매협회 회원사별 월간 Data · 2023년 1월 ~ 2026년 10월 · 주간 속보 2026년 11월 9일 주까지 · 점유율 모수 = 협회 집계 회원사 합계(2025년 7월부터 9개사) · 당사 = 코오롱오토옥션(협회 2023~2025년 표기 오토허브옥션)</div>
 <div class="kpis"><div class="kpi"><div class="kt">시장 출품</div><div class="kv">420,179<small>대</small></div><div class="kd">2025년 1~10월 386,300대 대비 <b class="pos">▲ 33,879대 (8.8%)</b></div></div><div class="kpi"><div class="kt">시장 낙찰률</div><div class="kv">53.8<small>%</small></div><div class="kd">낙찰 225,927대 · 2025년 1~10월 62.0% 대비 <b class="neg">▼ 8.2%p</b></div></div><div class="kpi"><div class="kt">당사 출품 점유율</div><div class="kv">20.0<small>% · 2위</small></div><div class="kd">2025년 1~10월 20.3%(2위) 대비 <b class="neg">▼ 0.3%p</b></div></div><div class="kpi"><div class="kt">당사 낙찰률</div><div class="kv">48.3<small>%</small></div><div class="kd">시장 53.8% 대비 <b class="neg">▼ 5.5%p</b></div></div></div>
 <div class="box rng"><div class="pre"><button data-n="6">최근 6개월</button><button data-n="12">최근 12개월</button><button data-n="24">최근 2년</button><button data-n="0" class="on">전체</button></div><div class="sl"><input type="range" id="r0" min="0" value="0" aria-label="시작 월"><input type="range" id="r1" min="0" aria-label="끝 월"></div><div class="rs" id="rs"></div></div>
