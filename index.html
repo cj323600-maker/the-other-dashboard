@@ -92,6 +92,42 @@ iframe{flex:1;width:100%;border:0;background:#fff}
 .kpi{transition:transform .12s,box-shadow .12s}a.kpi:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(0,0,0,.08)}
 .mod:active,a.kpi:active,.hero a:active{transform:scale(.98)}.nav a{transition:background-color .15s,color .15s}
 @media (max-width:760px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.kpi{padding:14px 14px}.kv{font-size:24px}.kv small{font-size:12px;margin-left:2px}.kpi .kt{flex-wrap:wrap;gap:4px}.kpi .kd,.kpi .kr{font-size:11.5px}}
+
+/* 2026-11-22: 진한 파란 바탕 · 반투명 카드(사용자 선택). 보고서 본문(iframe)은 그대로 */
+:root{--ink:#F3F7FD;--bg:#0E2A63;--card:rgba(255,255,255,.10);--mut:#B7C7E2;--line:rgba(255,255,255,.17);--blue:#9CC2FF;--soft:rgba(255,255,255,.08);--ok:#6BE3A7;--okbg:rgba(46,196,125,.22);--bad:#FFA39B;--badbg:rgba(255,92,80,.24);
+--side:rgba(7,20,52,.72);--side2:rgba(255,255,255,.09);--sideTx:#D5DFEF;--sideMut:#8FA3C4;
+--c-daily:#9CC2FF;--c-weekly:#6BE3A7;--c-monthly:#CDB0F7;--c-member:#FFB889;--c-trend:#93CDF7;--c-market:#74E2E2;--c-kmarket:#F3D183;--c-matching:#FFA39B;--c-check:#CFD8E3}
+html{background:#0E2A63}body{background:transparent}
+body:before{content:"";position:fixed;inset:0;z-index:-1;background:radial-gradient(900px 600px at 85% -10%,rgba(120,170,255,.45),transparent 60%),radial-gradient(700px 500px at 10% 110%,rgba(70,120,230,.45),transparent 60%),linear-gradient(135deg,#081A44 0%,#123A8A 52%,#2863C8 100%)}
+.side{backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-right:1px solid var(--line)}
+.nav a.on{background:linear-gradient(90deg,#2F6FD6,#4A8CF5);box-shadow:0 6px 16px rgba(20,60,150,.45)}.nav a.on:before{display:none}
+.me{border-top-color:var(--line)}.av{background:rgba(255,255,255,.14)}
+.bar{background:rgba(9,26,66,.55);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.kpi,.mod,.panel,.hero,.pn{background:var(--card);border:1px solid rgba(255,255,255,.19);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:0 10px 30px rgba(3,12,40,.30),inset 0 1px 0 rgba(255,255,255,.16)}
+.hero{background:linear-gradient(120deg,rgba(255,255,255,.22),rgba(255,255,255,.08))}
+.mod:hover,a.kpi:hover,a.pn:hover{transform:translateY(-4px);background:rgba(255,255,255,.15);box-shadow:0 16px 36px rgba(3,12,40,.40),inset 0 1px 0 rgba(255,255,255,.22)}
+.ic{background:rgba(255,255,255,.13)}.vt{background:rgba(9,26,66,.55)}.vt a.ext{border-color:var(--line)}
+.search{background:rgba(255,255,255,.08)}.search::placeholder{color:var(--mut)}
+.dday{background:#fff;color:#163A6B}.new{background:#D92D20}.badge{border-color:var(--line)}
+.cban.bad{background:rgba(255,92,80,.22);border-color:rgba(255,150,140,.55);color:#FFE1DD}.cban.ok{background:rgba(46,196,125,.18);border-color:rgba(107,227,167,.45);color:#D3F8E4}.cban.run{background:rgba(255,255,255,.08);color:var(--mut)}
+@media (max-width:1024px){.side{background:rgba(7,20,52,.96)}}
+/* 최근 5개 회차 막대 · 일간보고 총평 상자 */
+.duo{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(0,1fr);gap:18px;margin-top:18px}
+.pn{display:block;border-radius:14px;padding:20px 22px;min-width:0;transition:transform .12s,box-shadow .12s,background-color .12s}
+.pn h4{margin:0;font-size:16px;font-weight:800}.pn .ps{font-size:12.5px;color:var(--mut);margin-top:4px;line-height:1.5}
+.bars{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin-top:16px}
+.bc{min-width:0;text-align:center}.bw{position:relative;height:150px}
+.b1,.b2{position:absolute;bottom:0}.b1{left:8%;right:8%;border-radius:8px 8px 3px 3px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.24)}
+.b2{left:24%;right:24%;border-radius:6px 6px 2px 2px;background:linear-gradient(180deg,#8DBBFF,#3D82F0)}
+.bc.cur .b1{background:rgba(255,255,255,.24);border-color:rgba(255,255,255,.5)}
+.bv{position:absolute;left:0;right:0;font-size:11.5px;font-weight:800;line-height:1;white-space:nowrap}.bv.w{color:#fff}
+.bd{font-size:12.5px;font-weight:800;margin-top:7px}.br{font-size:11.5px;color:var(--mut);margin-top:2px}
+.lg{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:11.5px;color:var(--mut);margin-top:12px}.lg i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.sm .l1{font-size:15.5px;font-weight:800;line-height:1.5;margin-top:12px}.sm .l2{font-size:13.5px;line-height:1.6;margin-top:9px;padding-top:9px;border-top:1px solid var(--line)}
+.sm .tg{display:inline-block;font-size:11.5px;font-weight:800;border-radius:99px;padding:1px 9px;margin-right:6px}.sm .tg.ok{background:var(--okbg)}.sm .tg.bad{background:var(--badbg)}.sm .tg.nt{background:rgba(255,255,255,.14);color:var(--ink)}
+.sm .go{font-size:13px;font-weight:700;color:var(--c-daily);margin-top:12px}
+@media (max-width:1024px){.duo{grid-template-columns:1fr}}
+@media (max-width:760px){.pn{padding:16px 14px}.bars{gap:6px}.bw{height:130px}.bv{font-size:11px}.duo{gap:12px}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -179,7 +215,7 @@ function fresh(m){var v=LIVE[m.key];return v&&v.lm&&(now-v.lm)<36*3600000;}
 function loadLive(m){
   return fetch(liveUrl(m)+"?t="+Date.now(),{cache:"no-store"}).then(function(r){if(!r.ok)throw 0;var lm=Date.parse(r.headers.get("last-modified")||"");return r.text().then(function(t){return[t,lm];});})
   .then(function(a){var doc=new DOMParser().parseFromString(a[0],"text/html");var st=txt(doc.querySelector(m.subSel||".sub")).replace(/\[대외비\]/g,"").trim();if(st.length>90)st=st.slice(0,90)+"…";
-    LIVE[m.key]={title:(doc.title||m.name).trim(),sub:st,lm:isNaN(a[1])?0:a[1]};if(m.key==="daily"){renderAuction(st);KPI=readKpi(doc);}})
+    LIVE[m.key]={title:(doc.title||m.name).trim(),sub:st,lm:isNaN(a[1])?0:a[1]};if(m.key==="daily"){renderAuction(st);KPI=readKpi(doc);SUMM=readSumm(doc);}if(m.key==="trend")RND=readRounds(a[0]);})
   .catch(function(){LIVE[m.key]={title:m.name+" 최신본",sub:"",lm:0};});
 }
 // 카드 회색 글씨: 보고서별 핵심 한 줄(2026-11-11)
@@ -216,6 +252,28 @@ var NAVCUR="home";function renderNav(cur){NAVCUR=cur;
     html+='<a href="#'+m.key+'" class="'+(cur===m.key?"on":"")+'" style="--c:'+m.c+'">'+ico(m.ic)+esc(m.name)+(m.key==="check"?chkBadge():(fresh(m)&&!m.noList?'<span class="dot" title="36시간 이내 갱신"></span>':''))+'</a>';});
   document.getElementById("nav").innerHTML=html;
 }
+// 2026-11-22: 홈 "최근 5개 회차 출품 · 낙찰 실적"(출품 및 낙찰 추이 게시본의 회차 값)과 "일간보고 총평"(일보 .summ의 l1 · l2 · 경매 영향 줄)
+var RND=null,SUMM=null;
+function readRounds(s){var re=/\["\d\d\.\d\d\.\d\d", (\d+), (\d+), "(\d{4})-(\d\d)-(\d\d)", \d+, \d+\]/g,m,o=[];while((m=re.exec(s)))o.push({d:(+m[4])+"/"+(+m[5]),k:m[3]+m[4]+m[5],n:+m[1],w:+m[2]});o.sort(function(a,b){return a.k<b.k?-1:1;});return o.length>=5?o.slice(-5):null;}
+function readSumm(doc){var s=doc.querySelector(".summ");if(!s)return null;var o=[];
+  [].forEach.call(s.children,function(c){if(!/^l[12]$/.test(c.className))return;var ps=[];[].forEach.call(c.childNodes,function(n){var t=n.textContent.replace(/\s+/g," ");if(!t.trim())return;ps.push({t:t,c:n.nodeType===1&&/\b(ok|bad)\b/.test(n.className)?RegExp.$1:""});});o.push({k:c.className,ps:ps});});
+  var e=[].map.call(s.querySelectorAll("summary span"),txt).filter(function(x){return /^경매 영향/.test(x);})[0];
+  if(e)o.push({k:"ex",ps:[{t:e.replace(/^경매 영향:\s*/,"").replace(/\s*·\s*눌러서 펼치기\s*$/,""),c:""}]});
+  return o.length?o:null;}
+function num(n){return n.toLocaleString("ko-KR");}
+function duo(){
+  var h='<div class="duo"><a class="pn" href="#trend"><h4>최근 5개 회차 출품 · 낙찰 실적</h4>';
+  if(RND){var mx=Math.max.apply(null,RND.map(function(r){return r.n;}))*1.16;
+    h+='<div class="ps">'+RND[0].d+' ~ '+RND[4].d+' 경매 · 출품 및 낙찰 추이 기준(낙찰취소 반영) · 단위 대</div><div class="bars">';
+    RND.forEach(function(r,i){var a=(r.n/mx*100).toFixed(1),b=(r.w/mx*100).toFixed(1);
+      h+='<div class="bc'+(i===4?" cur":"")+'"><div class="bw"><div class="b1" style="height:'+a+'%"></div><div class="b2" style="height:'+b+'%"></div><span class="bv" style="bottom:calc('+a+'% + 4px)">'+num(r.n)+'</span><span class="bv w" style="bottom:calc('+b+'% + 4px)">'+num(r.w)+'</span></div><div class="bd">'+r.d+'</div><div class="br">'+(r.w/r.n*100).toFixed(1)+'%</div></div>';});
+    h+='</div><div class="lg"><span><i style="background:rgba(255,255,255,.3)"></i>출품대수(대)</span><span><i style="background:#5C9BFA"></i>낙찰대수(대)</span><span>날짜 아래 숫자는 낙찰률(%)</span></div>';}
+  else h+='<div class="skl" style="width:60%;margin-top:12px" aria-label="불러오는 중"></div><div class="skl big" style="width:100%;height:120px"></div>';
+  h+='</a><a class="pn sm" href="#daily"><h4>일간보고 총평</h4>';
+  if(SUMM){SUMM.forEach(function(l){h+='<div class="'+(l.k==="l1"?"l1":"l2")+'">'+(l.k==="ex"?'<span class="tg nt">경매 영향(전주 대비)</span>':'')+l.ps.map(function(p){return p.c?(l.k==="l2"?'<span class="tg '+p.c+'">'+esc(p.t.trim())+'</span>':'<span class="'+p.c+'">'+esc(p.t)+'</span>'):esc(p.t);}).join("")+'</div>';});
+    h+='<div class="go">팀별 원인은 일간보고에서 확인 →</div>';}
+  else h+='<div class="skl" style="width:80%;margin-top:14px" aria-label="불러오는 중"></div><div class="skl" style="width:95%"></div><div class="skl" style="width:70%"></div>';
+  return h+'</a></div>';}
 function renderHome(){
   document.getElementById("ttl").textContent="홈";
   var lv=LIVE.daily,dl=lv&&lv.sub?lv.sub.split("·").slice(0,3).join("·"):"",up=MODS.filter(function(m){return !m.noList&&fresh(m);});
@@ -226,7 +284,7 @@ function renderHome(){
   if(KPI){KPI.forEach(function(k){html+='<a class="kpi" href="#daily"><div class="kt"><span>'+esc(k.lab)+'</span>'+(k.pill?'<span class="pill '+(k.ok?"ok":"bad")+'">'+esc(k.pill.replace("주 목표 대비 달성률","달성률"))+'</span>':'')+'</div><div class="kv"><span class="'+(k.inv?"":(k.ok?"ok":"bad"))+'">'+esc(k.v)+'</span><small>'+esc(k.unit)+'</small></div><div class="kd">'+esc(k.d)+'</div>'+(k.rg?'<div class="kr">예상 범위 '+esc(k.rg)+'</div>':'')+(k.fin?'<div class="kr">'+esc(k.fin)+'</div>':'')+'</a>';});}
   else if(LIVE.daily){for(var i=0;i<3;i++)html+='<div class="kpi"><div class="kv" style="font-size:16px;color:var(--mut)">표시할 항목 없음</div></div>';}
   else{for(var i=0;i<4;i++)html+='<div class="kpi" aria-label="불러오는 중"><div class="skl" style="width:45%"></div><div class="skl big"></div><div class="skl" style="width:70%"></div></div>';}
-  html+='</div><h3 class="sec"><span>보고서와 분석</span><small>'+(up.length?"최근 36시간 갱신 "+up.map(function(m){return m.name;}).join(" · "):"최신본 기준")+'</small></h3><div class="grid">';
+  html+='</div>'+duo()+'<h3 class="sec"><span>보고서와 분석</span><small>'+(up.length?"최근 36시간 갱신 "+up.map(function(m){return m.name;}).join(" · "):"최신본 기준")+'</small></h3><div class="grid">';
   MODS.forEach(function(m){if(m.noList)return;// 2026-11-14: 관리 메뉴(보고서 점검)는 홈 카드에서 제외
     var v=LIVE[m.key],list=DATA?DATA[m.key]:null;
     html+='<a class="mod" href="#'+m.key+'" style="--c:'+m.c+'"><div class="ic">'+ico(m.ic)+'</div><div><h4>'+esc(m.name)+'</h4><div class="upd'+(fresh(m)?" fresh":"")+'">'+(v&&v.lm?"업데이트 "+esc(ago(v.lm)):"")+'</div></div>'
