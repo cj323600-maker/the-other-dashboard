@@ -1,5 +1,5 @@
 <!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>국내 경매장 시장</title>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"><style>:root{--ink:#141B22;--bg:#F4F6F8;--card:#fff;--mut:#7A8691;--line:#E2E7EC;--blue:#1F5FBF;--soft:#EEF3FA;--ok:#1E7B47;--bad:#B3261E}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"><style>:root{--ink:#141B22;--bg:#F4F6F8;--card:#fff;--mut:#3D4958;--line:#E2E7EC;--blue:#1F5FBF;--soft:#EEF3FA;--ok:#1E7B47;--bad:#B3261E}
 @media (prefers-color-scheme:dark){:root{--ink:#E6EBF0;--bg:#0F1419;--card:#182029;--mut:#98A4AF;--line:#2A3540;--blue:#6E9EE8;--soft:#1D2834;--ok:#5CC48A;--bad:#F2928A}}
 *{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--ink)}body{font-family:"Pretendard Variable",Pretendard,-apple-system,system-ui,"Malgun Gothic",sans-serif;font-variant-numeric:tabular-nums;word-break:keep-all;overflow-wrap:anywhere;-webkit-text-size-adjust:100%}
 .w{max-width:1200px;margin:0 auto;padding:20px 16px 40px}h1{margin:0;font-size:23px;font-weight:800}.sub{font-size:13px;color:var(--mut);margin-top:4px;line-height:1.5}
@@ -27,10 +27,15 @@ body:before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;bac
 .sk-t{color:#F5F8FE!important}.sk-m{color:#D3DEF0!important}.sk-r{color:#FFA39B!important}.sk-g{color:#6BE3A7!important}.sk-b{color:#A9CBFF!important}
 .sk-l{border-color:rgba(255,255,255,.2)!important}
 .sk-c{border-radius:14px!important;border-color:rgba(255,255,255,.85)!important;box-shadow:0 12px 32px rgba(3,12,40,.34),inset 0 1px 0 rgba(255,255,255,.95)!important}
-.sk-f{background-color:rgba(255,255,255,.92)!important;-webkit-backdrop-filter:blur(18px) saturate(1.25);backdrop-filter:blur(18px) saturate(1.25)}
+.sk-f{background-color:rgba(255,255,255,.96)!important;-webkit-backdrop-filter:blur(18px) saturate(1.25);backdrop-filter:blur(18px) saturate(1.25)}
 :where(.sk-f) table{background-color:#fff}
 .sk-w{background:#fff!important;border-radius:14px!important;box-shadow:0 10px 30px rgba(3,12,40,.30)!important}
 canvas.sk-w{padding:10px;box-sizing:border-box}
+/* 회원사 분석 배지 · 막대: 밝은 색 바탕 위 흰 글자를 진한 글자로(대비 2.5 → 7 이상), 청록 배지는 한 단계 진하게 */
+.bdg[style*="#60a5fa" i],.bdg[style*="#94a3b8" i],i[style*="#60a5fa" i]{color:#0F172A!important}
+.bdg[style*="#0891b2" i]{background:#0E7490!important}
+.bdg[style*="#d97706" i]{background:#B45309!important}.bdg[style*="#059669" i]{background:#047857!important}
+.up{color:#166534!important}
 .fxnav{background:rgba(9,26,66,.62)!important;border-bottom-color:rgba(255,255,255,.17)!important}
 .fxnav a{background:rgba(255,255,255,.10)!important;color:#D5DFEF!important;border-color:rgba(255,255,255,.2)!important}
 .fxnav a:hover{color:#fff!important;border-color:#9CC2FF!important}.fxnav a.on{background:linear-gradient(90deg,#2F6FD6,#4A8CF5)!important;border-color:transparent!important;color:#fff!important}
@@ -142,7 +147,7 @@ upd();
 </script></div><!--FX--><style>
 .fxnav{position:sticky;top:0;z-index:40;display:flex;gap:6px;align-items:center;overflow-x:auto;padding:8px 2px;margin:8px 0 10px;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border-bottom:1px solid rgba(27,39,51,.12);scrollbar-width:none}
 .fxnav::-webkit-scrollbar{display:none}
-.fxnav a{flex:0 0 auto;font-size:12.5px;font-weight:700;color:#5B6876;text-decoration:none;padding:6px 12px;border:1px solid rgba(27,39,51,.14);border-radius:999px;background:#fff;white-space:nowrap;transition:background-color .15s,color .15s,border-color .15s}
+.fxnav a{flex:0 0 auto;font-size:12.5px;font-weight:700;color:#3D4958;text-decoration:none;padding:6px 12px;border:1px solid rgba(27,39,51,.14);border-radius:999px;background:#fff;white-space:nowrap;transition:background-color .15s,color .15s,border-color .15s}
 .fxnav a:hover{border-color:#1F4E8C;color:#1F4E8C}.fxnav a.on{background:#1F4E8C;border-color:#1F4E8C;color:#fff}
 .fxnav .fxt{margin-left:auto;font-weight:800}
 html{scroll-behavior:smooth}.fxsec{scroll-margin-top:58px}

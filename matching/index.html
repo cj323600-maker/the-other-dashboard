@@ -127,7 +127,7 @@ select{font:inherit;font-size:12.5px;padding:3px 6px;border:1px solid var(--line
 .gc.v-take1{background:#c7d6ea;border-color:#9fb8d9;color:#13325b}
 .gc.v-hold{background:var(--bg);color:var(--muted)}
 .gc.v-weak1{background:#d3d6da;border-color:#b9bec5;color:var(--ink)}
-.gc.v-weak2{background:#7d848c;border-color:#7d848c;color:#fff}
+.gc.v-weak2{background:#5F6772;border-color:#5F6772;color:#fff}
 .gc.v-stop{background:var(--ink);border-color:var(--ink);color:#fff}
 .gc.v-thin{background:repeating-linear-gradient(135deg,#f3f5f7 0 6px,#e7eaee 6px 12px);color:var(--muted)}
 .gc.sel{outline:3px solid #e0a100;outline-offset:1px}
@@ -162,7 +162,7 @@ select{font:inherit;font-size:12.5px;padding:3px 6px;border:1px solid var(--line
 .strip{display:grid;grid-template-columns:repeat(6,1fr);gap:4px}
 .strip .gc{height:40px}
 .guide{border:2px solid var(--accent);border-radius:8px;padding:12px 14px;background:var(--accent-soft)}
-.guide.weak{border-color:#7d848c;background:#eef0f2}
+.guide.weak{border-color:#5F6772;background:#eef0f2}
 .guide.stop{border-color:var(--ink);background:#e9eaec}
 .guide.hold{border-color:var(--line);background:var(--soft)}
 .guide .g1{font-size:16px;font-weight:700;margin-bottom:8px}
@@ -198,7 +198,7 @@ details.gloss{margin-top:6px;font-size:12.5px;color:var(--muted)}details.gloss>s
 @media (max-width:560px){.pd-t span:nth-child(2){display:none}}
 .kp{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:8px 0 4px}
 .kt{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px 14px;display:flex;flex-direction:column;gap:1px;border-top:3px solid var(--line);min-width:0}
-.kt.take{border-top-color:var(--accent)}.kt.cut{border-top-color:#7d848c}.kt.hold{border-top-color:#c9ced4}.kt:first-child{border-top-color:var(--ink)}
+.kt.take{border-top-color:var(--accent)}.kt.cut{border-top-color:#5F6772}.kt.hold{border-top-color:#c9ced4}.kt:first-child{border-top-color:var(--ink)}
 .kt .k{font-size:12.5px;font-weight:700;color:var(--muted)}.kt .v{font-size:24px;font-weight:800;line-height:1.25;font-variant-numeric:tabular-nums}.kt.take .v{color:var(--accent)}.kt .v small{font-size:13px;font-weight:600;color:var(--muted);margin-left:2px}.kt .d{font-size:12px;color:var(--muted)}
 .card,.sbox,.flow,.det{border-radius:10px;box-shadow:0 1px 2px rgba(20,24,28,.04)}
 .ch{padding:13px 18px}.ch h2{font-size:16.5px;display:flex;align-items:center}.ch .no{border-radius:6px;min-width:24px;text-align:center}.cb{padding:14px 18px}
@@ -211,7 +211,7 @@ tbody tr:hover td{background:#fafbfc}th{letter-spacing:0}td,th{padding:9px 10px}
 .sc{border-radius:8px;padding:8px 10px;display:flex;flex-direction:column;gap:0;line-height:1.45}.sc:hover{box-shadow:0 2px 6px rgba(20,24,28,.14)}
 .sr0{font-size:10.5px;font-weight:700;color:var(--muted)}.sr{font-size:19px;font-weight:800;font-variant-numeric:tabular-nums;margin-bottom:4px;color:var(--ink)}.sr.hot{color:var(--fixed)}
 .sb1{display:flex;justify-content:space-between;gap:4px;font-size:11.5px}.sb1 span{color:var(--muted)}.sb1 b{font-variant-numeric:tabular-nums}
-.st{display:block;height:8px;background:rgba(29,34,40,.08);border-radius:2px;margin-bottom:4px;overflow:hidden}.st i{display:block;height:100%;border-radius:2px}.st i.bt{background:var(--accent)}.st i.bc{background:#7d848c}
+.st{display:block;height:8px;background:rgba(29,34,40,.08);border-radius:2px;margin-bottom:4px;overflow:hidden}.st i{display:block;height:100%;border-radius:2px}.st i.bt{background:var(--accent)}.st i.bc{background:#5F6772}
 .sc .h{font-size:11.5px;display:inline}.sc .muted{font-size:11px}
 .modal{border-radius:14px;overflow:hidden}.mh{position:sticky;top:0;background:var(--bg);z-index:2}.guide{border-radius:10px}.why3 .w{border-radius:8px}.why3 .w .v{font-size:20px;font-weight:800}
 .sb-i.on{box-shadow:inset 3px 0 0 var(--accent)}.sb-m::before{content:"화면";font-size:11px;color:#6f7984;font-weight:700;padding:0 10px 2px}
@@ -237,7 +237,7 @@ tbody tr:hover td{background:#fafbfc}th{letter-spacing:0}td,th{padding:9px 10px}
 @media (max-width:560px){.app{padding:0 10px 40px}.gt{min-width:760px}.sgt{min-width:640px}.mapt{min-width:0}}
 .sgt{width:100%}.sgt th:first-child{white-space:nowrap;padding-right:8px}
 /* 2026-11-20 사용자 지시: 연식 × 주행거리 칸 색을 차종 × 연식 그리드와 통일(더 받을 쪽 = 진한 파랑, 남는 쪽 = 진한 회색, 글자 흰색) */
-.sc.take{background:var(--accent);border-color:var(--accent);color:#fff}.sc.cut{background:#7d848c;border-color:#7d848c;color:#fff}
+.sc.take{background:var(--accent);border-color:var(--accent);color:#fff}.sc.cut{background:#5F6772;border-color:#5F6772;color:#fff}
 .sc.take .sr,.sc.cut .sr,.sc.take .sb1 b,.sc.cut .sb1 b,.sc.take .h,.sc.cut .h{color:#fff}
 .sc.take .sr0,.sc.cut .sr0,.sc.take .sb1 span,.sc.cut .sb1 span,.sc.take .muted,.sc.cut .muted{color:rgba(255,255,255,.82)}
 .sc.take .sr.hot,.sc.cut .sr.hot{color:#fff;text-decoration:underline;text-decoration-color:#ff8f9b;text-decoration-thickness:3px;text-underline-offset:4px}
@@ -341,10 +341,15 @@ body:before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;bac
 .sk-t{color:#F5F8FE!important}.sk-m{color:#D3DEF0!important}.sk-r{color:#FFA39B!important}.sk-g{color:#6BE3A7!important}.sk-b{color:#A9CBFF!important}
 .sk-l{border-color:rgba(255,255,255,.2)!important}
 .sk-c{border-radius:14px!important;border-color:rgba(255,255,255,.85)!important;box-shadow:0 12px 32px rgba(3,12,40,.34),inset 0 1px 0 rgba(255,255,255,.95)!important}
-.sk-f{background-color:rgba(255,255,255,.92)!important;-webkit-backdrop-filter:blur(18px) saturate(1.25);backdrop-filter:blur(18px) saturate(1.25)}
+.sk-f{background-color:rgba(255,255,255,.96)!important;-webkit-backdrop-filter:blur(18px) saturate(1.25);backdrop-filter:blur(18px) saturate(1.25)}
 :where(.sk-f) table{background-color:#fff}
 .sk-w{background:#fff!important;border-radius:14px!important;box-shadow:0 10px 30px rgba(3,12,40,.30)!important}
 canvas.sk-w{padding:10px;box-sizing:border-box}
+/* 회원사 분석 배지 · 막대: 밝은 색 바탕 위 흰 글자를 진한 글자로(대비 2.5 → 7 이상), 청록 배지는 한 단계 진하게 */
+.bdg[style*="#60a5fa" i],.bdg[style*="#94a3b8" i],i[style*="#60a5fa" i]{color:#0F172A!important}
+.bdg[style*="#0891b2" i]{background:#0E7490!important}
+.bdg[style*="#d97706" i]{background:#B45309!important}.bdg[style*="#059669" i]{background:#047857!important}
+.up{color:#166534!important}
 .fxnav{background:rgba(9,26,66,.62)!important;border-bottom-color:rgba(255,255,255,.17)!important}
 .fxnav a{background:rgba(255,255,255,.10)!important;color:#D5DFEF!important;border-color:rgba(255,255,255,.2)!important}
 .fxnav a:hover{color:#fff!important;border-color:#9CC2FF!important}.fxnav a.on{background:linear-gradient(90deg,#2F6FD6,#4A8CF5)!important;border-color:transparent!important;color:#fff!important}
@@ -621,7 +626,7 @@ function memberView(){
 let gmode='n', gteam='전체', gsel=null, ssel=null, gopen=new Set();
 const VLAB={'강함':'더 가져올 차','보류':'판단 보류','약함':'받기 전 확인','중단':'받지 않는 차','표본':'표본 적음'};
 function vcls(c){if(!c)return 'none';if(c.v==='강함')return c.sure==='높음'?'v-take2':'v-take1';if(c.v==='약함')return c.sure==='높음'?'v-weak2':'v-weak1';if(c.v==='중단')return 'v-stop';if(c.v==='표본')return 'v-thin';if(c.v==='보류'&&c.ref)return c.ref==='강함'?'v-take1':'v-weak1';return 'v-hold';}
-function vchip(v,sure){const m={'강함':['var(--accent)','#fff'],'약함':['#7d848c','#fff'],'중단':['var(--ink)','#fff'],'보류':['var(--soft)','var(--muted)'],'표본':['var(--soft)','var(--muted)']}[v]||['var(--soft)','var(--muted)'];return `<span class="vchip" style="background:${m[0]};color:${m[1]}">${VLAB[v]||v}${sure&&v!=='보류'&&v!=='표본'?' ('+sure+')':''}</span>`;}
+function vchip(v,sure){const m={'강함':['var(--accent)','#fff'],'약함':['#5F6772','#fff'],'중단':['var(--ink)','#fff'],'보류':['var(--soft)','var(--muted)'],'표본':['var(--soft)','var(--muted)']}[v]||['var(--soft)','var(--muted)'];return `<span class="vchip" style="background:${m[0]};color:${m[1]}">${VLAB[v]||v}${sure&&v!=='보류'&&v!=='표본'?' ('+sure+')':''}</span>`;}
 function memType(c){return c.exp>=50?'수출 바이어 모집':'내수 매매상사 모집';}
 function detail(){
   if(!gsel) return `<div class="det"><h3>칸을 눌러 보세요</h3><p class="muted">칸 하나가 판정 하나이고, 지시 하나로 이어짐. 누르면 근거와 각 팀에 나간 지시가 여기에 나옴.</p>
@@ -652,7 +657,7 @@ function carGrid(){
   if(gfocus) h+=`<div class="warnbox" style="margin-bottom:8px">세그먼트 <b>${gfocus.label}</b> 안 차종만 강조 중 <button class="btn" data-clearfocus="1">전체 보기</button></div>`;
   h+=`<div class="gtool"><span class="lab2">칸 숫자</span><span class="seg"><button aria-pressed="${gmode==='n'}" data-gm="n">주 출품 대수</button><button aria-pressed="${gmode==='q'}" data-gm="q">더 받을 / 남는 대수</button><button aria-pressed="${gmode==='fr'}" data-gm="fr">제값 낙찰률</button></span>
   <span class="seg" style="margin-left:8px"><button data-gall="1" aria-pressed="false">모두 펼치기</button><button data-gall="0" aria-pressed="false">모두 접기</button></span><span class="lab2" style="margin-left:8px">팀 보기</span>${['전체',...Object.keys(DATA.teams)].map(t=>`<button class="chip" aria-pressed="${t===gteam}" data-gteam="${t}">${t}</button>`).join('')}</div>
-  <div class="legend"><span style="color:var(--ink)"><b>칸을 누르면 상세 팝업</b></span><span><i style="background:var(--accent)"></i>더 가져올 차 (95% 수준, 지시)</span><span><i style="background:#c7d6ea"></i>더 가져올 쪽 참고 (80% 수준)</span><span><i style="background:#fff"></i>판단 보류</span><span><i style="background:#d3d6da"></i>받기 전 확인 쪽 참고 (80% 수준)</span><span><i style="background:#7d848c"></i>받기 전 확인 (95% 수준, 지시)</span><span><i style="background:var(--ink)"></i>받지 않는 차</span><span><i style="background:repeating-linear-gradient(135deg,#f3f5f7 0 4px,#e7eaee 4px 8px)"></i>표본 적음</span><span>주 8대 이상 계열 = 출품 ${DATA.gridCov}%, 나머지 주 약 ${DATA.gridRest}대는 차군 묶음 참고</span></div>`;
+  <div class="legend"><span style="color:var(--ink)"><b>칸을 누르면 상세 팝업</b></span><span><i style="background:var(--accent)"></i>더 가져올 차 (95% 수준, 지시)</span><span><i style="background:#c7d6ea"></i>더 가져올 쪽 참고 (80% 수준)</span><span><i style="background:#fff"></i>판단 보류</span><span><i style="background:#d3d6da"></i>받기 전 확인 쪽 참고 (80% 수준)</span><span><i style="background:#5F6772"></i>받기 전 확인 (95% 수준, 지시)</span><span><i style="background:var(--ink)"></i>받지 않는 차</span><span><i style="background:repeating-linear-gradient(135deg,#f3f5f7 0 4px,#e7eaee 4px 8px)"></i>표본 적음</span><span>주 8대 이상 계열 = 출품 ${DATA.gridCov}%, 나머지 주 약 ${DATA.gridRest}대는 차군 묶음 참고</span></div>`;
   h+=`<div><div class="card" style="margin:0"><div class="cb tw"><table class="gt"><thead><tr><th class="rh">차군 / 차종 계열 (주 출품)</th>${YLs.map(y=>`<th>${y}</th>`).join('')}<th class="sm">이번 주 지시</th></tr></thead><tbody>`;
   DATA.grid.forEach((g,gi)=>{
     const fhit=gfocus&&g.rows.some(r=>gfocus.names.includes(r.name));
@@ -697,7 +702,7 @@ function segGrid(){
   const KLs=['5만 km 미만','5~10만 km','10~15만 km','15~20만 km','20만 km 이상'];
   const arr=DATA.segc[schg],mxs=Math.max(1,...arr.map(x=>Math.max(x.plus,x.minus)));
   let h=`<div class="gtool"><span class="lab2">차군</span>${Object.keys(DATA.segc).map(c=>`<button class="chip" aria-pressed="${c===schg}" data-schg="${c}">${c}</button>`).join('')}</div>
-  <div class="legend"><span><i style="background:var(--accent)"></i>더 받을 쪽 우세 (2배 이상)</span><span><i style="background:#7d848c"></i>남는 쪽 우세 (2배 이상)</span><span><i style="background:#fff"></i>혼재</span><span>칸 위 숫자 = 낙찰률(55% 이상 빨강). 막대는 회당 대수이고, 칸 판정이 아니라 칸 안 차종 판정을 따로 더한 값</span></div>`;
+  <div class="legend"><span><i style="background:var(--accent)"></i>더 받을 쪽 우세 (2배 이상)</span><span><i style="background:#5F6772"></i>남는 쪽 우세 (2배 이상)</span><span><i style="background:#fff"></i>혼재</span><span>칸 위 숫자 = 낙찰률(55% 이상 빨강). 막대는 회당 대수이고, 칸 판정이 아니라 칸 안 차종 판정을 따로 더한 값</span></div>`;
   h+=`<div><div class="card" style="margin:0"><div class="cb tw"><table class="sgt"><colgroup><col style="width:92px"><col><col><col><col><col></colgroup><thead><tr><th></th>${KLs.map(k=>`<th>${k}</th>`).join('')}</tr></thead><tbody>`;
   for(let y=0;y<6;y++){
     h+=`<tr><th style="text-align:right">${YLs[y]}</th>`;
@@ -752,7 +757,7 @@ function checkView(){
    <span class="lab">4주 전 판정별, 최근 4회차 제값 차 낙찰률 (점선 = 기준 55%)</span>
    ${bar('더 가져올 차 ('+r['강함'][0]+'개)',rate('강함'),'var(--accent)')}
    ${bar('판단 보류 ('+r['보류'][0]+'개)',rate('보류'),'#b9bec5')}
-   ${bar('받기 전 확인 ('+r['약함'][0]+'개)',rate('약함'),'#7d848c')}
+   ${bar('받기 전 확인 ('+r['약함'][0]+'개)',rate('약함'),'#5F6772')}
    <p class="small" style="margin-top:8px">판정 순서대로 결과가 갈림. 한 달 전 가이드가 대체로 맞았다는 뜻.</p></div><div>
    <span class="lab">한 달 뒤 판정이 어떻게 됐나</span>
    <ul class="small">
