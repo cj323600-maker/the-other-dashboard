@@ -83,6 +83,16 @@ iframe{flex:1;width:100%;border:0;background:#fff}
 .kpi .kr{font-size:12.5px;color:var(--mut);margin-top:4px}.hero .stale{display:inline-block;margin-left:8px;background:#FDE8E7;color:#B42318;font-weight:800;font-size:12px;padding:2px 8px;border-radius:999px}
 .cst{margin-left:auto;min-width:9px;height:9px;border-radius:999px;background:#22A06B;font-size:10px;font-weight:800;color:#fff;line-height:16px;text-align:center;animation:cpl 1.8s infinite}.cst.bad{min-width:18px;height:16px;padding:0 5px;background:#D92D20;animation-name:cpr}.cst.run{background:#9AA5B1}@keyframes cpl{0%{box-shadow:0 0 0 0 rgba(34,160,107,.6)}70%{box-shadow:0 0 0 7px rgba(34,160,107,0)}100%{box-shadow:0 0 0 0 rgba(34,160,107,0)}}@keyframes cpr{0%{box-shadow:0 0 0 0 rgba(217,45,32,.6)}70%{box-shadow:0 0 0 7px rgba(217,45,32,0)}100%{box-shadow:0 0 0 0 rgba(217,45,32,0)}}
 .cban{display:flex;flex-wrap:wrap;align-items:center;gap:4px 14px;border-radius:12px;padding:10px 16px;margin:0 0 14px;font-size:13px;text-decoration:none;color:inherit}.cban b{font-weight:800}.cban span{flex:1 1 280px;min-width:0;overflow-wrap:anywhere}.cban em{font-style:normal;font-size:12px;opacity:.85;white-space:nowrap}.cban.bad{background:#FDECEA;border:1px solid #F5B5AE;color:#8A1C12}.cban.ok{background:#E9F6EE;border:1px solid #BFE3CC;color:#1E5E3A;padding:7px 14px}.cban.run{background:#EEF2F5;color:#5B6876;padding:7px 14px}
+
+/* 2026-11-22: 로딩 뼈대 · 화면 전환 · 카드 차례 등장 · 누름 반응 · 폰 숫자 카드 2열 */
+@keyframes sklm{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.skl{display:block;height:13px;border-radius:6px;margin:6px 0;background:linear-gradient(90deg,var(--soft) 25%,var(--line) 37%,var(--soft) 63%);background-size:400% 100%;animation:sklm 1.4s ease infinite}.skl.big{height:34px;width:60%;margin:12px 0}
+@keyframes pvin{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+#view.vin{animation:pvin .22s ease-out}
+.kpi{transition:transform .12s,box-shadow .12s}a.kpi:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(0,0,0,.08)}
+.mod:active,a.kpi:active,.hero a:active{transform:scale(.98)}.nav a{transition:background-color .15s,color .15s}
+@media (max-width:760px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.kpi{padding:14px 14px}.kv{font-size:24px}.kv small{font-size:12px;margin-left:2px}.kpi .kt{flex-wrap:wrap;gap:4px}.kpi .kd,.kpi .kr{font-size:11.5px}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
@@ -214,12 +224,13 @@ function renderHome(){
     if(new Date(+bd[1],+bd[2]-1,+bd[3])<exp)stale='<span class="stale">최신 일보 아님 · 기준일 '+(+bd[2])+'/'+(+bd[3])+'</span>';}
   var html='<div class="page">'+chkBanner()+'<section class="hero"><div><div class="k">일간보고 최신본'+stale+'</div><h2>'+esc(lv?lv.title:"전략기획 ERP")+'</h2><div class="s">'+esc(dl)+'</div></div><a href="#daily">일간보고 보기 →</a></section><div class="kpis">';
   if(KPI){KPI.forEach(function(k){html+='<a class="kpi" href="#daily"><div class="kt"><span>'+esc(k.lab)+'</span>'+(k.pill?'<span class="pill '+(k.ok?"ok":"bad")+'">'+esc(k.pill.replace("주 목표 대비 달성률","달성률"))+'</span>':'')+'</div><div class="kv"><span class="'+(k.inv?"":(k.ok?"ok":"bad"))+'">'+esc(k.v)+'</span><small>'+esc(k.unit)+'</small></div><div class="kd">'+esc(k.d)+'</div>'+(k.rg?'<div class="kr">예상 범위 '+esc(k.rg)+'</div>':'')+(k.fin?'<div class="kr">'+esc(k.fin)+'</div>':'')+'</a>';});}
-  else{for(var i=0;i<3;i++)html+='<div class="kpi"><div class="kv" style="font-size:16px;color:var(--mut)">'+(LIVE.daily?"표시할 항목 없음":"불러오는 중")+'</div></div>';}
+  else if(LIVE.daily){for(var i=0;i<3;i++)html+='<div class="kpi"><div class="kv" style="font-size:16px;color:var(--mut)">표시할 항목 없음</div></div>';}
+  else{for(var i=0;i<4;i++)html+='<div class="kpi" aria-label="불러오는 중"><div class="skl" style="width:45%"></div><div class="skl big"></div><div class="skl" style="width:70%"></div></div>';}
   html+='</div><h3 class="sec"><span>보고서와 분석</span><small>'+(up.length?"최근 36시간 갱신 "+up.map(function(m){return m.name;}).join(" · "):"최신본 기준")+'</small></h3><div class="grid">';
   MODS.forEach(function(m){if(m.noList)return;// 2026-11-14: 관리 메뉴(보고서 점검)는 홈 카드에서 제외
     var v=LIVE[m.key],list=DATA?DATA[m.key]:null;
     html+='<a class="mod" href="#'+m.key+'" style="--c:'+m.c+'"><div class="ic">'+ico(m.ic)+'</div><div><h4>'+esc(m.name)+'</h4><div class="upd'+(fresh(m)?" fresh":"")+'">'+(v&&v.lm?"업데이트 "+esc(ago(v.lm)):"")+'</div></div>'
-      +'<div><div class="lt">'+esc(v?(brief(m,v.sub)||v.title):"불러오는 중")+'</div></div><div class="ft">열기 →<span>'+(m.noList?"열 때마다 자동 대조":"지난 보고서 "+(list?list.length:"-")+"건")+'</span></div></a>';});
+      +'<div><div class="lt">'+(v?esc(brief(m,v.sub)||v.title):'<span class="skl" style="width:75%" aria-label="불러오는 중"></span>')+'</div></div><div class="ft">열기 →<span>'+(m.noList?"열 때마다 자동 대조":"지난 보고서 "+(list?list.length:"-")+"건")+'</span></div></a>';});
   html+='</div>'+(ERR?'<div class="panel err" style="margin-top:16px">지난 보고서 목록: '+esc(ERR)+'</div>':'')
     +'<div class="foot">코오롱오토옥션 전략기획팀 · 최신본은 각 보고서 저장소 업데이트 시 자동 반영 · 지난 보고서는 메뉴별 보관 폴더에 날짜_제목.html 형식으로 보관</div></div>';
   document.getElementById("view").innerHTML=html;
@@ -254,7 +265,17 @@ function route(force){
 var side=document.getElementById("side"),scrim=document.getElementById("scrim");
 function menu(o){side.classList.toggle("open",o);scrim.classList.toggle("open",o);}
 document.getElementById("burger").onclick=function(){menu(!side.classList.contains("open"));};scrim.onclick=function(){menu(false);};
-window.addEventListener("hashchange",function(){menu(false);route(true);window.scrollTo(0,0);});
+window.addEventListener("hashchange",function(){menu(false);route(true);window.scrollTo(0,0);fxView();});
+// 2026-11-22: 짧은 움직임(화면 전환 · 숫자 올라가기 · 카드 차례 등장). 기기의 동작 줄이기 설정이면 끔
+function noMo(){return !!(window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches);}
+function fxView(){if(noMo())return;var v=document.getElementById("view");v.classList.remove("vin");void v.offsetWidth;v.classList.add("vin");}
+var _rh0=renderHome,_fxh=false,_ksig="";
+renderHome=function(){_rh0();if(noMo())return;
+  if(!_fxh&&LIVE.daily){_fxh=true;fxView();}
+  if(KPI){var sig=KPI.map(function(k){return k.v;}).join("|");if(sig!==_ksig){_ksig=sig;
+    [].forEach.call(document.querySelectorAll("#view .kpi .kv>span"),function(el){var t=el.textContent,m=t.match(/^([\d,]+)(?:\.(\d+))?$/);if(!m)return;var dec=m[2]?m[2].length:0,val=parseFloat(t.replace(/,/g,"")),t0=performance.now();
+      (function st(now){var p=Math.min(1,(now-t0)/500),x=val*(1-Math.pow(1-p,3));el.textContent=p<1?x.toLocaleString("ko-KR",{minimumFractionDigits:dec,maximumFractionDigits:dec}):t;if(p<1)requestAnimationFrame(st);})(t0);});}}
+};
 route(true);
 function selfTime(m){// 2026-11-14: 포털 저장소 안 메뉴는 배포 때마다 Last-Modified가 함께 바뀌므로 그 파일의 마지막 커밋 시각을 씀
   var ck="erp_ct_"+m.key;try{var c=JSON.parse(sessionStorage.getItem(ck)||"null");if(c&&Date.now()-c.t<CACHE_MS)return Promise.resolve(c.v);}catch(e){}
