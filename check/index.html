@@ -39,7 +39,62 @@ table.h{width:100%;border-collapse:collapse;font-size:13px}table.h th,table.h td
 table.h td.n{white-space:nowrap;font-variant-numeric:tabular-nums}
 @media(max-width:560px){table.h .hide{display:none}}
 </style>
-</head>
+<!--SKIN--><style>
+@media screen{
+html{background:#0E2A63!important}
+body{background:transparent!important}
+body:before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(900px 600px at 85% -10%,rgba(120,170,255,.45),transparent 60%),radial-gradient(700px 500px at 10% 110%,rgba(70,120,230,.45),transparent 60%),linear-gradient(135deg,#081A44 0%,#123A8A 52%,#2863C8 100%)}
+.sk-x{background:transparent!important;box-shadow:none!important;border-color:transparent!important}
+.sk-t{color:#F3F7FD!important}.sk-m{color:#B7C7E2!important}.sk-r{color:#FFA39B!important}.sk-g{color:#6BE3A7!important}.sk-b{color:#9CC2FF!important}
+.sk-l{border-color:rgba(255,255,255,.2)!important}
+.sk-c{border-radius:14px!important;border-color:rgba(255,255,255,.55)!important;box-shadow:0 10px 30px rgba(3,12,40,.30)!important}
+.sk-w{background:#fff!important;border-radius:14px!important;box-shadow:0 10px 30px rgba(3,12,40,.30)!important}
+canvas.sk-w{padding:10px;box-sizing:border-box}
+.fxnav{background:rgba(9,26,66,.62)!important;border-bottom-color:rgba(255,255,255,.17)!important}
+.fxnav a{background:rgba(255,255,255,.10)!important;color:#D5DFEF!important;border-color:rgba(255,255,255,.2)!important}
+.fxnav a:hover{color:#fff!important;border-color:#9CC2FF!important}.fxnav a.on{background:linear-gradient(90deg,#2F6FD6,#4A8CF5)!important;border-color:transparent!important;color:#fff!important}
+}
+</style><script>(function(){
+  var D=document,MODE="cards";
+  function col(s){var m=(s||"").match(/[\d.]+/g);if(!m)return[0,0,0,0];m=m.map(Number);if(m.length<4)m[3]=1;return m;}
+  function lum(c){return(0.2126*c[0]+0.7152*c[1]+0.0722*c[2])/255;}
+  function solid(el){var c=col(getComputedStyle(el).backgroundColor);return c[3]>0.5?c:null;}
+  var SK=/\bsk-[tmrgblcwx]\b/;
+  function run(){
+    var B=D.body,dh=Math.max(D.documentElement.scrollHeight,innerHeight),vw=innerWidth;
+    // 1) 화면 전체를 덮는 밝은 회색 바탕 상자는 걷어냄(카드가 아닌 것)
+    [].forEach.call(B.querySelectorAll(":scope > *, :scope > * > *, :scope > * > * > *"),function(el){
+      if(el.classList.contains("sk-x")||/^(SCRIPT|STYLE|TABLE|CANVAS|SVG|NAV)$/i.test(el.tagName))return;
+      var c=solid(el);if(!c||lum(c)<0.8)return;
+      if(el.offsetWidth>=vw*0.9&&el.offsetHeight>=Math.min(dh*0.6,innerHeight*1.2)&&(MODE!=="sheet"||lum(c)<0.99))el.classList.add("sk-x");});
+    // 2) 바탕 위에 바로 놓인 것 처리
+    var memo=new WeakMap();
+    function onDark(el){// 가장 가까운 불투명 배경이 없으면 진한 바탕 위
+      var p=el,chain=[];while(p&&p!==B&&p.nodeType===1){if(memo.has(p)){var r=memo.get(p);chain.forEach(function(x){memo.set(x,r);});return r;}
+        chain.push(p);var cs=getComputedStyle(p);
+        if(!p.classList.contains("sk-x")){var c=col(cs.backgroundColor);if(c[3]>0.5||cs.backgroundImage!=="none"||p.classList.contains("sk-w")){chain.forEach(function(x){memo.set(x,false);});return false;}}
+        p=p.parentElement;}
+      chain.forEach(function(x){memo.set(x,true);});return true;}
+    var all=B.getElementsByTagName("*");
+    for(var i=0;i<all.length;i++){var el=all[i],tg=el.tagName;
+      if(/^(SCRIPT|STYLE|BR|OPTION)$/i.test(tg)||el.closest(".fxnav")||el.closest("svg"))continue;
+      if(/^(TABLE|CANVAS)$/i.test(tg)||tg==="svg"){if(!el.classList.contains("sk-w")&&el.offsetWidth>120&&onDark(el)){el.classList.add("sk-w");memo.set(el,false);}continue;}
+      var cs=null,c=solid(el);
+      if(c&&lum(c)>0.9&&el.offsetWidth>=180&&el.offsetHeight>=40&&!el.classList.contains("sk-c")&&!el.classList.contains("sk-x")&&!el.closest("table")&&el.parentElement&&onDark(el.parentElement))el.classList.add("sk-c");
+      var hasText=false;for(var n=el.firstChild;n;n=n.nextSibling)if(n.nodeType===3&&n.nodeValue.trim()){hasText=true;break;}
+      if(!hasText&&!/^(HR)$/i.test(tg))continue;
+      if(SK.test(el.className&&el.className.baseVal===undefined?el.className:""))continue;
+      if(!onDark(el))continue;
+      cs=getComputedStyle(el);var t=col(cs.color);
+      if(hasText&&lum(t)<0.62){var mx=Math.max(t[0],t[1],t[2]),mn=Math.min(t[0],t[1],t[2]),k="sk-t";
+        if(mx-mn>70){k=t[0]===mx?(t[1]>t[0]*0.72?"sk-m":"sk-r"):t[1]===mx?"sk-g":"sk-b";}else if(lum(t)>0.3)k="sk-m";
+        el.classList.add(k);}
+      if(parseFloat(cs.borderBottomWidth)>0||parseFloat(cs.borderTopWidth)>0||tg==="HR")el.classList.add("sk-l");}
+  }
+  var tm=null;function later(){clearTimeout(tm);tm=setTimeout(run,80);}
+  if(D.readyState==="loading")D.addEventListener("DOMContentLoaded",run);else run();
+  addEventListener("load",function(){run();new MutationObserver(later).observe(D.body,{childList:true,subtree:true});});
+})();</script><!--/SKIN--></head>
 <body><div class="w">
 <div class="top"><div><h1>보고서 점검 프로그램</h1><div class="sub" id="sub">ERP 게시본 8개의 갱신 상태와 공통 숫자를 자동 대조 · 화면을 연 동안 1분마다 게시본 변경을 감시해 바뀌면 다시 점검 · 파일 업데이트(배포) 때와 매시 정각에도 자동 점검</div></div><span class="conf">[대외비]</span></div>
 <div class="live" id="live"><span class="dot" id="dot"></span><span id="lv">점검 시작</span><span class="m" id="lm"></span></div>
