@@ -316,6 +316,21 @@ tbody tr:hover td{background:#fafbfc}th{letter-spacing:0}td,th{padding:9px 10px}
  .mi2{grid-template-columns:minmax(0,1fr)!important}
  .hrow .pd{padding:6px 10px 4px}.kt{padding:6px 10px}.kt .v{font-size:19px}
 }
+/* 2026-11-22 사용자 지시: 고정 머리글 · 부드러운 전환 · 작은 반응(용어집 참고) */
+@keyframes vIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@keyframes mIn{from{opacity:0;transform:translateY(10px) scale(.985)}to{opacity:1;transform:none}}
+@keyframes bIn{from{background:rgba(20,24,28,0)}to{background:rgba(20,24,28,.45)}}
+@keyframes rIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+#view.vin{animation:vIn .22s ease-out}.modal.min{animation:mIn .2s ease-out}.modal-bg.bin{animation:bIn .2s ease-out}
+.gt tr.chi.rin{animation:rIn .22s ease-out both;animation-delay:calc(var(--i,0)*22ms)}
+.gc,.sc,.ghb,.btn,.chip,.sb-i,.sbox,.kt{transition:transform .1s ease,box-shadow .15s ease,background-color .15s ease,border-color .15s ease}
+.gc[data-g]:hover,.sc:hover{transform:translateY(-1px);box-shadow:0 3px 10px rgba(20,24,28,.16)}
+.gc[data-g]:active,.sc:active,.ghb:active,.btn:active,.chip:active{transform:scale(.97)}
+@media (min-width:1000px){
+ .tw:has(>.gt),.tw:has(>.sgt){overflow:visible}.card:has(.gt),.card:has(.sgt){overflow:visible}
+ .gt thead th,.sgt thead th{position:sticky;top:0;z-index:5;background:var(--bg);box-shadow:0 1px 0 var(--line)}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
@@ -365,7 +380,7 @@ function headInit(){const m=DATA.meta,f=n=>Number(n).toLocaleString('ko-KR');
  document.getElementById('sbr').textContent=`${m.r0md}~${m.lastmd}`;
  document.getElementById('meta').innerHTML=`<span class="pill">${m.task} <b>4회차 (${m.wk[0]} ~ ${m.wk[3]})</b></span><span class="pill">이번 주 <b>1주차</b> (${m.wk[0]} 경매)</span><span class="pill">발행 <b>${m.issue}</b> 경매운영팀</span><span class="pill">수락 기한 <b>${m.due}</b></span>`;
  const c=m.cnt,tile=(k,v,u,d,cl)=>`<div class="kt ${cl}"><span class="k">${k}</span><span class="v">${v}<small>${u}</small></span><span class="d">${d}</span></div>`;
- document.getElementById('kp').innerHTML=tile('판정 단위',f(m.units),'개',`출품의 ${m.cov}%`,'')+tile('더 가져올 차',f(c['강함']||0),'개',`회당 약 ${m.qs}대`,'take')+tile('받기 전 확인',f((c['약함']||0)+(c['중단']||0)),'개',`회당 약 ${m.qw}대 남음`,'cut')+tile('판단 보류',f(c['보류']||0),'개','그중 80% 수준 참고 '+Object.values(DATA.ux).filter(x=>x[0]==='보류'&&x[5]).length+'개','hold');
+ document.getElementById('kp').innerHTML=tile('판정 단위',f(m.units),'개',`출품의 ${m.cov}%`,'')+tile('더 가져올 차',f(c['강함']||0),'개',`회당 약 ${m.qs}대`,'take')+tile('받기 전 확인',f((c['약함']||0)+(c['중단']||0)),'개',`회당 약 ${m.qw}대 남음`,'cut')+tile('판단 보류',f(c['보류']||0),'개','그중 80% 수준 참고 '+Object.values(DATA.ux).filter(x=>x[0]==='보류'&&x[5]).length+'개','hold'); countUp();
  document.getElementById('foot').innerHTML=`계산 방법: 판정은 차종 계열 × 연식대 단위로 ${m.W}회차(${m.r0md}~${m.lastmd}, 출품 ${f(m.n16)}대)를 모아서 함. 판정 단위 ${m.units}개(출품의 ${m.cov}%): 더 가져올 차 ${m.cnt['강함']||0}, 받기 전 확인 ${m.cnt['약함']||0}, 받지 않는 차 ${m.cnt['중단']||0}, 판단 보류 ${m.cnt['보류']||0}. 더 가져올 차 = 제값 낙찰률이 55%를 넘는 것이 확실(95% 신뢰), 받기 전 확인 = 50% 미만이 확실, 받지 않는 차 = 그중 제값 낙찰률 20% 미만. 팀별 대수는 최신 회차(${m.lastmd}) 그 팀 출품 비중으로 나눈 값이라 출품 조직 정보를 전 회차에 붙이면 정확해짐. 희망가는 최신 회차만 기록이 있어 과거 회차는 시작가 + 50만원으로 봄. 회원사와 출품사 이름은 실명으로 표시(대외비). 수락, 반려, 소개 버튼은 눌러볼 수 있지만 아직 저장되지 않음(과제 원장 저장소 미정, TODO 미결). 공식 실적은 일간보고와 출품 및 낙찰 추이를 따름.`;}
 function ruleView(){const m=DATA.meta,R=[['판정 기간','기본 최근 <b>16</b>회차, 매주 경매 후 다시 계산. 과제 발행과 주간 점검은 기본 기간 기준. 화면 위 슬라이더로 기간을 늘리거나 줄여 비교할 수 있음(지금 '+m.W+' 회차, '+m.r0md+'~'+m.lastmd+')'],['판정 단위','차종 계열 × 연식대(6구간). 하이브리드, 전기는 30대 이상이면 따로 뗌. 16회차 출품 30대 미만이면 판정 안 함(표본 적음). 지금 '+m.units+'개 단위가 출품의 '+m.cov+'%'],['계열','세부모델명에서 올 뉴, 더 뉴, 신형, 괄호, 세대 코드(IG, MD, R 등)를 뗀 차명. 예: 올 뉴쏘렌토, 뉴쏘렌토 R은 쏘렌토. 경매운영팀 검수 전 초안(TODO 미결)'],['시세 범위','같은 세부모델 × 연식 × 주행 구간(5만 km)에서 16회차에 팔린 가격의 하위 25% ~ 상위 25%와 중앙값. 5대 이상 팔린 조건만, 3~4대는 중앙값만'],['비싸게 나온 차','희망가가 범위 상단을 넘는 차(범위가 없으면 시작가가 중앙값 +10% 이상). 희망가 기록이 없는 과거 회차는 시작가 + 50만원'],['제값 낙찰률','비싸게 나온 차를 뺀 낙찰률. 시세 없는 차는 제값으로 봄'],['더 가져올 차','제값 낙찰률이 55%를 넘는 것이 95% 신뢰로 확실'],['받기 전 확인','제값 낙찰률이 50% 아래인 것이 95% 신뢰로 확실. 희망가가 범위 중앙 이하일 때만 받기'],['받지 않는 차','받기 전 확인 중 제값 낙찰률 20% 미만'],['판단 보류','그 사이, 또는 제값 출품 30대 미만. 지시 없음'],['신뢰 수준','모든 판정을 95% 신뢰로 냄(실장 11/20 지시). 과제, KPI, 평가에 같은 판정을 씀'],['회당 대수','(제값 낙찰 ÷ 0.55 − 제값 출품) ÷ 16. 더하기면 더 가져올 대수, 빼기면 남는 차'],['가격 먼저','비싸게 나온 차 30% 이상이고 제값 차보다 낙찰률이 15%p 이상 낮으면 희망가 조정으로 넘김'],['묶음 과제','더 가져올 차의 회당 대수를 차군 5 × 연식 3으로 합쳐 최신 회차 팀 출품 비중으로 나눔. 경매 4회 합계 10대 미만 연식은 합치고, 그래도 미만이면 지시 안 함'],['유효성 점검','4주 전 판정과 최근 4회차 제값 낙찰률 비교. 더 가져올 차는 55% 이상 유지, 45~55% 약해짐, 45% 미만 반대. 받기 전 확인은 50% 미만 유지, 50~60% 약해짐, 60% 이상 반대']];
   return `<div class="card" style="margin-top:14px"><div class="ch"><h2>판정 기준</h2><span class="why">설계 가이드 v1.0, 개발 명세 v1.0(전략기획실, 11/20) 기준. 설정값은 전략기획실과 합의 후 바꿈</span></div><div class="cb"><div class="tw"><table><thead><tr><th style="width:150px">규칙</th><th>정의</th></tr></thead><tbody>${R.map(r=>`<tr><td><b>${r[0]}</b></td><td>${r[1]}</td></tr>`).join('')}</tbody></table></div></div></div>`;}
@@ -788,6 +803,19 @@ function modalHTML(){
   return h;
 }
 
+// 2026-11-22 사용자 지시: 화면 전환 · 팝업 · 차군 펼침 · 숫자에 짧은 움직임(바뀐 것에만, 동작 줄이기 설정이면 끔)
+function RM(){return !!(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches);}
+var _pv='', _pm=false, _go=-1;
+function fx(){ if(RM()) return;
+  const V=document.getElementById('view'), k=view+'/'+gview;
+  if(k!==_pv){V.classList.remove('vin'); void V.offsetWidth; V.classList.add('vin'); _pv=k;}
+  const m=document.querySelector('#modal .modal'), o=!!m; if(o&&!_pm){m.classList.add('min'); m.parentElement.classList.add('bin');} _pm=o;
+  if(_go>=0){const tb=document.querySelectorAll('.gt tbody.gb')[_go]; if(tb)[...tb.querySelectorAll('tr.chi')].forEach((tr,i)=>{tr.style.setProperty('--i',Math.min(i,10)); tr.classList.add('rin');}); _go=-1;}
+}
+function countUp(){ if(RM()) return;
+  document.querySelectorAll('#kp .kt .v').forEach(v=>{const n=v.firstChild; if(!n||n.nodeType!==3) return; const t=parseInt(n.nodeValue.replace(/,/g,'')); if(!t) return; const t0=performance.now();
+    (function st(now){const p=Math.min(1,(now-t0)/450); n.nodeValue=Math.round(t*(1-Math.pow(1-p,3))).toLocaleString('ko-KR'); if(p<1) requestAnimationFrame(st);})(t0);});
+}
 let vfold={}, ropen=new Set();
 const VFOLD0={sales:[3,4],member:[3],check:[1]}, VJUMP={sales:[0,1,2],member:[0,2,3]};
 function enhanceView(){
@@ -807,6 +835,7 @@ function render(){
   document.getElementById('view').innerHTML=TX(view==='sales'?salesView():view==='member'?memberView():view==='grid'?gridView():view==='rule'?ruleView():checkView());
   enhanceView();
   document.getElementById('modal').innerHTML=TX((view==='grid'&&gview==='car')?modalHTML():(view==='grid'&&gview==='seg')?segModalHTML():'');
+  fx();
   document.querySelectorAll('.sb-i').forEach(t=>{const on=t.dataset.v===view&&(!t.dataset.gv||t.dataset.gv===gview);t.classList.toggle('on',on);t.setAttribute('aria-current',on?'page':'false')});
 }
 document.addEventListener('click',e=>{
@@ -820,7 +849,7 @@ document.addEventListener('click',e=>{
   const gt=e.target.closest('[data-gteam]'); if(gt){gteam=gt.dataset.gteam;render();return;}
   const vf_=e.target.closest('.ch[data-vf]'); if(vf_&&!e.target.closest('button,select,a,input,summary')){vfold[vf_.dataset.vf]=!vfold[vf_.dataset.vf];render();return;}
   const vj_=e.target.closest('.sbox[data-jump]'); if(vj_&&!e.target.closest('button,select,a')){const t=vj_.dataset.jump;vfold[view+':'+t]=false;render();const el=document.getElementById('sec-'+t);if(el)el.scrollIntoView({behavior:'smooth',block:'start'});return;}
-  const gt_=e.target.closest('[data-gtog]'); if(gt_){const i=+gt_.dataset.gtog; if(gopen.has(i))gopen.delete(i);else gopen.add(i); if(gfocus&&!gopen.has(i))gfocus=null; render();return;}
+  const gt_=e.target.closest('[data-gtog]'); if(gt_){const i=+gt_.dataset.gtog; if(gopen.has(i))gopen.delete(i);else{gopen.add(i);_go=i;} if(gfocus&&!gopen.has(i))gfocus=null; render();return;}
   const ga_=e.target.closest('[data-gall]'); if(ga_){gopen=new Set(ga_.dataset.gall==='1'?DATA.grid.map((_,i)=>i):[]);gfocus=null;render();return;}
   const gc=e.target.closest('.gc[data-g]'); if(gc){const g=+gc.dataset.g,ri=+gc.dataset.r,y=+gc.dataset.y;gsel={g,ri,y,r:DATA.grid[g].rows[ri]};render();return;}
   const sc=e.target.closest('.sc'); if(sc){ssel={y:+sc.dataset.sy,k:+sc.dataset.sk};render();return;}
