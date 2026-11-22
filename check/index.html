@@ -62,12 +62,18 @@ canvas.sk-w{padding:10px;box-sizing:border-box}
   function solid(el){var c=col(getComputedStyle(el).backgroundColor);return c[3]>0.5?c:null;}
   var SK=/\bsk-[tmrgblcwx]\b/;
   function run(){
-    var B=D.body,dh=Math.max(D.documentElement.scrollHeight,innerHeight),vw=innerWidth;
+    var B=D.body,vw=innerWidth;
+    // 다시 판정할 때마다 이전 표시를 지우고 처음부터(접힌 구역을 펴거나 폭이 바뀌면 높이가 달라지므로)
+    [].forEach.call(B.querySelectorAll(".sk-x,.sk-t,.sk-m,.sk-r,.sk-g,.sk-b,.sk-l,.sk-c,.sk-f,.sk-w"),function(el){el.classList.remove("sk-x","sk-t","sk-m","sk-r","sk-g","sk-b","sk-l","sk-c","sk-f","sk-w");});
+    var dh=Math.max(D.documentElement.scrollHeight,innerHeight);
     // 1) 화면 전체를 덮는 밝은 회색 바탕 상자는 걷어냄(카드가 아닌 것)
     [].forEach.call(B.querySelectorAll(":scope > *, :scope > * > *, :scope > * > * > *"),function(el){
       if(el.classList.contains("sk-x")||/^(SCRIPT|STYLE|TABLE|CANVAS|SVG|NAV)$/i.test(el.tagName))return;
       var c=solid(el);if(!c||lum(c)<0.8)return;
-      if(el.offsetWidth>=vw*0.9&&el.offsetHeight>=Math.min(dh*0.6,innerHeight*1.2)&&(MODE!=="sheet"||lum(c)<0.99))el.classList.add("sk-x");});
+      // 카드(둥근 모서리 · 그림자 · 테두리 · 접이식)는 걷어내지 않음. 폰에서는 카드도 화면 폭을 다 차지하므로 폭만으로 판단하면 안 됨(2026-11-23 폰 화면 글자 사라짐 원인)
+      var s=getComputedStyle(el);
+      if(/^(DETAILS|SECTION|ARTICLE|A)$/i.test(el.tagName)||parseFloat(s.borderTopLeftRadius)>0||s.boxShadow!=="none"||parseFloat(s.borderTopWidth)>0||parseFloat(s.borderLeftWidth)>0)return;
+      if(el.offsetWidth>=vw*0.9&&el.offsetHeight>=dh*0.6)el.classList.add("sk-x");});
     // 2) 바탕 위에 바로 놓인 것 처리
     var memo=new WeakMap();
     function onDark(el){// 가장 가까운 불투명 배경이 없으면 진한 바탕 위
