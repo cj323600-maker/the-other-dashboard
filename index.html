@@ -128,6 +128,17 @@ body:before{content:"";position:fixed;inset:0;z-index:-1;background:radial-gradi
 .sm .go{font-size:13px;font-weight:700;color:var(--c-daily);margin-top:12px}
 @media (max-width:1024px){.duo{grid-template-columns:1fr}}
 @media (max-width:760px){.pn{padding:16px 14px}.bars{gap:6px}.bw{height:130px}.bv{font-size:11px}.duo{gap:12px}}
+/* 2026-11-23: 영상과 같은 밝은 반투명 카드(진한 파란 바탕 위, 카드 안 글자는 진한 색으로 숫자 대비를 높임). 제목 띠(hero)와 왼쪽 메뉴는 그대로 */
+.kpi,.mod,.panel,.pn{--ink:#111A26;--mut:#4A5870;--line:#D7DFEB;--blue:#1F5FBF;--soft:#EDF2F9;--ok:#16713F;--okbg:#DDF2E5;--bad:#B3261E;--badbg:#FBE4E1;
+--c-daily:#1F5FBF;--c-weekly:#1E7B47;--c-monthly:#6B3FA0;--c-member:#C8641F;--c-trend:#2F5D8A;--c-market:#0E7C86;--c-kmarket:#8A5A00;--c-matching:#B3423A;--c-check:#4B5563;
+color:var(--ink);background:rgba(255,255,255,.90);border-color:rgba(255,255,255,.75)}
+.mod:hover,a.kpi:hover,a.pn:hover{background:rgba(255,255,255,.97)}
+.ic{background:color-mix(in srgb,var(--c) 14%,transparent)}
+.kv{font-weight:900}.kd,.kpi .kr{font-weight:500}
+.panel .search{background:#F4F6FA}
+.b1{background:#DCE6F5;border-color:#C3D2EA}.bc.cur .b1{background:#C9D9F2;border-color:#8FB0E6}
+.bv{font-size:12.5px}.bv.w{color:#123F94}.sm .tg.nt{background:#E6ECF5}
+@media (max-width:760px){.bv{font-size:11.5px}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -267,7 +278,7 @@ function duo(){
     h+='<div class="ps">'+RND[0].d+' ~ '+RND[4].d+' 경매 · 출품 및 낙찰 추이 기준(낙찰취소 반영) · 단위 대</div><div class="bars">';
     RND.forEach(function(r,i){var a=(r.n/mx*100).toFixed(1),b=(r.w/mx*100).toFixed(1);
       h+='<div class="bc'+(i===4?" cur":"")+'"><div class="bw"><div class="b1" style="height:'+a+'%"></div><div class="b2" style="height:'+b+'%"></div><span class="bv" style="bottom:calc('+a+'% + 4px)">'+num(r.n)+'</span><span class="bv w" style="bottom:calc('+b+'% + 4px)">'+num(r.w)+'</span></div><div class="bd">'+r.d+'</div><div class="br">'+(r.w/r.n*100).toFixed(1)+'%</div></div>';});
-    h+='</div><div class="lg"><span><i style="background:rgba(255,255,255,.3)"></i>출품대수(대)</span><span><i style="background:#5C9BFA"></i>낙찰대수(대)</span><span>날짜 아래 숫자는 낙찰률(%)</span></div>';}
+    h+='</div><div class="lg"><span><i style="background:#C9D9F2"></i>출품대수(대)</span><span><i style="background:#5C9BFA"></i>낙찰대수(대)</span><span>날짜 아래 숫자는 낙찰률(%)</span></div>';}
   else h+='<div class="skl" style="width:60%;margin-top:12px" aria-label="불러오는 중"></div><div class="skl big" style="width:100%;height:120px"></div>';
   h+='</a><a class="pn sm" href="#daily"><h4>일간보고 총평</h4>';
   if(SUMM){SUMM.forEach(function(l){h+='<div class="'+(l.k==="l1"?"l1":"l2")+'">'+(l.k==="ex"?'<span class="tg nt">경매 영향(전주 대비)</span>':'')+l.ps.map(function(p){return p.c?(l.k==="l2"?'<span class="tg '+p.c+'">'+esc(p.t.trim())+'</span>':'<span class="'+p.c+'">'+esc(p.t)+'</span>'):esc(p.t);}).join("")+'</div>';});
