@@ -77,4 +77,52 @@ new Chart(document.getElementById('c3'),{data:{labels:EXP.lab,datasets:[
 document.querySelectorAll('a.rc').forEach(a=>a.addEventListener('click',ev=>{const id=a.getAttribute('href').slice(1),t=document.getElementById(id);if(!t)return;ev.preventDefault();
  t.scrollIntoView({behavior:'smooth',block:'start'});let r=t.tagName=='TR'?t:null,rs=[];while(r){rs.push(r);r=r.nextElementSibling;if(!r||r.classList.contains('g0'))break}
  rs.forEach(x=>x.classList.add('hl'));setTimeout(()=>rs.forEach(x=>x.classList.remove('hl')),1800)}));
-document.querySelectorAll('a[href^="#s"]').forEach(a=>a.addEventListener('click',()=>{document.getElementById('srcd').open=true}));</script></body></html>
+document.querySelectorAll('a[href^="#s"]').forEach(a=>a.addEventListener('click',()=>{document.getElementById('srcd').open=true}));</script><!--FX--><style>
+.fxnav{position:sticky;top:0;z-index:40;display:flex;gap:6px;align-items:center;overflow-x:auto;padding:8px 2px;margin:8px 0 10px;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border-bottom:1px solid rgba(27,39,51,.12);scrollbar-width:none}
+.fxnav::-webkit-scrollbar{display:none}
+.fxnav a{flex:0 0 auto;font-size:12.5px;font-weight:700;color:#5B6876;text-decoration:none;padding:6px 12px;border:1px solid rgba(27,39,51,.14);border-radius:999px;background:#fff;white-space:nowrap;transition:background-color .15s,color .15s,border-color .15s}
+.fxnav a:hover{border-color:#1F4E8C;color:#1F4E8C}.fxnav a.on{background:#1F4E8C;border-color:#1F4E8C;color:#fff}
+.fxnav .fxt{margin-left:auto;font-weight:800}
+html{scroll-behavior:smooth}.fxsec{scroll-margin-top:58px}
+@media (min-width:1000px){.fxst-w{overflow:visible!important}.fxst thead th{position:sticky;top:var(--fxh,50px);z-index:5}}
+@keyframes fxin{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+body.fxgo>*{animation:fxin .25s ease-out}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}body.fxgo>*{animation:none}.fxnav a{transition:none}}
+@media print{.fxnav{display:none}}
+</style><script>(function(){
+  function vis(el){return !!(el.offsetWidth||el.offsetHeight||el.getClientRects().length);}
+  var hs=[].filter.call(document.querySelectorAll('h2'),vis); if(hs.length<3) return;
+  // 모든 구역 제목의 가장 가까운 공통 조상 → 그 바로 아래에 띠를 넣어야 화면 끝까지 붙어 있음
+  function chain(el){var a=[];while(el){a.unshift(el);el=el.parentElement;}return a;}
+  var c0=chain(hs[0]),lca=document.body;
+  for(var d=0;d<c0.length;d++){if(hs.every(function(h){return chain(h)[d]===c0[d];}))lca=c0[d];else break;}
+  if(lca===hs[0])lca=hs[0].parentElement;
+  var first=hs[0];while(first.parentElement&&first.parentElement!==lca)first=first.parentElement;
+  var nav=document.createElement('nav');nav.className='fxnav';nav.setAttribute('aria-label','구역 바로가기');
+  var labs=hs.map(function(h){return h.textContent.replace(/\[[^\]]*\]|\([^)]*\)/g,'').replace(/\s+/g,' ').trim();});
+  var shorts=labs.map(function(t){return t.split(/[—:]/)[0].trim();});
+  var links=hs.map(function(h,i){
+    // 이동 대상 = 이 제목만 담고 있는 가장 바깥 상자(다른 구역 제목과 같은 상자에 있으면 제목 자체)
+    var sec=h;while(sec.parentElement&&sec.parentElement!==lca&&hs.every(function(o){return o===h||!sec.parentElement.contains(o);}))sec=sec.parentElement;
+    if(!sec.id)sec.id='fxs'+i;sec.classList.add('fxsec');
+    var t=shorts[i];if(shorts.indexOf(t)!==shorts.lastIndexOf(t)){t=labs[i].replace(/\s*[—:]\s*/,' ');if(t.length>22)t=t.slice(0,21).trim()+'…';}
+    var a=document.createElement('a');a.href='#'+sec.id;a.textContent=t;
+    a.addEventListener('click',function(){var dt=sec.tagName==='DETAILS'?sec:sec.querySelector('details');if(dt&&h.closest('details')===dt)dt.open=true;});
+    nav.appendChild(a);return {a:a,sec:sec};});
+  var top=document.createElement('a');top.href='#';top.className='fxt';top.textContent='맨 위로';
+  top.addEventListener('click',function(e){e.preventDefault();window.scrollTo({top:0,behavior:'smooth'});});nav.appendChild(top);
+  lca.insertBefore(nav,first);
+  function spy(){var y=nav.getBoundingClientRect().bottom+40,cur=0;
+    links.forEach(function(l,i){if(l.sec.getBoundingClientRect().top<=y)cur=i;});
+    links.forEach(function(l,i){var on=i===cur;if(l.a.classList.contains('on')!==on){l.a.classList.toggle('on',on);if(on&&nav.scrollWidth>nav.clientWidth)nav.scrollLeft=Math.max(0,l.a.offsetLeft-nav.clientWidth/2+l.a.offsetWidth/2);}});}
+  var tk=false;window.addEventListener('scroll',function(){if(!tk){tk=true;requestAnimationFrame(function(){tk=false;spy();});}},{passive:true});spy();
+  // 화면보다 긴 표는 머리글을 띠 아래에 고정(표가 옆으로 넘치지 않을 때만)
+  function fixHead(){document.documentElement.style.setProperty('--fxh',nav.offsetHeight+'px');
+    [].forEach.call(document.querySelectorAll('table'),function(t){if(!t.tHead||!vis(t)||t.offsetHeight<window.innerHeight*0.9)return;
+      var w=t.parentElement;if(!w)return;var cs=getComputedStyle(w);
+      if(cs.overflowX!=='visible'||cs.overflowY!=='visible'){if(t.scrollWidth>w.clientWidth+1)return;w.classList.add('fxst-w');}
+      [].forEach.call(t.tHead.querySelectorAll('th'),function(th){if(getComputedStyle(th).backgroundColor==='rgba(0, 0, 0, 0)')th.style.backgroundColor='#fff';});
+      t.classList.add('fxst');});}
+  fixHead();window.addEventListener('resize',fixHead);
+  if(!(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches))document.body.classList.add('fxgo');
+})();</script><!--/FX--></body></html>
