@@ -100,7 +100,7 @@ canvas.sk-w{padding:10px;box-sizing:border-box}
   if(D.readyState==="loading")D.addEventListener("DOMContentLoaded",run);else run();
   D.addEventListener("toggle",later,true);addEventListener("load",function(){run();new MutationObserver(later).observe(D.body,{childList:true,subtree:true});});
 })();</script><script src="https://cj323600-maker.github.io/the-other-dashboard/track/track.js" defer></script><!--/SKIN--></head><body><div class="wrap">
-<div class="hd"><div><h1>접속 기록</h1><div class="sub" id="sub">포털과 보고서 링크로 들어온 기록 · 같은 기기 · 같은 화면은 30분에 한 번만 기록 · IP는 앞자리만 남김</div></div><span class="conf">[대외비]</span></div>
+<div class="hd"><div><h1>접속 기록</h1><div class="sub" id="sub">포털과 보고서 링크로 들어온 기록 · 같은 기기 · 같은 화면은 30분에 한 번만 기록</div></div><span class="conf">[대외비]</span></div>
 <div id="box"><div class="wait">불러오는 중</div></div>
 </div>
 <script src="../track/track.js"></script>
@@ -131,13 +131,13 @@ function draw(){
    dv.map(function(p){var a=W.filter(function(r){return r[12]===p[0];}),l=a[0];return'<tr><td>'+esc(p[0])+'</td><td>'+esc(l[1]||'-')+'</td><td>'+esc([l[5],l[7],l[8]].filter(Boolean).join(' · '))+'</td><td>'+esc(l[9]+' · '+l[10])+'</td><td class="n">'+p[1]+'</td><td>'+esc(l[0].slice(5,16))+'</td></tr>';}).join('')+'</tbody></table></div></div>';
   var kinds=["all","직접 링크","포털 안에서 열람","포털에서 새 창"],rows=F==="all"?R:R.filter(function(r){return r[2]===F;});
   h+='<div class="card"><h2>최근 접속 기록<small>최근 '+Math.min(rows.length,300)+'건</small></h2><div class="flt">'+kinds.map(function(k){return'<button type="button" data-k="'+k+'" aria-pressed="'+(F===k)+'">'+(k==="all"?"전체":k)+'</button>';}).join('')+'</div>'+
-   '<div class="tw"><table class="log"><thead><tr><th>접속 시각</th><th>이름</th><th>열람 방식</th><th>화면</th><th>IP(앞자리만)</th><th>국가 · 지역 · 도시</th><th>통신사</th><th>기기 · 브라우저</th><th>화면 크기</th><th>기기 번호</th></tr></thead><tbody>'+
+   '<div class="tw"><table class="log"><thead><tr><th>접속 시각</th><th>이름</th><th>열람 방식</th><th>화면</th><th>IP</th><th>국가 · 지역 · 도시</th><th>통신사</th><th>기기 · 브라우저</th><th>화면 크기</th><th>기기 번호</th></tr></thead><tbody>'+
    rows.slice(0,300).map(function(r){return'<tr><td class="t">'+esc(r[0])+'</td><td data-l="이름">'+esc(r[1]||'-')+'</td><td data-l="열람 방식"><span class="tag">'+esc(r[2])+'</span></td><td data-l="화면">'+esc(r[3])+'</td><td data-l="IP">'+esc(r[4])+'</td><td data-l="위치">'+esc([r[5],r[6],r[7]].filter(Boolean).join(' · '))+'</td><td data-l="통신사">'+esc(r[8])+'</td><td data-l="기기">'+esc(r[9]+' · '+r[10])+'</td><td data-l="화면 크기">'+esc(r[11])+'</td><td data-l="기기 번호">'+esc(r[12])+'</td></tr>';}).join('')+'</tbody></table></div></div>';
   box.innerHTML=h;
   [].forEach.call(box.querySelectorAll('.flt button'),function(b){b.onclick=function(){F=b.getAttribute('data-k');draw();};});
 }
 function load(){fetch(EP+"?n=2000&t="+Date.now()).then(function(r){return r.json();}).then(function(j){R=j.rows||[];H=j.head||[];window.__tot=j.total;
-  document.getElementById("sub").textContent="포털과 보고서 링크로 들어온 기록 · 같은 기기 · 같은 화면은 30분에 한 번만 기록 · IP는 앞자리만 남김 · 마지막 확인 "+new Date().toTimeString().slice(0,5);draw();})
+  document.getElementById("sub").textContent="포털과 보고서 링크로 들어온 기록 · 같은 기기 · 같은 화면은 30분에 한 번만 기록 · 마지막 확인 "+new Date().toTimeString().slice(0,5);draw();})
  .catch(function(){box.innerHTML='<div class="wait">기록을 불러오지 못했습니다. 잠시 뒤 다시 열어 주세요.</div>';});}
 load();setInterval(load,5*60*1000);
 })();
