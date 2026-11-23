@@ -98,12 +98,12 @@ iframe{flex:1;width:100%;border:0;background:#fff}
 --side:rgba(7,20,52,.72);--side2:rgba(255,255,255,.09);--sideTx:#D5DFEF;--sideMut:#8FA3C4;
 --c-daily:#9CC2FF;--c-weekly:#6BE3A7;--c-monthly:#CDB0F7;--c-member:#FFB889;--c-trend:#93CDF7;--c-market:#74E2E2;--c-kmarket:#F3D183;--c-matching:#FFA39B;--c-check:#CFD8E3}
 html{background:#0E2A63}body{background:transparent}
-body:before{content:"";position:fixed;inset:0;z-index:-1;background:radial-gradient(900px 600px at 85% -10%,rgba(120,170,255,.45),transparent 60%),radial-gradient(700px 500px at 10% 110%,rgba(70,120,230,.45),transparent 60%),linear-gradient(135deg,#081A44 0%,#123A8A 52%,#2863C8 100%)}
-.side{backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-right:1px solid var(--line)}
+body:before{content:"";position:fixed;top:0;left:0;right:0;height:calc(100vh + 200px);height:calc(100lvh + 200px);z-index:-1;background:radial-gradient(900px 600px at 85% -10%,rgba(120,170,255,.45),transparent 60%),radial-gradient(700px 500px at 10% 110%,rgba(70,120,230,.45),transparent 60%),linear-gradient(135deg,#081A44 0%,#123A8A 52%,#2863C8 100%)}
+.side{border-right:1px solid var(--line)}
 .nav a.on{background:linear-gradient(90deg,#2F6FD6,#4A8CF5);box-shadow:0 6px 16px rgba(20,60,150,.45)}.nav a.on:before{display:none}
 .me{border-top-color:var(--line)}.av{background:rgba(255,255,255,.14)}
-.bar{background:rgba(9,26,66,.55);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
-.kpi,.mod,.panel,.hero,.pn{background:var(--card);border:1px solid rgba(255,255,255,.19);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:0 10px 30px rgba(3,12,40,.30),inset 0 1px 0 rgba(255,255,255,.16)}
+.bar{background:rgba(9,26,66,.94);}
+.kpi,.mod,.panel,.hero,.pn{background:var(--card);border:1px solid rgba(255,255,255,.19);box-shadow:0 10px 30px rgba(3,12,40,.30),inset 0 1px 0 rgba(255,255,255,.16)}
 .hero{background:linear-gradient(120deg,rgba(255,255,255,.22),rgba(255,255,255,.08))}
 .mod:hover,a.kpi:hover,a.pn:hover{transform:translateY(-4px);background:rgba(255,255,255,.15);box-shadow:0 16px 36px rgba(3,12,40,.40),inset 0 1px 0 rgba(255,255,255,.22)}
 .ic{background:rgba(255,255,255,.13)}.vt{background:rgba(9,26,66,.55)}.vt a.ext{border-color:var(--line)}
@@ -131,7 +131,7 @@ body:before{content:"";position:fixed;inset:0;z-index:-1;background:radial-gradi
 /* 2026-11-23: 영상과 같은 밝은 반투명 카드(진한 파란 바탕 위, 카드 안 글자는 진한 색으로 숫자 대비를 높임). 제목 띠(hero)와 왼쪽 메뉴는 그대로 */
 .kpi,.mod,.panel,.pn{--ink:#111A26;--mut:#4A5870;--line:#D7DFEB;--blue:#1F5FBF;--soft:#EDF2F9;--ok:#16713F;--okbg:#DDF2E5;--bad:#B3261E;--badbg:#FBE4E1;
 --c-daily:#1F5FBF;--c-weekly:#1E7B47;--c-monthly:#6B3FA0;--c-member:#C8641F;--c-trend:#2F5D8A;--c-market:#0E7C86;--c-kmarket:#8A5A00;--c-matching:#B3423A;--c-check:#4B5563;
-color:var(--ink);background:rgba(255,255,255,.88);border-color:rgba(255,255,255,.85);backdrop-filter:blur(18px) saturate(1.25);-webkit-backdrop-filter:blur(18px) saturate(1.25)}
+color:var(--ink);background:rgba(255,255,255,.88);border-color:rgba(255,255,255,.85);}
 .mod:hover,a.kpi:hover,a.pn:hover{background:rgba(255,255,255,.93)}
 .ic{background:color-mix(in srgb,var(--c) 14%,transparent)}
 .kv{font-weight:900}.kd,.kpi .kr{font-weight:500}
