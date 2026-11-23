@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>접속 기록</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css">
+<style>
+:root{--bg:#F4F6F8;--card:#fff;--ink:#16202A;--mut:#3D4958;--line:#E3E8EC;--acc:#1F5FBF;--soft:#EEF3FA}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:"Pretendard Variable",Pretendard,-apple-system,"Malgun Gothic",sans-serif;font-variant-numeric:tabular-nums;word-break:keep-all}
+.wrap{max-width:1240px;margin:0 auto;padding:24px 24px 48px}
+.hd{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap}
+h1{margin:0;font-size:22px;font-weight:800}.sub{font-size:13px;color:var(--mut);margin-top:6px;line-height:1.6}
+.conf{border:1.5px solid #B42318;color:#B42318;font-size:12px;font-weight:700;border-radius:4px;padding:2px 8px;white-space:nowrap}
+.kp{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:16px}
+.k{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px}.k .l{font-size:12.5px;color:var(--mut);font-weight:700}
+.k .v{font-size:28px;font-weight:800;margin-top:6px}.k .v small{font-size:13px;color:var(--mut);margin-left:3px}.k .d{font-size:12px;color:var(--mut);margin-top:4px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin-top:14px}
+.card h2{margin:0 0 10px;font-size:15.5px}.card h2 small{font-weight:500;color:var(--mut);font-size:12.5px;margin-left:6px}
+.tw{overflow-x:auto}table{width:100%;border-collapse:collapse;font-size:13px}
+th{font-size:12px;color:var(--mut);text-align:left;font-weight:700;padding:8px 8px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:8px 8px;border-bottom:1px solid var(--line);vertical-align:top}td.n,th.n{text-align:right}
+.tag{display:inline-block;font-size:11.5px;font-weight:700;border-radius:99px;padding:1px 8px;background:var(--soft);color:var(--acc);white-space:nowrap}
+.wait{background:#FFF4DE;border:1px solid #F3D48B;color:#6B4A00;border-radius:12px;padding:14px 16px;margin-top:16px;font-size:13.5px;line-height:1.7}
+.bar{height:8px;border-radius:4px;background:var(--acc);display:inline-block;vertical-align:middle;margin-right:6px}
+.flt{display:flex;gap:8px;flex-wrap:wrap;margin:4px 0 10px}.flt button{font:inherit;font-size:12.5px;font-weight:700;border:1px solid var(--line);background:#fff;border-radius:99px;padding:6px 12px;cursor:pointer;color:var(--mut)}
+.flt button[aria-pressed="true"]{background:var(--acc);color:#fff;border-color:var(--acc)}
+@media (max-width:760px){.wrap{padding:16px 14px 40px}.kp{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .log thead{display:none}.log,.log tbody,.log tr,.log td{display:block}.log tr{padding:8px 2px;border-bottom:1px solid var(--line)}.log td{border:0;padding:1px 0}
+ .log td[data-l]:before{content:attr(data-l) " ";color:var(--mut);font-size:12px}.log td.t{font-weight:700}}
+</style><!--SKIN--><style>
+*{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+html{background:#0E2A63!important}
+body{background:transparent!important}
+body:before{content:"";position:fixed;top:0;left:0;right:0;height:calc(100vh + 200px);height:calc(100lvh + 200px);z-index:-1;pointer-events:none;background:radial-gradient(900px 600px at 85% -10%,rgba(120,170,255,.45),transparent 60%),radial-gradient(700px 500px at 10% 110%,rgba(70,120,230,.45),transparent 60%),linear-gradient(135deg,#081A44 0%,#123A8A 52%,#2863C8 100%)}
+.sk-x{background:transparent!important;box-shadow:none!important;border-color:transparent!important}
+.sk-t{color:#F5F8FE!important}.sk-m{color:#D3DEF0!important}.sk-r{color:#FFA39B!important}.sk-g{color:#6BE3A7!important}.sk-b{color:#A9CBFF!important}
+.sk-l{border-color:rgba(255,255,255,.2)!important}
+.sk-c{border-radius:14px!important;border-color:rgba(255,255,255,.85)!important;box-shadow:0 12px 32px rgba(3,12,40,.34),inset 0 1px 0 rgba(255,255,255,.95)!important}
+.sk-f{background-color:rgba(255,255,255,.96)!important;}
+:where(.sk-f) table{background-color:#fff}
+.sk-w{background:#fff!important;border-radius:14px!important;box-shadow:0 10px 30px rgba(3,12,40,.30)!important}
+canvas.sk-w{padding:10px;box-sizing:border-box}
+/* 마우스를 올리면 카드가 살짝 떠오름(포털과 같은 반응 · 누르는 기능 없음 · 마우스가 있는 기기만) */
+@media (hover:hover){.sk-h{transition:transform .16s ease,box-shadow .16s ease}
+.sk-h:hover{transform:translateY(-4px);box-shadow:0 18px 40px rgba(3,12,40,.45)!important}}
+@media (prefers-reduced-motion:reduce){.sk-h{transition:none}.sk-h:hover{transform:none}}
+
+/* 회원사 분석 배지 · 막대: 밝은 색 바탕 위 흰 글자를 진한 글자로(대비 2.5 → 7 이상), 청록 배지는 한 단계 진하게 */
+.bdg[style*="#60a5fa" i],.bdg[style*="#94a3b8" i],i[style*="#60a5fa" i]{color:#0F172A!important}
+.bdg[style*="#0891b2" i]{background:#0E7490!important}
+.bdg[style*="#d97706" i]{background:#B45309!important}.bdg[style*="#059669" i]{background:#047857!important}
+.up{color:#166534!important}
+.fxnav{background:rgba(9,26,66,.62)!important;border-bottom-color:rgba(255,255,255,.17)!important}
+.fxnav a{background:rgba(255,255,255,.10)!important;color:#D5DFEF!important;border-color:rgba(255,255,255,.2)!important}
+.fxnav a:hover{color:#fff!important;border-color:#9CC2FF!important}.fxnav a.on{background:linear-gradient(90deg,#2F6FD6,#4A8CF5)!important;border-color:transparent!important;color:#fff!important}
+</style><script>(function(){
+  var D=document,MODE="cards";
+  function col(s){var m=(s||"").match(/[\d.]+/g);if(!m)return[0,0,0,0];m=m.map(Number);if(m.length<4)m[3]=1;return m;}
+  function lum(c){return(0.2126*c[0]+0.7152*c[1]+0.0722*c[2])/255;}
+  function solid(el){var c=col(getComputedStyle(el).backgroundColor);return c[3]>0.5?c:null;}
+  var SK=/\bsk-[tmrgblcwx]\b/;
+  function run(){
+    var B=D.body,vw=innerWidth;
+    // 다시 판정할 때마다 이전 표시를 지우고 처음부터(접힌 구역을 펴거나 폭이 바뀌면 높이가 달라지므로)
+    [].forEach.call(B.querySelectorAll(".sk-x,.sk-t,.sk-m,.sk-r,.sk-g,.sk-b,.sk-l,.sk-c,.sk-f,.sk-w,.sk-h"),function(el){el.classList.remove("sk-x","sk-t","sk-m","sk-r","sk-g","sk-b","sk-l","sk-c","sk-f","sk-w","sk-h");});
+    var dh=Math.max(D.documentElement.scrollHeight,innerHeight);
+    // 1) 화면 전체를 덮는 밝은 회색 바탕 상자는 걷어냄(카드가 아닌 것)
+    [].forEach.call(B.querySelectorAll(":scope > *, :scope > * > *, :scope > * > * > *"),function(el){
+      if(el.classList.contains("sk-x")||/^(SCRIPT|STYLE|TABLE|CANVAS|SVG|NAV)$/i.test(el.tagName))return;
+      var c=solid(el);if(!c||lum(c)<0.8)return;
+      // 카드(둥근 모서리 · 그림자 · 테두리 · 접이식)는 걷어내지 않음. 폰에서는 카드도 화면 폭을 다 차지하므로 폭만으로 판단하면 안 됨(2026-11-23 폰 화면 글자 사라짐 원인)
+      var s=getComputedStyle(el);
+      if(/^(DETAILS|SECTION|ARTICLE|A)$/i.test(el.tagName)||parseFloat(s.borderTopLeftRadius)>0||s.boxShadow!=="none"||parseFloat(s.borderTopWidth)>0||parseFloat(s.borderLeftWidth)>0)return;
+      if(el.offsetWidth>=vw*0.9&&el.offsetHeight>=dh*0.6)el.classList.add("sk-x");});
+    // 2) 바탕 위에 바로 놓인 것 처리
+    var memo=new WeakMap();
+    function onDark(el){// 가장 가까운 불투명 배경이 없으면 진한 바탕 위
+      var p=el,chain=[];while(p&&p!==B&&p.nodeType===1){if(memo.has(p)){var r=memo.get(p);chain.forEach(function(x){memo.set(x,r);});return r;}
+        chain.push(p);var cs=getComputedStyle(p);
+        if(!p.classList.contains("sk-x")){var c=col(cs.backgroundColor);if(c[3]>0.5||cs.backgroundImage!=="none"||p.classList.contains("sk-w")){chain.forEach(function(x){memo.set(x,false);});return false;}}
+        p=p.parentElement;}
+      chain.forEach(function(x){memo.set(x,true);});return true;}
+    var all=B.getElementsByTagName("*");
+    for(var i=0;i<all.length;i++){var el=all[i],tg=el.tagName;
+      if(/^(SCRIPT|STYLE|BR|OPTION)$/i.test(tg)||el.closest(".fxnav")||el.closest("svg"))continue;
+      if(/^(TABLE|CANVAS)$/i.test(tg)||tg==="svg"){if(!el.classList.contains("sk-w")&&el.offsetWidth>120&&onDark(el)){el.classList.add("sk-w");memo.set(el,false);}continue;}
+      var cs=null,c=solid(el);
+      if(c&&lum(c)>0.9&&el.offsetWidth>=180&&el.offsetHeight>=40&&!el.classList.contains("sk-c")&&!el.classList.contains("sk-x")&&!el.closest("table")&&el.parentElement&&onDark(el.parentElement)){el.classList.add("sk-c");if(el.offsetHeight<420)el.classList.add("sk-h");if(lum(c)>0.985)el.classList.add("sk-f");}
+      var hasText=false;for(var n=el.firstChild;n;n=n.nextSibling)if(n.nodeType===3&&n.nodeValue.trim()){hasText=true;break;}
+      if(!hasText&&!/^(HR)$/i.test(tg))continue;
+      if(SK.test(el.className&&el.className.baseVal===undefined?el.className:""))continue;
+      if(!onDark(el))continue;
+      cs=getComputedStyle(el);var t=col(cs.color);
+      if(hasText&&lum(t)<0.62){var mx=Math.max(t[0],t[1],t[2]),mn=Math.min(t[0],t[1],t[2]),k="sk-t";
+        if(mx-mn>70){k=t[0]===mx?(t[1]>t[0]*0.72?"sk-m":"sk-r"):t[1]===mx?"sk-g":"sk-b";}else if(lum(t)>0.3)k="sk-m";
+        el.classList.add(k);}
+      if(parseFloat(cs.borderBottomWidth)>0||parseFloat(cs.borderTopWidth)>0||tg==="HR")el.classList.add("sk-l");}
+      // 다른 카드를 품은 상자는 떠오르지 않게(겹쳐서 두 번 뜨는 것 방지)
+    [].forEach.call(B.querySelectorAll(".sk-h"),function(e){if(e.querySelector(".sk-c"))e.classList.remove("sk-h");});
+  }
+  var tm=null;function later(){clearTimeout(tm);tm=setTimeout(run,80);}
+  if(D.readyState==="loading")D.addEventListener("DOMContentLoaded",run);else run();
+  D.addEventListener("toggle",later,true);addEventListener("load",function(){run();new MutationObserver(later).observe(D.body,{childList:true,subtree:true});});
+})();</script><script src="https://cj323600-maker.github.io/the-other-dashboard/track/track.js" defer></script><!--/SKIN--></head><body><div class="wrap">
+<div class="hd"><div><h1>접속 기록</h1><div class="sub" id="sub">포털과 보고서 링크로 들어온 기록 · 같은 기기 · 같은 화면은 30분에 한 번만 기록 · IP는 앞자리만 남김</div></div><span class="conf">[대외비]</span></div>
+<div id="box"><div class="wait">불러오는 중</div></div>
+</div>
+<script src="../track/track.js"></script>
+<script>
+(function(){
+var EP=window.KAA_TRACK_EP||"",box=document.getElementById("box");
+function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+if(!EP){box.innerHTML='<div class="wait"><b>설치 대기</b> · 기록을 받을 구글 시트가 아직 연결되지 않았습니다. 연결되면 포털 · 일간보고 · 주간보고 · 월간보고 · 분석 화면에 들어온 기록이 이 화면에 쌓입니다.</div>';return;}
+var R=[],H=[],F="all";
+function day(s){return s.slice(0,10);}
+function draw(){
+  var today=new Date(Date.now()+9*3600e3).toISOString().slice(0,10),d7=new Date(Date.now()+9*3600e3-6*864e5).toISOString().slice(0,10);
+  var T=R.filter(function(r){return day(r[0])===today;}),W=R.filter(function(r){return day(r[0])>=d7;});
+  var uniq=function(a){var s={};a.forEach(function(r){s[r[12]]=1;});return Object.keys(s).length;};
+  var direct=W.filter(function(r){return r[2]==="직접 링크";}).length;
+  var h='<div class="kp">'+
+   '<div class="k"><div class="l">오늘 접속</div><div class="v">'+T.length.toLocaleString()+'<small>건</small></div><div class="d">기기 '+uniq(T)+'대</div></div>'+
+   '<div class="k"><div class="l">최근 7일 접속</div><div class="v">'+W.length.toLocaleString()+'<small>건</small></div><div class="d">기기 '+uniq(W)+'대</div></div>'+
+   '<div class="k"><div class="l">최근 7일 공유 링크로 직접 들어옴</div><div class="v">'+direct.toLocaleString()+'<small>건</small></div><div class="d">전체 '+W.length.toLocaleString()+'건 중</div></div>'+
+   '<div class="k"><div class="l">쌓인 기록</div><div class="v">'+(window.__tot||R.length).toLocaleString()+'<small>건</small></div><div class="d">이 화면은 최근 '+R.length.toLocaleString()+'건 표시</div></div></div>';
+  // 화면별 · 사람(기기)별 최근 7일
+  var by=function(a,f){var m={};a.forEach(function(r){var k=f(r);m[k]=(m[k]||0)+1;});return Object.keys(m).map(function(k){return[k,m[k]];}).sort(function(x,y){return y[1]-x[1];});};
+  var pg=by(W,function(r){return r[3];}),mx=pg.length?pg[0][1]:1;
+  h+='<div class="card"><h2>화면별 접속<small>최근 7일 · 단위 건</small></h2><div class="tw"><table><thead><tr><th>화면</th><th class="n">접속 (건)</th><th class="n">기기 (대)</th></tr></thead><tbody>'+
+   pg.map(function(p){var a=W.filter(function(r){return r[3]===p[0];});return'<tr><td><span class="bar" style="width:'+Math.max(4,p[1]/mx*120)+'px"></span>'+esc(p[0])+'</td><td class="n">'+p[1]+'</td><td class="n">'+uniq(a)+'</td></tr>';}).join('')+'</tbody></table></div></div>';
+  var dv=by(W,function(r){return r[12];});
+  h+='<div class="card"><h2>기기별 접속<small>최근 7일 · 기기 번호는 기기마다 무작위로 정한 번호</small></h2><div class="tw"><table><thead><tr><th>기기 번호</th><th>이름</th><th>국가 · 도시 · 통신사</th><th>기기 · 브라우저</th><th class="n">접속 (건)</th><th>마지막 접속</th></tr></thead><tbody>'+
+   dv.map(function(p){var a=W.filter(function(r){return r[12]===p[0];}),l=a[0];return'<tr><td>'+esc(p[0])+'</td><td>'+esc(l[1]||'-')+'</td><td>'+esc([l[5],l[7],l[8]].filter(Boolean).join(' · '))+'</td><td>'+esc(l[9]+' · '+l[10])+'</td><td class="n">'+p[1]+'</td><td>'+esc(l[0].slice(5,16))+'</td></tr>';}).join('')+'</tbody></table></div></div>';
+  var kinds=["all","직접 링크","포털 안에서 열람","포털에서 새 창"],rows=F==="all"?R:R.filter(function(r){return r[2]===F;});
+  h+='<div class="card"><h2>최근 접속 기록<small>최근 '+Math.min(rows.length,300)+'건</small></h2><div class="flt">'+kinds.map(function(k){return'<button type="button" data-k="'+k+'" aria-pressed="'+(F===k)+'">'+(k==="all"?"전체":k)+'</button>';}).join('')+'</div>'+
+   '<div class="tw"><table class="log"><thead><tr><th>접속 시각</th><th>이름</th><th>열람 방식</th><th>화면</th><th>IP(앞자리만)</th><th>국가 · 지역 · 도시</th><th>통신사</th><th>기기 · 브라우저</th><th>화면 크기</th><th>기기 번호</th></tr></thead><tbody>'+
+   rows.slice(0,300).map(function(r){return'<tr><td class="t">'+esc(r[0])+'</td><td data-l="이름">'+esc(r[1]||'-')+'</td><td data-l="열람 방식"><span class="tag">'+esc(r[2])+'</span></td><td data-l="화면">'+esc(r[3])+'</td><td data-l="IP">'+esc(r[4])+'</td><td data-l="위치">'+esc([r[5],r[6],r[7]].filter(Boolean).join(' · '))+'</td><td data-l="통신사">'+esc(r[8])+'</td><td data-l="기기">'+esc(r[9]+' · '+r[10])+'</td><td data-l="화면 크기">'+esc(r[11])+'</td><td data-l="기기 번호">'+esc(r[12])+'</td></tr>';}).join('')+'</tbody></table></div></div>';
+  box.innerHTML=h;
+  [].forEach.call(box.querySelectorAll('.flt button'),function(b){b.onclick=function(){F=b.getAttribute('data-k');draw();};});
+}
+function load(){fetch(EP+"?n=2000&t="+Date.now()).then(function(r){return r.json();}).then(function(j){R=j.rows||[];H=j.head||[];window.__tot=j.total;
+  document.getElementById("sub").textContent="포털과 보고서 링크로 들어온 기록 · 같은 기기 · 같은 화면은 30분에 한 번만 기록 · IP는 앞자리만 남김 · 마지막 확인 "+new Date().toTimeString().slice(0,5);draw();})
+ .catch(function(){box.innerHTML='<div class="wait">기록을 불러오지 못했습니다. 잠시 뒤 다시 열어 주세요.</div>';});}
+load();setInterval(load,5*60*1000);
+})();
+</script></body></html>
