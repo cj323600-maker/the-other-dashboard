@@ -305,7 +305,7 @@ function renderHome(){
     html+='<a class="mod" href="#'+m.key+'" style="--c:'+m.c+'"><div class="ic">'+ico(m.ic)+'</div><div><h4>'+esc(m.name)+'</h4><div class="upd'+(fresh(m)?" fresh":"")+'">'+(v&&v.lm?"업데이트 "+esc(ago(v.lm)):"")+'</div></div>'
       +'<div><div class="lt">'+(v?esc(brief(m,v.sub)||v.title):'<span class="skl" style="width:75%" aria-label="불러오는 중"></span>')+'</div></div><div class="ft">열기 →<span>'+(m.noList?"열 때마다 자동 대조":"지난 보고서 "+(list?list.length:"-")+"건")+'</span></div></a>';});
   html+='</div>'+(ERR?'<div class="panel err" style="margin-top:16px">지난 보고서 목록: '+esc(ERR)+'</div>':'')
-    +'<div class="foot">코오롱오토옥션 전략기획팀 · 최신본은 각 보고서 저장소 업데이트 시 자동 반영 · 지난 보고서는 메뉴별 보관 폴더에 날짜_제목.html 형식으로 보관'+(window.KAA_TRACK_EP?' · 포털과 보고서는 접속 기록(시각 · 기기 · 지역 · IP 앞자리)을 남깁니다':'')+'</div></div>';
+    +'<div class="foot">코오롱오토옥션 전략기획팀 · 최신본은 각 보고서 저장소 업데이트 시 자동 반영 · 지난 보고서는 메뉴별 보관 폴더에 날짜_제목.html 형식으로 보관'+(window.KAA_TRACK_EP?' · 포털과 보고서는 접속 기록(시각 · 기기 · 지역 · IP)을 남깁니다':'')+'</div></div>';
   document.getElementById("view").innerHTML=html;
   var s_=document.getElementById('nms');if(s_){s_.onclick=function(){var v=(document.getElementById('nmi').value||'').trim();if(!v)return;try{localStorage.setItem('kaa_name',v);}catch(e){}renderHome();};document.getElementById('nmk').onclick=function(){try{localStorage.setItem('kaa_name_skip','1');}catch(e){}renderHome();};}
 }

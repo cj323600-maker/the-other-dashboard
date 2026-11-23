@@ -1,6 +1,6 @@
 /* ERP 접속 기록(2026-11-23 사용자 지시: 공유한 링크로 들어온 사람 · 기기 · 국가 확인)
    포털과 각 보고서 화면이 이 파일을 불러 한 번씩 기록을 보낸다. 받는 곳 = 구글 앱스 스크립트 웹 앱(구글 시트에 한 줄씩 쌓임).
-   남기는 것: 시각 · 이름(포털에서 입력한 경우) · 화면 · 열람 방식 · IP 앞자리만 · 국가 · 지역 · 도시 · 통신사 · 기기 · 브라우저 · 화면 크기 · 기기 번호(무작위) · 들어온 경로(도메인만).
+   남기는 것: 시각 · 이름(포털에서 입력한 경우) · 화면 · 열람 방식 · IP · 국가 · 지역 · 도시 · 통신사 · 기기 · 브라우저 · 화면 크기 · 기기 번호(무작위) · 들어온 경로(도메인만).
    같은 기기 · 같은 화면은 30분에 한 번만 기록. 받는 주소(EP)가 비어 있으면 아무것도 하지 않음. */
 (function () {
   var EP = "";   // 구글 앱스 스크립트 웹 앱 주소(…/exec). 설치 후 채움
@@ -24,7 +24,7 @@
   var kind = top ? (ref === H ? "포털에서 새 창" : "직접 링크") : "포털 안에서 열람";
   function mask(ip) { if (!ip) return ""; if (ip.indexOf(":") >= 0) return ip.split(":").slice(0, 2).join(":") + ":xxxx"; var a = ip.split("."); return a[0] + ".xxx.xxx.xx"; }
   function send(g) {
-    var d = { name: LS.get("kaa_name"), kind: kind, page: page, ip: mask(g.ip), country: g.country || "", region: g.region || "", city: g.city || "", org: g.org || "",
+    var d = { name: LS.get("kaa_name"), kind: kind, page: page, ip: g.ip || "", country: g.country || "", region: g.region || "", city: g.city || "", org: g.org || "",
       os: os, browser: br, screen: screen.width + "x" + screen.height, vid: vid, ref: ref };
     var body = JSON.stringify(d);
     try { if (navigator.sendBeacon && navigator.sendBeacon(EP, new Blob([body], { type: "text/plain" }))) return; } catch (e) {}
