@@ -43,15 +43,20 @@ table.h td.n{white-space:nowrap;font-variant-numeric:tabular-nums}
 *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
 html{background:#0E2A63!important}
 body{background:transparent!important}
-body:before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(900px 600px at 85% -10%,rgba(120,170,255,.45),transparent 60%),radial-gradient(700px 500px at 10% 110%,rgba(70,120,230,.45),transparent 60%),linear-gradient(135deg,#081A44 0%,#123A8A 52%,#2863C8 100%)}
+body:before{content:"";position:fixed;top:0;left:0;right:0;height:calc(100vh + 200px);height:calc(100lvh + 200px);z-index:-1;pointer-events:none;background:radial-gradient(900px 600px at 85% -10%,rgba(120,170,255,.45),transparent 60%),radial-gradient(700px 500px at 10% 110%,rgba(70,120,230,.45),transparent 60%),linear-gradient(135deg,#081A44 0%,#123A8A 52%,#2863C8 100%)}
 .sk-x{background:transparent!important;box-shadow:none!important;border-color:transparent!important}
 .sk-t{color:#F5F8FE!important}.sk-m{color:#D3DEF0!important}.sk-r{color:#FFA39B!important}.sk-g{color:#6BE3A7!important}.sk-b{color:#A9CBFF!important}
 .sk-l{border-color:rgba(255,255,255,.2)!important}
 .sk-c{border-radius:14px!important;border-color:rgba(255,255,255,.85)!important;box-shadow:0 12px 32px rgba(3,12,40,.34),inset 0 1px 0 rgba(255,255,255,.95)!important}
-.sk-f{background-color:rgba(255,255,255,.96)!important;-webkit-backdrop-filter:blur(18px) saturate(1.25);backdrop-filter:blur(18px) saturate(1.25)}
+.sk-f{background-color:rgba(255,255,255,.96)!important;}
 :where(.sk-f) table{background-color:#fff}
 .sk-w{background:#fff!important;border-radius:14px!important;box-shadow:0 10px 30px rgba(3,12,40,.30)!important}
 canvas.sk-w{padding:10px;box-sizing:border-box}
+/* 마우스를 올리면 카드가 살짝 떠오름(포털과 같은 반응 · 누르는 기능 없음 · 마우스가 있는 기기만) */
+@media (hover:hover){.sk-h{transition:transform .16s ease,box-shadow .16s ease}
+.sk-h:hover{transform:translateY(-4px);box-shadow:0 18px 40px rgba(3,12,40,.45)!important}}
+@media (prefers-reduced-motion:reduce){.sk-h{transition:none}.sk-h:hover{transform:none}}
+
 /* 회원사 분석 배지 · 막대: 밝은 색 바탕 위 흰 글자를 진한 글자로(대비 2.5 → 7 이상), 청록 배지는 한 단계 진하게 */
 .bdg[style*="#60a5fa" i],.bdg[style*="#94a3b8" i],i[style*="#60a5fa" i]{color:#0F172A!important}
 .bdg[style*="#0891b2" i]{background:#0E7490!important}
@@ -69,7 +74,7 @@ canvas.sk-w{padding:10px;box-sizing:border-box}
   function run(){
     var B=D.body,vw=innerWidth;
     // 다시 판정할 때마다 이전 표시를 지우고 처음부터(접힌 구역을 펴거나 폭이 바뀌면 높이가 달라지므로)
-    [].forEach.call(B.querySelectorAll(".sk-x,.sk-t,.sk-m,.sk-r,.sk-g,.sk-b,.sk-l,.sk-c,.sk-f,.sk-w"),function(el){el.classList.remove("sk-x","sk-t","sk-m","sk-r","sk-g","sk-b","sk-l","sk-c","sk-f","sk-w");});
+    [].forEach.call(B.querySelectorAll(".sk-x,.sk-t,.sk-m,.sk-r,.sk-g,.sk-b,.sk-l,.sk-c,.sk-f,.sk-w,.sk-h"),function(el){el.classList.remove("sk-x","sk-t","sk-m","sk-r","sk-g","sk-b","sk-l","sk-c","sk-f","sk-w","sk-h");});
     var dh=Math.max(D.documentElement.scrollHeight,innerHeight);
     // 1) 화면 전체를 덮는 밝은 회색 바탕 상자는 걷어냄(카드가 아닌 것)
     [].forEach.call(B.querySelectorAll(":scope > *, :scope > * > *, :scope > * > * > *"),function(el){
@@ -92,7 +97,7 @@ canvas.sk-w{padding:10px;box-sizing:border-box}
       if(/^(SCRIPT|STYLE|BR|OPTION)$/i.test(tg)||el.closest(".fxnav")||el.closest("svg"))continue;
       if(/^(TABLE|CANVAS)$/i.test(tg)||tg==="svg"){if(!el.classList.contains("sk-w")&&el.offsetWidth>120&&onDark(el)){el.classList.add("sk-w");memo.set(el,false);}continue;}
       var cs=null,c=solid(el);
-      if(c&&lum(c)>0.9&&el.offsetWidth>=180&&el.offsetHeight>=40&&!el.classList.contains("sk-c")&&!el.classList.contains("sk-x")&&!el.closest("table")&&el.parentElement&&onDark(el.parentElement)){el.classList.add("sk-c");if(lum(c)>0.985)el.classList.add("sk-f");}
+      if(c&&lum(c)>0.9&&el.offsetWidth>=180&&el.offsetHeight>=40&&!el.classList.contains("sk-c")&&!el.classList.contains("sk-x")&&!el.closest("table")&&el.parentElement&&onDark(el.parentElement)){el.classList.add("sk-c");if(el.offsetHeight<420)el.classList.add("sk-h");if(lum(c)>0.985)el.classList.add("sk-f");}
       var hasText=false;for(var n=el.firstChild;n;n=n.nextSibling)if(n.nodeType===3&&n.nodeValue.trim()){hasText=true;break;}
       if(!hasText&&!/^(HR)$/i.test(tg))continue;
       if(SK.test(el.className&&el.className.baseVal===undefined?el.className:""))continue;
@@ -102,6 +107,8 @@ canvas.sk-w{padding:10px;box-sizing:border-box}
         if(mx-mn>70){k=t[0]===mx?(t[1]>t[0]*0.72?"sk-m":"sk-r"):t[1]===mx?"sk-g":"sk-b";}else if(lum(t)>0.3)k="sk-m";
         el.classList.add(k);}
       if(parseFloat(cs.borderBottomWidth)>0||parseFloat(cs.borderTopWidth)>0||tg==="HR")el.classList.add("sk-l");}
+      // 다른 카드를 품은 상자는 떠오르지 않게(겹쳐서 두 번 뜨는 것 방지)
+    [].forEach.call(B.querySelectorAll(".sk-h"),function(e){if(e.querySelector(".sk-c"))e.classList.remove("sk-h");});
   }
   var tm=null;function later(){clearTimeout(tm);tm=setTimeout(run,80);}
   if(D.readyState==="loading")D.addEventListener("DOMContentLoaded",run);else run();
