@@ -144,6 +144,27 @@ color:var(--ink);background:rgba(255,255,255,.88);border-color:rgba(255,255,255,
 </style>
 </head>
 <body>
+<!--INTRO--><style>
+#intro{position:fixed;inset:0;z-index:9999;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:0 16px;text-align:center;transition:opacity .55s ease,visibility .55s}
+#intro.out{opacity:0;visibility:hidden}
+#intro .i1{font:500 clamp(10px,1.5vw,14px)/1 Pretendard,system-ui,sans-serif;letter-spacing:.55em;color:#5B6876;opacity:0;animation:inA .7s .1s ease forwards;padding-left:.55em}
+#intro .i2{font:800 clamp(26px,5.4vw,52px)/1.15 Pretendard,system-ui,sans-serif;color:#141B24;letter-spacing:-.01em;word-break:keep-all}
+#intro .i2 span{display:inline-block;opacity:0;transform:translateY(8px);animation:inB .5s ease forwards;white-space:pre}
+#intro .i3{font:500 clamp(11px,1.4vw,13px)/1 Pretendard,system-ui,sans-serif;color:#8A94A0;opacity:0;animation:inA .6s 1.2s ease forwards}
+@keyframes inA{to{opacity:1}}@keyframes inB{to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){#intro{display:none}}
+@media print{#intro{display:none}}
+</style>
+<div id="intro" aria-hidden="true"><div class="i1">KOLON AUTO AUCTION</div><div class="i2" id="introT"></div><div class="i3">전략기획팀</div></div>
+<script>(function(){var el=document.getElementById("intro");if(!el)return;
+  var seen=false;try{seen=sessionStorage.getItem("kaa_intro")==="1";}catch(e){}
+  if(seen||(window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches)){el.parentNode.removeChild(el);return;}
+  try{sessionStorage.setItem("kaa_intro","1");}catch(e){}
+  var T="2026 전략기획 ERP",h=document.getElementById("introT");
+  T.split("").forEach(function(ch,i){var s=document.createElement("span");s.textContent=ch;s.style.animationDelay=(0.35+i*0.055)+"s";h.appendChild(s);});
+  var done=false;function close(){if(done)return;done=true;el.classList.add("out");setTimeout(function(){if(el.parentNode)el.parentNode.removeChild(el);},650);}
+  setTimeout(close,2300);el.addEventListener("click",close);document.addEventListener("keydown",close,{once:true});
+})();</script><!--/INTRO-->
 <aside class="side" id="side">
   <div class="brand"><div class="mark">K</div><div><b>전략기획 ERP</b><small>코오롱오토옥션 전략기획팀</small></div></div>
   <nav class="nav" id="nav"></nav>
