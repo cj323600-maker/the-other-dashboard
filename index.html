@@ -121,7 +121,7 @@ body:before{content:"";position:fixed;top:0;left:0;right:0;height:calc(100vh + 2
 .pn{display:block;border-radius:14px;padding:20px 22px;min-width:0;transition:transform .12s,box-shadow .12s,background-color .12s}
 .pn h4{margin:0;font-size:16px;font-weight:800}.pn .ps{font-size:12.5px;color:var(--mut);margin-top:4px;line-height:1.5}
 .bars{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin-top:16px}
-.bc{min-width:0;text-align:center}.bw{position:relative;height:150px}
+.bc{min-width:0;text-align:center;display:flex;flex-direction:column}.duo>.pn.rb{display:flex;flex-direction:column}.rb .bars{flex:1}.bw{position:relative;flex:1;min-height:170px}
 .b1,.b2{position:absolute;bottom:0}.b1{left:8%;right:8%;border-radius:8px 8px 3px 3px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.24)}
 .b2{left:24%;right:24%;border-radius:6px 6px 2px 2px;background:linear-gradient(180deg,#8DBBFF,#3D82F0)}
 .bc.cur .b1{background:rgba(255,255,255,.24);border-color:rgba(255,255,255,.5)}
@@ -130,9 +130,9 @@ body:before{content:"";position:fixed;top:0;left:0;right:0;height:calc(100vh + 2
 .lg{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:11.5px;color:var(--mut);margin-top:12px}.lg i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
 .sm .l1{font-size:15.5px;font-weight:800;line-height:1.5;margin-top:12px}.sm .l2{font-size:13.5px;line-height:1.6;margin-top:9px;padding-top:9px;border-top:1px solid var(--line)}
 .sm .tg{display:inline-block;font-size:11.5px;font-weight:800;border-radius:99px;padding:1px 9px;margin-right:6px}.sm .tg.ok{background:var(--okbg)}.sm .tg.bad{background:var(--badbg)}.sm .tg.nt{background:rgba(255,255,255,.14);color:var(--ink)}
-.sm .go{font-size:13px;font-weight:700;color:var(--c-daily);margin-top:12px}
+.sm .go{font-size:13px;font-weight:700;color:var(--c-daily);margin-top:12px}.wk .c1{border-top:0;padding-top:0;margin-top:10px}.wt{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px;font-variant-numeric:tabular-nums}.wt th{font-size:12px;font-weight:800;text-align:right;padding:6px 4px;border-bottom:1.5px solid var(--line);vertical-align:bottom;line-height:1.3}.wt th small{display:block;font-size:10.5px;font-weight:600;color:var(--mut)}.wt th:first-child,.wt td:first-child{text-align:left}.wt td{text-align:right;padding:7px 4px;border-bottom:1px solid var(--line);line-height:1.35;color:var(--mut)}.wt td:first-child{font-weight:700;color:var(--ink);word-break:keep-all}.wt td b{color:var(--ink)}.wt td i{display:block;font-style:normal;font-weight:800}.wn{font-size:11.5px;color:var(--mut);margin-top:7px}.wt .ok{color:var(--ok)}.wt .bad{color:var(--bad)}.wt td span{white-space:nowrap}.wt tr.tn{display:none}@media (max-width:420px){.wt th:first-child,.wt tr:not(.tn) td:first-child{display:none}.wt tr.tn{display:table-row}.wt tr.tn td{text-align:left;color:var(--ink);font-weight:800;border-bottom:0;padding:8px 2px 0}.wt tr.tn+tr td{padding-top:2px}.wt tr.tn.tt td{border-top:1.5px solid var(--line)}.wt{font-size:11.5px}.wt th{font-size:11px;padding:5px 2px}.wt th small{font-size:9.5px}.wt td{padding:6px 2px}}.wt tr.tt td{border-top:1.5px solid var(--line);border-bottom:0;background:var(--soft);font-weight:800}
 @media (max-width:1024px){.duo{grid-template-columns:1fr}.mx3 .mxr{grid-template-columns:1fr}}
-@media (max-width:760px){.pn{padding:16px 14px}.bars{gap:6px}.bw{height:130px}.bv{font-size:11px}.duo{gap:12px}}
+@media (max-width:760px){.pn{padding:16px 14px}.bars{gap:6px}.bw{min-height:150px}.bv{font-size:11px}.duo{gap:12px}}
 /* 2026-11-23: 영상과 같은 밝은 반투명 카드(진한 파란 바탕 위, 카드 안 글자는 진한 색으로 숫자 대비를 높임). 제목 띠(hero)와 왼쪽 메뉴는 그대로 */
 .kpi,.mod,.panel,.pn{--ink:#111A26;--mut:#4A5870;--line:#D7DFEB;--blue:#1F5FBF;--soft:#EDF2F9;--ok:#16713F;--okbg:#DDF2E5;--bad:#B3261E;--badbg:#FBE4E1;
 --c-daily:#1F5FBF;--c-weekly:#1E7B47;--c-monthly:#6B3FA0;--c-member:#C8641F;--c-trend:#2F5D8A;--c-market:#0E7C86;--c-kmarket:#8A5A00;--c-matching:#B3423A;--c-check:#4B5563;
@@ -295,11 +295,15 @@ var NAVCUR="home";function renderNav(cur){NAVCUR=cur;
 // 2026-11-22: 홈 "최근 5개 회차 출품 · 낙찰 실적"(출품 및 낙찰 추이 게시본의 회차 값)과 "일간보고 총평"(일보 .summ의 l1 · l2 · 경매 영향 줄)
 var RND=null,SUMM=null,MACRO=null,WSUM=null;
 // 2026-11-24 사용자 지시: 일간보고는 위에 있으니 홈 총평은 주간보고 총평으로. 주보 .hl(.hlh 제목 줄 · .sl 항목: span.tp 꼬리표 good/bad/mid + 내용) 중 앞 3개 항목
-function readWeek(doc){var h=doc.querySelector(".hl");if(!h)return null;var hd=h.querySelector(".hlh"),sb=doc.querySelector(".topbar .sub");
-  var o={wk:sb?((sb.textContent.match(/(\d+월\s*\d+주차)/)||[])[1]||"").replace(/\s+/g," "):"",hd:hd?txt(hd):"",rows:[]};
-  [].forEach.call(h.querySelectorAll(".sl"),function(s){var tp=s.querySelector(".tp"),sp=s.querySelectorAll("span")[1];if(!tp||!sp)return;
-    o.rows.push({k:txt(tp),c:/\bgood\b/.test(tp.className)?"ok":(/\bbad\b/.test(tp.className)?"bad":"nt"),t:txt(sp)});});
-  return o.hd?o:null;}
+function readWeek(doc){var sb=doc.querySelector(".topbar .sub"),o={wk:sb?((sb.textContent.match(/(\d+월\s*\d+주차)/)||[])[1]||"").replace(/\s+/g," "):"",con:"",rows:[]};
+  [].forEach.call(doc.querySelectorAll(".hl .sl"),function(s){var tp=s.querySelector(".tp"),sp=s.querySelectorAll("span")[1];if(tp&&sp&&txt(tp)==="결론")o.con=txt(sp);});
+  var tb=[].filter.call(doc.querySelectorAll("table"),function(x){var th=x.querySelector("thead th");return th&&txt(th)==="팀"&&/출품대수/.test(txt(x.querySelector("thead")))&&/주 목표/.test(txt(x.querySelector("thead")))&&/W\d/.test(txt(x.querySelector("thead")));})[0];
+  if(!tb)return null;
+  [].forEach.call(tb.querySelectorAll("tbody tr"),function(tr){var td=tr.querySelectorAll("td");if(/etc/.test(tr.className)){var m=txt(tr).match(/주 출품 목표\s*([\d,]+)대\s*·\s*낙찰 목표\s*([\d,]+)대/);if(m)o.etc=m;return;}if(td.length<9)return;var k=td[0].cloneNode(true);[].forEach.call(k.querySelectorAll(".tp,small"),function(z){z.remove();});var nm=txt(k);
+    if(/^전사/.test(nm)||txt(td[1])==="–")return;
+    var nn=function(s){return +s.replace(/[^\d.]/g,"");},pr=function(x,y,f){x=nn(x);y=nn(y);return y?(Math.floor(x/y*1000+0.5)/10).toFixed(1)+"%":f;};// 달성률은 주보 상단 칩 · 결론과 같게 소수 첫째 자리로 다시 계산
+    o.rows.push({t:nm,tot:/tot/.test(tr.className),e:txt(td[1]),et:txt(td[2]),er:pr(txt(td[1]),txt(td[2]),txt(td[3])),w:txt(td[4]),wt:txt(td[5]),wr:pr(txt(td[4]),txt(td[5]),txt(td[6])),r:txt(td[7]),rt:txt(td[8])});});
+  return o.rows.length?o:null;}
 // 2026-11-24 사용자 지시("오른쪽에 국제 동향 그래프"): 일보 환율 · 금리 · 유가 · 수출 블록(details.mxd 안 .mxs)의 1년 꺾은선 선만 작게 옮겨 그림. 값 = 꺾은선 마지막 점, 비교 = 그래프 제목의 전년 대비
 function readMacro(doc){var o=[];
   [].forEach.call(doc.querySelectorAll("details.mxd .mxs"),function(g){var l=g.querySelector(".mxl"),pth=g.querySelector("svg path"),tl=g.querySelectorAll("svg circle title");if(!l||!pth||!tl.length)return;
@@ -316,16 +320,19 @@ function readSumm(doc){var s=doc.querySelector(".summ");if(!s)return null;var o=
   return o.length?o:null;}
 function num(n){return n.toLocaleString("ko-KR");}
 function duo(){
-  var h='<div class="duo"><a class="pn" href="#trend"><h4>최근 5개 회차 출품 · 낙찰 실적</h4>';
+  var h='<div class="duo"><a class="pn rb" href="#trend"><h4>최근 5개 회차 출품 · 낙찰 실적</h4>';
   if(RND){var mx=Math.max.apply(null,RND.map(function(r){return r.n;}))*1.16;
     h+='<div class="ps">'+RND[0].d+' ~ '+RND[4].d+' 경매 · 출품 및 낙찰 추이 기준(낙찰취소 반영) · 단위 대</div><div class="bars">';
     RND.forEach(function(r,i){var a=(r.n/mx*100).toFixed(1),b=(r.w/mx*100).toFixed(1);
       h+='<div class="bc'+(i===4?" cur":"")+'"><div class="bw"><div class="b1" style="height:'+a+'%"></div><div class="b2" style="height:'+b+'%"></div><span class="bv" style="bottom:calc('+a+'% + 4px)">'+num(r.n)+'</span><span class="bv w" style="bottom:calc('+b+'% + 4px)">'+num(r.w)+'</span></div><div class="bd">'+r.d+'</div><div class="br">'+(r.w/r.n*100).toFixed(1)+'%</div></div>';});
     h+='</div><div class="lg"><span><i style="background:#C9D9F2"></i>출품대수(대)</span><span><i style="background:#5C9BFA"></i>낙찰대수(대)</span><span>날짜 아래 숫자는 낙찰률(%)</span></div>';}
   else h+='<div class="skl" style="width:60%;margin-top:12px" aria-label="불러오는 중"></div><div class="skl big" style="width:100%;height:120px"></div>';
-  h+='</a><a class="pn sm" href="#weekly"><h4>주간보고 총평'+(WSUM&&WSUM.wk&&WSUM.hd.indexOf(WSUM.wk)<0?' · '+esc(WSUM.wk):'')+'</h4>';
-  if(WSUM){h+='<div class="l1">'+esc(WSUM.hd)+'</div>';WSUM.rows.slice(0,3).forEach(function(r){h+='<div class="l2"><span class="tg '+r.c+'">'+esc(r.k)+'</span>'+esc(r.t)+'</div>';});
-    h+='<div class="go">항목 전체는 주간보고에서 확인 →</div>';}
+  h+='</a><a class="pn sm wk" href="#weekly"><h4>'+(WSUM&&WSUM.wk?esc(WSUM.wk)+' ':'')+'팀별 실적 · 주 목표 대비</h4>';
+  if(WSUM){var pc=function(v){return parseFloat(v)>=100?"ok":"bad";};
+    if(WSUM.con)h+='<div class="l2 c1"><span class="tg bad">결론</span>'+esc(WSUM.con)+'</div>';
+    h+='<table class="wt"><thead><tr><th>팀</th><th>출품대수 (대)<small>실적 / 주 목표 · 달성률</small></th><th>낙찰대수 (대)<small>실적 / 주 목표 · 달성률</small></th><th>낙찰률 (%)<small>실적 / 목표</small></th></tr></thead><tbody>';
+    WSUM.rows.forEach(function(r){h+='<tr class="tn'+(r.tot?' tt':'')+'"><td colspan="3">'+esc(r.t)+'</td></tr><tr'+(r.tot?' class="tt"':'')+'><td>'+esc(r.t)+'</td><td><span><b>'+esc(r.e)+'</b> / '+esc(r.et)+'</span><i class="'+pc(r.er)+'">'+esc(r.er)+'</i></td><td><span><b>'+esc(r.w)+'</b> / '+esc(r.wt)+'</span><i class="'+pc(r.wr)+'">'+esc(r.wr)+'</i></td><td><span><b class="'+(parseFloat(r.r)>=parseFloat(r.rt)?"ok":"bad")+'">'+esc(r.r)+'</b> / '+esc(r.rt)+'</span></td></tr>';});
+    h+='</tbody></table>'+(WSUM.etc?'<div class="wn">경매 합계 주 목표에는 팀에 나누지 않은 출품 '+WSUM.etc[1]+'대 · 낙찰 '+WSUM.etc[2]+'대가 들어 있음</div>':'')+'<div class="go">주간보고 전체 보기 →</div>';}
   else h+='<div class="skl" style="width:80%;margin-top:14px" aria-label="불러오는 중"></div><div class="skl" style="width:95%"></div><div class="skl" style="width:70%"></div>';
   h+='</a><a class="pn sm mx3" href="#daily"><h4>국제 동향</h4>';
   if(MACRO){h+='<div class="ps">일간보고 기준 · 꺾은선은 최근 1년(월별 지표는 2년) · 오른쪽은 지금 값과 전년 대비</div><div class="mxr">';
