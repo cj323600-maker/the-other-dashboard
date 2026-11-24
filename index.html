@@ -112,7 +112,12 @@ body:before{content:"";position:fixed;top:0;left:0;right:0;height:calc(100vh + 2
 .cban.bad{background:rgba(255,92,80,.22);border-color:rgba(255,150,140,.55);color:#FFE1DD}.cban.ok{background:rgba(46,196,125,.18);border-color:rgba(107,227,167,.45);color:#D3F8E4}.cban.run{background:rgba(255,255,255,.08);color:var(--mut)}
 @media (max-width:1024px){.side{background:rgba(7,20,52,.96)}}
 /* 최근 5개 회차 막대 · 일간보고 총평 상자 */
-.duo{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(0,1fr);gap:18px;margin-top:18px}
+.duo{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr) minmax(0,1fr);gap:18px;margin-top:18px}
+.mx3 .mxr{display:grid;grid-template-columns:1fr;margin-top:10px}.mx3 .mr{display:grid;grid-template-columns:minmax(0,1fr) 92px auto;align-items:center;gap:10px;padding:8px 0;border-top:1px solid var(--line2,rgba(20,50,90,.10))}
+.mx3 .mn{font-size:13px;font-weight:700;min-width:0}.mx3 .mn small{display:block;font-size:11.5px;font-weight:500;color:var(--mut);margin-top:1px}
+.mx3 .sp{height:30px;width:92px}.mx3 .sp svg{width:92px;height:30px;display:block}
+.mx3 .mv{text-align:right;white-space:nowrap}.mx3 .mv b{font-size:13.5px;font-weight:800}.mx3 .mv small{display:block;font-size:11.5px;font-weight:700}.mx3 .mv .up{color:var(--ok)}.mx3 .mv .dn{color:var(--bad)}
+@media (max-width:1400px){.duo{grid-template-columns:minmax(0,1.45fr) minmax(0,1fr)}.duo .mx3{grid-column:1/-1}.mx3 .mxr{grid-template-columns:repeat(2,minmax(0,1fr));column-gap:22px}}
 .pn{display:block;border-radius:14px;padding:20px 22px;min-width:0;transition:transform .12s,box-shadow .12s,background-color .12s}
 .pn h4{margin:0;font-size:16px;font-weight:800}.pn .ps{font-size:12.5px;color:var(--mut);margin-top:4px;line-height:1.5}
 .bars{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin-top:16px}
@@ -126,7 +131,7 @@ body:before{content:"";position:fixed;top:0;left:0;right:0;height:calc(100vh + 2
 .sm .l1{font-size:15.5px;font-weight:800;line-height:1.5;margin-top:12px}.sm .l2{font-size:13.5px;line-height:1.6;margin-top:9px;padding-top:9px;border-top:1px solid var(--line)}
 .sm .tg{display:inline-block;font-size:11.5px;font-weight:800;border-radius:99px;padding:1px 9px;margin-right:6px}.sm .tg.ok{background:var(--okbg)}.sm .tg.bad{background:var(--badbg)}.sm .tg.nt{background:rgba(255,255,255,.14);color:var(--ink)}
 .sm .go{font-size:13px;font-weight:700;color:var(--c-daily);margin-top:12px}
-@media (max-width:1024px){.duo{grid-template-columns:1fr}}
+@media (max-width:1024px){.duo{grid-template-columns:1fr}.mx3 .mxr{grid-template-columns:1fr}}
 @media (max-width:760px){.pn{padding:16px 14px}.bars{gap:6px}.bw{height:130px}.bv{font-size:11px}.duo{gap:12px}}
 /* 2026-11-23: 영상과 같은 밝은 반투명 카드(진한 파란 바탕 위, 카드 안 글자는 진한 색으로 숫자 대비를 높임). 제목 띠(hero)와 왼쪽 메뉴는 그대로 */
 .kpi,.mod,.panel,.pn{--ink:#111A26;--mut:#4A5870;--line:#D7DFEB;--blue:#1F5FBF;--soft:#EDF2F9;--ok:#16713F;--okbg:#DDF2E5;--bad:#B3261E;--badbg:#FBE4E1;
@@ -250,7 +255,7 @@ function fresh(m){var v=LIVE[m.key];return v&&v.lm&&(now-v.lm)<36*3600000;}
 function loadLive(m){
   return fetch(liveUrl(m)+"?t="+Date.now(),{cache:"no-store"}).then(function(r){if(!r.ok)throw 0;var lm=Date.parse(r.headers.get("last-modified")||"");return r.text().then(function(t){return[t,lm];});})
   .then(function(a){var doc=new DOMParser().parseFromString(a[0],"text/html");var st=txt(doc.querySelector(m.subSel||".sub")).replace(/\[대외비\]/g,"").trim();if(st.length>90)st=st.slice(0,90)+"…";
-    LIVE[m.key]={title:(doc.title||m.name).trim(),sub:st,lm:isNaN(a[1])?0:a[1]};if(m.key==="daily"){renderAuction(st);KPI=readKpi(doc);SUMM=readSumm(doc);}if(m.key==="trend")RND=readRounds(a[0]);})
+    LIVE[m.key]={title:(doc.title||m.name).trim(),sub:st,lm:isNaN(a[1])?0:a[1]};if(m.key==="daily"){renderAuction(st);KPI=readKpi(doc);SUMM=readSumm(doc);MACRO=readMacro(doc);}if(m.key==="trend")RND=readRounds(a[0]);})
   .catch(function(){LIVE[m.key]={title:m.name+" 최신본",sub:"",lm:0};});
 }
 // 카드 회색 글씨: 보고서별 핵심 한 줄(2026-11-11)
@@ -288,7 +293,15 @@ var NAVCUR="home";function renderNav(cur){NAVCUR=cur;
   document.getElementById("nav").innerHTML=html;
 }
 // 2026-11-22: 홈 "최근 5개 회차 출품 · 낙찰 실적"(출품 및 낙찰 추이 게시본의 회차 값)과 "일간보고 총평"(일보 .summ의 l1 · l2 · 경매 영향 줄)
-var RND=null,SUMM=null;
+var RND=null,SUMM=null,MACRO=null;
+// 2026-11-24 사용자 지시("오른쪽에 국제 동향 그래프"): 일보 환율 · 금리 · 유가 · 수출 블록(details.mxd 안 .mxs)의 1년 꺾은선 선만 작게 옮겨 그림. 값 = 꺾은선 마지막 점, 비교 = 그래프 제목의 전년 대비
+function readMacro(doc){var o=[];
+  [].forEach.call(doc.querySelectorAll("details.mxd .mxs"),function(g){var l=g.querySelector(".mxl"),pth=g.querySelector("svg path"),tl=g.querySelectorAll("svg circle title");if(!l||!pth||!tl.length)return;
+    var lt=l.textContent.replace(/\s+/g," ").trim(),nm=lt.split(" 최근")[0].replace(" 월평균",""),yo=(lt.match(/전년[^·]*?대비\s*([+▼][\d.,]+(?:%|bp)|보합)/)||[])[1]||"",
+        base=((lt.match(/전년(?: 동월)?\(([^)]+)\)/)||[])[1]||""),last=tl[tl.length-1].textContent.trim().split(" "),unit=((lt.match(/단위\s*(\S+)/)||[])[1]||"");
+    var dd=last[0];if(/^\d\d\.\d\d$/.test(dd))dd=(+dd.slice(3))+"월";
+    o.push({nm:nm,per:(lt.match(/최근 (1년|24개월)/)||[])[1]==="24개월"?"월별":"주별",d:dd,v:last.slice(1).join(" "),yo:yo,base:base,unit:unit,path:pth.getAttribute("d")});});
+  return o.length?o:null;}
 function readRounds(s){var re=/\["\d\d\.\d\d\.\d\d", (\d+), (\d+), "(\d{4})-(\d\d)-(\d\d)", \d+, \d+\]/g,m,o=[];while((m=re.exec(s)))o.push({d:(+m[4])+"/"+(+m[5]),k:m[3]+m[4]+m[5],n:+m[1],w:+m[2]});o.sort(function(a,b){return a.k<b.k?-1:1;});return o.length>=5?o.slice(-5):null;}
 function readSumm(doc){var s=doc.querySelector(".summ");if(!s)return null;var o=[];
   [].forEach.call(s.children,function(c){if(!/^l[12]$/.test(c.className))return;var ps=[];[].forEach.call(c.childNodes,function(n){var t=n.textContent.replace(/\s+/g," ");if(!t.trim())return;ps.push({t:t,c:n.nodeType===1&&/\b(ok|bad)\b/.test(n.className)?RegExp.$1:""});});o.push({k:c.className,ps:ps});});
@@ -307,6 +320,12 @@ function duo(){
   h+='</a><a class="pn sm" href="#daily"><h4>일간보고 총평</h4>';
   if(SUMM){SUMM.forEach(function(l){h+='<div class="'+(l.k==="l1"?"l1":"l2")+'">'+(l.k==="ex"?'<span class="tg nt">경매 영향(전주 대비)</span>':'')+l.ps.map(function(p){return p.c?(l.k==="l2"?'<span class="tg '+p.c+'">'+esc(p.t.trim())+'</span>':'<span class="'+p.c+'">'+esc(p.t)+'</span>'):esc(p.t);}).join("")+'</div>';});
     h+='<div class="go">팀별 원인은 일간보고에서 확인 →</div>';}
+  else h+='<div class="skl" style="width:80%;margin-top:14px" aria-label="불러오는 중"></div><div class="skl" style="width:95%"></div><div class="skl" style="width:70%"></div>';
+  h+='</a><a class="pn sm mx3" href="#daily"><h4>국제 동향</h4>';
+  if(MACRO){h+='<div class="ps">일간보고 기준 · 꺾은선은 최근 1년(월별 지표는 2년) · 오른쪽은 지금 값과 전년 대비</div><div class="mxr">';
+    MACRO.forEach(function(m){var c=/^\+/.test(m.yo)?"up":(/^▼/.test(m.yo)?"dn":"");
+      h+='<div class="mr"><div class="mn">'+esc(m.nm)+'<small>'+esc(m.d)+' · '+m.per+'</small></div><div class="sp"><svg viewBox="0 0 360 150" preserveAspectRatio="none" aria-hidden="true"><path d="'+esc(m.path)+'" fill="none" stroke="#1F5FBF" stroke-width="5" vector-effect="non-scaling-stroke" style="stroke-width:1.8px"/></svg></div><div class="mv"><b>'+esc(m.v)+'</b><small class="'+c+'">전년 대비 '+esc(m.yo||"–")+'</small></div></div>';});
+    h+='</div><div class="go">그래프 자세히는 일간보고에서 확인 →</div>';}
   else h+='<div class="skl" style="width:80%;margin-top:14px" aria-label="불러오는 중"></div><div class="skl" style="width:95%"></div><div class="skl" style="width:70%"></div>';
   return h+'</a></div>';}
 function renderHome(){
