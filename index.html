@@ -112,12 +112,12 @@ body:before{content:"";position:fixed;top:0;left:0;right:0;height:calc(100vh + 2
 .cban.bad{background:rgba(255,92,80,.22);border-color:rgba(255,150,140,.55);color:#FFE1DD}.cban.ok{background:rgba(46,196,125,.18);border-color:rgba(107,227,167,.45);color:#D3F8E4}.cban.run{background:rgba(255,255,255,.08);color:var(--mut)}
 @media (max-width:1024px){.side{background:rgba(7,20,52,.96)}}
 /* 최근 5개 회차 막대 · 일간보고 총평 상자 */
-.duo{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr) minmax(0,1fr);gap:18px;margin-top:18px}
+.duo{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(0,1fr);gap:18px;margin-top:18px}.duo .mx3{grid-column:1/-1}
 .mx3 .mxr{display:grid;grid-template-columns:1fr;margin-top:10px}.mx3 .mr{display:grid;grid-template-columns:minmax(0,1fr) 92px auto;align-items:center;gap:10px;padding:8px 0;border-top:1px solid var(--line2,rgba(20,50,90,.10))}
 .mx3 .mn{font-size:13px;font-weight:700;min-width:0}.mx3 .mn small{display:block;font-size:11.5px;font-weight:500;color:var(--mut);margin-top:1px}
 .mx3 .sp{height:30px;width:92px}.mx3 .sp svg{width:92px;height:30px;display:block}
 .mx3 .mv{text-align:right;white-space:nowrap}.mx3 .mv b{font-size:13.5px;font-weight:800}.mx3 .mv small{display:block;font-size:11.5px;font-weight:700}.mx3 .mv .up{color:var(--ok)}.mx3 .mv .dn{color:var(--bad)}
-@media (max-width:1400px){.duo{grid-template-columns:minmax(0,1.45fr) minmax(0,1fr)}.duo .mx3{grid-column:1/-1}.mx3 .mxr{grid-template-columns:repeat(2,minmax(0,1fr));column-gap:22px}}
+.mx3 .mxr{grid-template-columns:repeat(2,minmax(0,1fr));column-gap:28px}
 .pn{display:block;border-radius:14px;padding:20px 22px;min-width:0;transition:transform .12s,box-shadow .12s,background-color .12s}
 .pn h4{margin:0;font-size:16px;font-weight:800}.pn .ps{font-size:12.5px;color:var(--mut);margin-top:4px;line-height:1.5}
 .bars{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin-top:16px}
@@ -255,7 +255,7 @@ function fresh(m){var v=LIVE[m.key];return v&&v.lm&&(now-v.lm)<36*3600000;}
 function loadLive(m){
   return fetch(liveUrl(m)+"?t="+Date.now(),{cache:"no-store"}).then(function(r){if(!r.ok)throw 0;var lm=Date.parse(r.headers.get("last-modified")||"");return r.text().then(function(t){return[t,lm];});})
   .then(function(a){var doc=new DOMParser().parseFromString(a[0],"text/html");var st=txt(doc.querySelector(m.subSel||".sub")).replace(/\[대외비\]/g,"").trim();if(st.length>90)st=st.slice(0,90)+"…";
-    LIVE[m.key]={title:(doc.title||m.name).trim(),sub:st,lm:isNaN(a[1])?0:a[1]};if(m.key==="daily"){renderAuction(st);KPI=readKpi(doc);SUMM=readSumm(doc);MACRO=readMacro(doc);}if(m.key==="trend")RND=readRounds(a[0]);})
+    LIVE[m.key]={title:(doc.title||m.name).trim(),sub:st,lm:isNaN(a[1])?0:a[1]};if(m.key==="daily"){renderAuction(st);KPI=readKpi(doc);MACRO=readMacro(doc);}if(m.key==="weekly")WSUM=readWeek(doc);if(m.key==="trend")RND=readRounds(a[0]);})
   .catch(function(){LIVE[m.key]={title:m.name+" 최신본",sub:"",lm:0};});
 }
 // 카드 회색 글씨: 보고서별 핵심 한 줄(2026-11-11)
@@ -293,7 +293,13 @@ var NAVCUR="home";function renderNav(cur){NAVCUR=cur;
   document.getElementById("nav").innerHTML=html;
 }
 // 2026-11-22: 홈 "최근 5개 회차 출품 · 낙찰 실적"(출품 및 낙찰 추이 게시본의 회차 값)과 "일간보고 총평"(일보 .summ의 l1 · l2 · 경매 영향 줄)
-var RND=null,SUMM=null,MACRO=null;
+var RND=null,SUMM=null,MACRO=null,WSUM=null;
+// 2026-11-24 사용자 지시: 일간보고는 위에 있으니 홈 총평은 주간보고 총평으로. 주보 .hl(.hlh 제목 줄 · .sl 항목: span.tp 꼬리표 good/bad/mid + 내용) 중 앞 3개 항목
+function readWeek(doc){var h=doc.querySelector(".hl");if(!h)return null;var hd=h.querySelector(".hlh"),sb=doc.querySelector(".topbar .sub");
+  var o={wk:sb?((sb.textContent.match(/(\d+월\s*\d+주차)/)||[])[1]||"").replace(/\s+/g," "):"",hd:hd?txt(hd):"",rows:[]};
+  [].forEach.call(h.querySelectorAll(".sl"),function(s){var tp=s.querySelector(".tp"),sp=s.querySelectorAll("span")[1];if(!tp||!sp)return;
+    o.rows.push({k:txt(tp),c:/\bgood\b/.test(tp.className)?"ok":(/\bbad\b/.test(tp.className)?"bad":"nt"),t:txt(sp)});});
+  return o.hd?o:null;}
 // 2026-11-24 사용자 지시("오른쪽에 국제 동향 그래프"): 일보 환율 · 금리 · 유가 · 수출 블록(details.mxd 안 .mxs)의 1년 꺾은선 선만 작게 옮겨 그림. 값 = 꺾은선 마지막 점, 비교 = 그래프 제목의 전년 대비
 function readMacro(doc){var o=[];
   [].forEach.call(doc.querySelectorAll("details.mxd .mxs"),function(g){var l=g.querySelector(".mxl"),pth=g.querySelector("svg path"),tl=g.querySelectorAll("svg circle title");if(!l||!pth||!tl.length)return;
@@ -317,9 +323,9 @@ function duo(){
       h+='<div class="bc'+(i===4?" cur":"")+'"><div class="bw"><div class="b1" style="height:'+a+'%"></div><div class="b2" style="height:'+b+'%"></div><span class="bv" style="bottom:calc('+a+'% + 4px)">'+num(r.n)+'</span><span class="bv w" style="bottom:calc('+b+'% + 4px)">'+num(r.w)+'</span></div><div class="bd">'+r.d+'</div><div class="br">'+(r.w/r.n*100).toFixed(1)+'%</div></div>';});
     h+='</div><div class="lg"><span><i style="background:#C9D9F2"></i>출품대수(대)</span><span><i style="background:#5C9BFA"></i>낙찰대수(대)</span><span>날짜 아래 숫자는 낙찰률(%)</span></div>';}
   else h+='<div class="skl" style="width:60%;margin-top:12px" aria-label="불러오는 중"></div><div class="skl big" style="width:100%;height:120px"></div>';
-  h+='</a><a class="pn sm" href="#daily"><h4>일간보고 총평</h4>';
-  if(SUMM){SUMM.forEach(function(l){h+='<div class="'+(l.k==="l1"?"l1":"l2")+'">'+(l.k==="ex"?'<span class="tg nt">경매 영향(전주 대비)</span>':'')+l.ps.map(function(p){return p.c?(l.k==="l2"?'<span class="tg '+p.c+'">'+esc(p.t.trim())+'</span>':'<span class="'+p.c+'">'+esc(p.t)+'</span>'):esc(p.t);}).join("")+'</div>';});
-    h+='<div class="go">팀별 원인은 일간보고에서 확인 →</div>';}
+  h+='</a><a class="pn sm" href="#weekly"><h4>주간보고 총평'+(WSUM&&WSUM.wk&&WSUM.hd.indexOf(WSUM.wk)<0?' · '+esc(WSUM.wk):'')+'</h4>';
+  if(WSUM){h+='<div class="l1">'+esc(WSUM.hd)+'</div>';WSUM.rows.slice(0,3).forEach(function(r){h+='<div class="l2"><span class="tg '+r.c+'">'+esc(r.k)+'</span>'+esc(r.t)+'</div>';});
+    h+='<div class="go">항목 전체는 주간보고에서 확인 →</div>';}
   else h+='<div class="skl" style="width:80%;margin-top:14px" aria-label="불러오는 중"></div><div class="skl" style="width:95%"></div><div class="skl" style="width:70%"></div>';
   h+='</a><a class="pn sm mx3" href="#daily"><h4>국제 동향</h4>';
   if(MACRO){h+='<div class="ps">일간보고 기준 · 꺾은선은 최근 1년(월별 지표는 2년) · 오른쪽은 지금 값과 전년 대비</div><div class="mxr">';
