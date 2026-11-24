@@ -172,7 +172,7 @@ color:var(--ink);background:rgba(255,255,255,.88);border-color:rgba(255,255,255,
 </style>
 <div id="intro" aria-hidden="true"><div class="i1">KOLON AUTO AUCTION</div><div class="i2" id="introT"></div><div class="i3">전략기획팀</div></div>
 <script>(function(){var el=document.getElementById("intro");if(!el)return;
-  var seen=false;try{seen=sessionStorage.getItem("kaa_intro")==="1";}catch(e){}
+  var seen=false; // 2026-11-24 사용자 지시: 들어올 때마다 보여 줌(같은 창 1회 제한 해제)
   if(seen||(window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches)){el.parentNode.removeChild(el);return;}
   try{sessionStorage.setItem("kaa_intro","1");}catch(e){}
   var T="2026 전략기획 ERP",h=document.getElementById("introT");
