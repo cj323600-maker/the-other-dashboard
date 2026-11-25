@@ -747,7 +747,7 @@ function carGrid(){
   if(gfocus) h+=`<div class="warnbox" style="margin-bottom:8px">세그먼트 <b>${gfocus.label}</b> 안 차종만 강조 중 <button class="btn" data-clearfocus="1">전체 보기</button></div>`;
   h+=`<div class="gtool"><span class="lab2">칸 숫자</span><span class="seg"><button aria-pressed="${gmode==='n'}" data-gm="n">주 출품 대수</button><button aria-pressed="${gmode==='q'}" data-gm="q">더 받을 / 남는 대수</button><button aria-pressed="${gmode==='fr'}" data-gm="fr">제값 낙찰률</button></span>
   <span class="seg" style="margin-left:8px"><button data-gall="1" aria-pressed="false">모두 펼치기</button><button data-gall="0" aria-pressed="false">모두 접기</button></span></div>
-  <div class="legend"><span style="color:var(--ink)"><b>칸을 누르면 판정 근거</b></span><span><i style="background:var(--accent)"></i>더 가져올 차</span><span><i style="background:#5F6772"></i>받기 전 확인</span><span><i style="background:var(--ink)"></i>받지 않는 차</span><span><i style="background:#fff"></i>판단 보류</span><span>더 가져올 차 = 제값 낙찰률 55% 초과, 받기 전 확인 = 50% 미만 (제값 출품 30대 이상일 때)</span><span><b>진한 색</b> = 표본이 충분해 확실함 · <b>옅은 색</b> = 기준은 넘었지만 표본이 적어 더 지켜볼 것</span><span>제값 낙찰률 = 희망가가 같은 조건 낙찰가 중앙값 ±5% 안에 나온 차의 낙찰률</span></div>`;
+  <div class="legend"><span style="color:var(--ink)"><b>칸을 누르면 판정 근거</b></span><span><i style="background:var(--accent)"></i>더 가져올 차</span><span><i style="background:#5F6772"></i>받기 전 확인</span><span><i style="background:var(--ink)"></i>받지 않는 차</span><span><i style="background:#fff"></i>판단 보류</span><span>더 가져올 차 = 제값 낙찰률 55% 초과, 받기 전 확인 = 50% 미만 (제값 출품 30대 이상일 때)</span><span><b>진한 색</b> = 표본이 충분해 확실함 · <b>옅은 색</b> = 기준은 넘었지만 표본이 적어 더 지켜볼 것</span><span>제값 낙찰률 = 희망가가 같은 조건 낙찰가 중앙값 ±5% 안에 나온 차의 낙찰률</span><span><span class="pf" style="position:static;display:inline-block;margin-right:4px">가격</span>= 고가로 나온 차가 출품의 30% 이상이고 고가 낙찰률이 제값보다 15%p 이상 낮은 칸. 희망가 조정이 먼저</span></div>`;
   h+=`<div><div class="card" style="margin:0"><div class="cb tw"><table class="gt"><thead><tr><th class="rh">차군 / 차종 계열 (주 출품)</th>${YLs.map(y=>`<th>${y}</th>`).join('')}<th class="sm">이번 주 지시</th></tr></thead><tbody>`;
   DATA.grid.forEach((g,gi)=>{
     const fhit=gfocus&&g.rows.some(r=>gfocus.names.includes(r.name));
@@ -778,7 +778,7 @@ function carGrid(){
         else {const f=share===null?1:share/100, qq=Math.round(c.q*f*10)/10; main=c.v==='강함'?'+'+qq:(c.v==='약함'||c.v==='중단')?'−'+qq:'0';subt=c.v==='강함'?(share===null?'더 받을 대수':gteam+' 몫'):(c.v==='보류'?'보류':(share===null?'남는 대수':gteam+' 몫'));}
         const sel=gsel&&gsel.g===gi&&gsel.ri===ri&&gsel.y===y;
         const fy=gfocus&&inFocus&&gfocus.y===y;
-        cells+=`<td><button class="gc ${vcls(c)} ${sel?'sel':''}" style="${fy?'box-shadow:0 0 0 2px #e0a100':''}" data-g="${gi}" data-r="${ri}" data-y="${y}" title="${r.name} ${YLs[y]}: ${VLAB[c.v]}">${c.pf?'<span class="pf">가격</span>':''}<b>${main}</b><span>${subt}</span></button></td>`;
+        cells+=`<td><button class="gc ${vcls(c)} ${sel?'sel':''}" style="${fy?'box-shadow:0 0 0 2px #e0a100':''}" data-g="${gi}" data-r="${ri}" data-y="${y}" title="${r.name} ${YLs[y]}: ${VLAB[c.v]}">${c.pf?'<span class="pf" title="고가로 나온 차가 출품의 30% 이상이고, 고가 낙찰률이 제값보다 15%p 이상 낮음. 희망가 조정이 먼저">가격</span>':''}<b>${main}</b><span>${subt}</span></button></td>`;
       });
       const sm=[cnt.t?`<b>더 가져올 연식 ${cnt.t}개</b>`:'',cnt.w?`받기 전 확인 연식 ${cnt.w}개`:'',cnt.s?`받지 않는 연식 ${cnt.s}개`:'',cnt.p?`희망가 조정 연식 ${cnt.p}개`:''].filter(Boolean).join('<br>')||'지시 없음';
       h+=`<tr class="chi ${ri===g.rows.length-1?'chl':''} ${dim?'dim':''}"><td class="rn ${sub?'sub':''}">${sub?'└ ':''}${r.name}<small>주 ${r.vol}대${share!==null?' / '+gteam+' '+share+'%':''}</small></td>${cells}<td class="sumc">${sm}</td></tr>`;
@@ -916,10 +916,10 @@ function segModalHTML(){
   </div></div></div>`;
 }
 function modalHTML(){
-  if(!gsel) return '';
+  if(!gsel) return ''; let P_;
   const YLs=['2023년 이후','2021~22년','2019~20년','2017~18년','2014~16년','2013년 이전'];
   const g=DATA.grid[gsel.g], r=g.rows[gsel.ri], y=gsel.y, c=r.cells[y];
-  const strip=r.cells.map((cc,yy)=>cc?`<button class="gc ${vcls(cc)} ${yy===y?'sel':''}" data-g="${gsel.g}" data-r="${gsel.ri}" data-y="${yy}" title="${YLs[yy]}">${cc.pf?'<span class="pf">가격</span>':''}<b style="font-size:12px">${YLs[yy]}</b><span>${VLAB[cc.v]}</span></button>`:`<div class="gc none" style="height:40px"></div>`).join('');
+  const strip=r.cells.map((cc,yy)=>cc?`<button class="gc ${vcls(cc)} ${yy===y?'sel':''}" data-g="${gsel.g}" data-r="${gsel.ri}" data-y="${yy}" title="${YLs[yy]}">${cc.pf?'<span class="pf" title="고가로 나온 차가 출품의 30% 이상이고, 고가 낙찰률이 제값보다 15%p 이상 낮음. 희망가 조정이 먼저">가격</span>':''}<b style="font-size:12px">${YLs[yy]}</b><span>${VLAB[cc.v]}</span></button>`:`<div class="gc none" style="height:40px"></div>`).join('');
   let gcls='hold', g1='', acts=[];
   const tm=Object.entries(r.teams).sort((a,b)=>b[1]-a[1]).map(([t,p])=>t+' '+p+'%').join(', ');
   if(c.v==='표본'){g1=`판정 안 함: 16회차 출품이 30대 미만(주 ${c.n}대)이라 이 칸만으로는 판단할 수 없음`; acts=[['모든 팀','지시 없음. 차군 묶음 판정을 참고로만 봄']];}
@@ -939,7 +939,7 @@ function modalHTML(){
   let h=`<div class="modal-bg" data-close="1"><div class="modal" role="dialog" aria-modal="true" aria-label="${r.name} ${YLs[y]} 상세">
   <div class="mh"><div><h3>${r.name} <span class="muted" style="font-size:15px;font-weight:400">${YLs[y]}</span></h3><div style="margin-top:6px;display:flex;gap:6px;flex-wrap:wrap;align-items:center">${vchip(c.v,c.sure)}${prev}<span class="pill">${g.group}, 주 출품 ${c.n}대</span></div></div><button class="mx" data-close="1" aria-label="닫기">×</button></div>
   <div class="mb2">
-   <div><span class="lab">같은 차종 연식별 판정 (눌러서 이동)</span><div class="strip">${strip}</div></div>
+   <div><span class="lab">같은 차종 연식별 판정 (눌러서 이동)</span><div class="strip">${strip}</div>${r.cells.some(x=>x&&x.pf)?`<p class="small muted" style="margin:6px 0 0"><span class="pf" style="position:static;display:inline-block;margin-right:4px">가격</span>= 고가로 나온 차가 출품의 30% 이상이고, 고가 낙찰률이 제값보다 15%p 이상 낮은 연식. 차를 더 받기 전에 희망가 조정이 먼저${c.pf?` (이 연식: 고가 ${c.over}%, 고가 낙찰률 ${(P_=c.pos)&&P_[1][0]?(P_[1][1]/P_[1][0]*100).toFixed(1):'-'}% / 제값 ${c.fn?(c.fw/c.fn*100).toFixed(1):'-'}%)`:''}</p>`:''}</div>
    <div class="guide ${gcls}"><div class="g1">${g1}</div><div class="acts2">${acts.map(a=>`<span class="who">${a[0]}</span><span>${a[1]}</span>`).join('')}</div></div>`;
   if(c.v!=='표본'){
    const W_=DATA.meta.W;
