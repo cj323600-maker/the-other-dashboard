@@ -267,7 +267,7 @@ tbody tr:hover td{background:#fafbfc}th{letter-spacing:0}td,th{padding:9px 10px}
 .hrow .kt .k{width:100%;font-size:12px}.hrow .kt .v{font-size:21px;line-height:1.2}.hrow .kt .d{font-size:11.5px}
 @media (max-width:1250px){.hrow{grid-template-columns:1fr}}
 @media (max-width:700px){.hrow .kp{grid-template-columns:repeat(2,minmax(0,1fr))}.hrow .kt .d{display:inline}}
-/* 영업 · 회원운영 화면 정리(2026-11-20) */
+/* 영업 · 회원운영 정리(2026-11-20) */
 .card.fd>:not(.ch){display:none}.card.fd>.ch{border-bottom:none}.card.fd{background:#f6f8fb}.ch[data-vf]{cursor:pointer}.ch[data-vf]:hover h2{color:var(--accent)}.vfi{font-style:normal;color:var(--accent);margin-right:6px;font-size:12px}
 .ruled{margin:0 0 10px}.ruled>summary{cursor:pointer;font-size:12.5px;font-weight:700;color:var(--muted);padding:2px 0}.ruled[open]>summary{margin-bottom:6px}
 .sbox[data-jump]{cursor:pointer;transition:box-shadow .12s}.sbox[data-jump]:hover{box-shadow:0 2px 10px rgba(20,24,28,.16)}.sbox[data-jump] .k::after{content:"  ↓";color:var(--accent)}
@@ -420,8 +420,8 @@ canvas.sk-w{padding:10px;box-sizing:border-box}
     <span class="sb-l">업무 화면</span>
     <button class="sb-i on" data-v="grid" data-gv="car"><b>차종 × 연식</b><span>그리드, 칸을 누르면 상세</span></button>
     <button class="sb-i" data-v="grid" data-gv="seg"><b>연식 × 주행거리</b><span>세그먼트 요약 그리드</span></button>
-    <button class="sb-i" data-v="sales"><b>영업 화면</b><span>희망가 조정, 더 가져올 묶음</span></button>
-    <button class="sb-i" data-v="member"><b>회원운영 화면</b><span>전문 바이어 모집</span></button>
+    <button class="sb-i" data-v="sales"><b>영업</b><span>희망가 조정, 더 가져올 묶음</span></button>
+    <button class="sb-i" data-v="member"><b>회원운영</b><span>전문 바이어 모집</span></button>
     <button class="sb-i" data-v="rule"><b>판정 기준</b><span>계산 방법</span></button>
     <span class="sb-l sb-l2">점검 · 검증 리포트</span>
     <button class="sb-i" data-v="sum3"><b>점검 요약</b><span>세 리포트를 한 화면에</span></button>
@@ -485,8 +485,8 @@ function simView(){
   const bAdd=B.reduce((s,b)=>s+b.addI,0), bW=B.reduce((s,b)=>s+b.ewI,0);
   const n1=S.n+bAdd-C.outN, w1=S.w+aGain+bW-C.outW, u0=S.n-S.w, u1=n1-w1;
   const trial=S.test<=S.bundleBasis;
-  let h=`<div class="card"><div class="ch"><h2>나. 요청 효과: 영업 화면 요청을 전부 수락했다면 (${md_(S.test)} 경매)</h2><span class="why">${trial?'시험판':'정식'}</span></div><div class="cb">
-  <p class="small" style="margin:0 0 8px">${md_(S.test)} 경매 실제 결과에 영업 화면 요청 3가지(① 희망가 조정 ② 더 가져올 묶음 ③ 받기 전 확인)를 그 판정 규칙대로 적용해 다시 셈. 판정은 ${S.judge.replace(/-/g,'.')} 16회차 기준.</p>
+  let h=`<div class="card"><div class="ch"><h2>나. 요청 효과: 영업 요청을 전부 수락했다면 (${md_(S.test)} 경매)</h2><span class="why">${trial?'시험판':'정식'}</span></div><div class="cb">
+  <p class="small" style="margin:0 0 8px">${md_(S.test)} 경매 실제 결과에 영업 요청 3가지(① 희망가 조정 ② 더 가져올 묶음 ③ 받기 전 확인)를 그 판정 규칙대로 적용해 다시 셈. 판정은 ${S.judge.replace(/-/g,'.')} 16회차 기준.</p>
   ${trial?`<div class="warnbox" style="margin:0 0 10px">시험판: 지금 묶음(12월 과제)은 ${md_(S.bundleBasis)} 경매 데이터까지 써서 만들어서, 같은 ${md_(S.test)} 회차로 시험하면 결과가 유리하게 나옴. 계산 방식 점검용이며, 11/25 경매 데이터가 들어오면 그 회차로 정식 리포트가 나옴.</div>`:''}
   <div class="tw"><table><thead><tr><th>구분</th><th class="n">출품 (대)</th><th class="n">낙찰 (대)</th><th class="n">유찰 (대)</th><th class="n">낙찰률 (%)</th></tr></thead><tbody>
    <tr><td>실제 (${md_(S.test)} 경매)</td><td class="n">${fmt(S.n)}</td><td class="n">${fmt(S.w)}</td><td class="n">${fmt(u0)}</td><td class="n">${pc(S.w,S.n)}</td></tr>
@@ -604,7 +604,7 @@ function sumView(){
     g3=`<div class="card"><div class="ch"><h2>요청 효과: 실제와 요청을 전부 수락했을 때 (대)</h2><span class="why">${md_(S.test)} 경매 · 진한 색 = 낙찰, 옅은 색 = 유찰</span></div><div class="cb"><div class="hb">${row('실제',S.n,S.w)}${row('전부 수락했다면',n1,w1)}</div></div></div>`;}
   return h+`<div class="s3g">${g1}${g2}${g3}</div>`;
 }
-function repHead(){const x=JT.length?JT[JT.length-1]:null;return `<div class="card"><div class="ch"><h2>결과 리포트${x?' ('+(+x.test.slice(5,7))+'/'+(+x.test.slice(8,10))+' 경매)':''}</h2><span class="why"><button class="btn noprint" data-print="1">인쇄 / PDF로 저장</button></span></div><div class="cb"><p class="small" style="margin:0">경매 결과가 들어오면 두 가지를 봄. <b>가. 판정 검증</b>: 경매 전 판정(더 가져올 차 · 받기 전 확인)이 실제 결과와 맞았는지. <b>나. 요청 효과</b>: 영업 화면 요청을 전부 수락했다면 출품 · 낙찰 · 유찰이 얼마나 달라졌을지.</p></div></div>`;}
+function repHead(){const x=JT.length?JT[JT.length-1]:null;return `<div class="card"><div class="ch"><h2>결과 리포트${x?' ('+(+x.test.slice(5,7))+'/'+(+x.test.slice(8,10))+' 경매)':''}</h2><span class="why"><button class="btn noprint" data-print="1">인쇄 / PDF로 저장</button></span></div><div class="cb"><p class="small" style="margin:0">경매 결과가 들어오면 두 가지를 봄. <b>가. 판정 검증</b>: 경매 전 판정(더 가져올 차 · 받기 전 확인)이 실제 결과와 맞았는지. <b>나. 요청 효과</b>: 영업 요청을 전부 수락했다면 출품 · 낙찰 · 유찰이 얼마나 달라졌을지.</p></div></div>`;}
 function rp3(me){const R=[['sum3','점검 요약','주간 점검과 결과 리포트의 핵심을 한 화면에'],['check','주간 점검','이번 달 과제: 팀이 과제대로 움직이고 있나, 과제 근거(판정)가 그대로인가'],['report','결과 리포트','경매 결과: 판정한 차가 실제로 그렇게 팔렸나, 요청을 전부 수락했다면 낙찰이 몇 대 달라졌나']];
 
   return `<div class="rp3h">점검 · 검증 리포트 3종 <span>눌러서 다른 리포트로 이동</span></div><div class="rp3" role="tablist" aria-label="점검 · 검증 리포트 3종">${R.map(r=>`<button role="tab" data-rp="${r[0]}" aria-current="${r[0]===me}"><b>${r[1]}${r[0]===me?' <em>지금 보는 화면</em>':' <i>이동 ›</i>'}</b><span>${r[2]}</span></button>`).join('')}</div>`;}
@@ -747,7 +747,7 @@ function memberView(){
     mktBox(R.personas.exp.countries));
   h+=prof('dom','2','신규 내수 전문 매매상사 모집',
     '내수 매매상사. 2019~2023년식 RV와 중대형 세단(K5, 카니발, 그랜저, G90, 스타리아 등)을 소매로 파는 상사. 대표님이 말씀하신 "5년 미만 차를 사는 매매상사"와 같은 대상.',
-    `<li><b>영업이 소개한 출품사</b>: 출품은 하는데 경매에서 사지 않는 곳, ${DATA.meta.lastmd} 회차 기준 ${R.vendorDealer}곳 (출품영업 ${DATA.leads['출품영업'].n}곳). 영업 화면 4번에서 소개하면 여기로 들어옴. 예: ${vt}. 이름 대조 기준이라 확인 필요</li><li><b>회원이 적은 지역의 매매단지</b>: 회원 주소 데이터로 지역별 회원 분포를 만들어 공백 지역 확인 (대표님 지시 "회원 분류 기호" 작업과 연결)</li><li><b>다른 경매장 이용 상사</b>: 우리 시세 서비스(PM) 체험과 함께 제안</li>`,
+    `<li><b>영업이 소개한 출품사</b>: 출품은 하는데 경매에서 사지 않는 곳, ${DATA.meta.lastmd} 회차 기준 ${R.vendorDealer}곳 (출품영업 ${DATA.leads['출품영업'].n}곳). 영업 메뉴 4번에서 소개하면 여기로 들어옴. 예: ${vt}. 이름 대조 기준이라 확인 필요</li><li><b>회원이 적은 지역의 매매단지</b>: 회원 주소 데이터로 지역별 회원 분포를 만들어 공백 지역 확인 (대표님 지시 "회원 분류 기호" 작업과 연결)</li><li><b>다른 경매장 이용 상사</b>: 우리 시세 서비스(PM) 체험과 함께 제안</li>`,
     '');
   // dormant
   const dl=[...R.personas.exp.dormant,...R.personas.dom.dormant].sort((a,b)=>(a.st!=='휴면')-(b.st!=='휴면')||b.prev-a.prev).slice(0,10);
@@ -799,7 +799,7 @@ function carGrid(){
   if(gfocus) h+=`<div class="warnbox" style="margin-bottom:8px">세그먼트 <b>${gfocus.label}</b> 안 차종만 강조 중 <button class="btn" data-clearfocus="1">전체 보기</button></div>`;
   h+=`<div class="gtool"><span class="lab2">칸 숫자</span><span class="seg"><button aria-pressed="${gmode==='n'}" data-gm="n">주 출품 대수</button><button aria-pressed="${gmode==='q'}" data-gm="q">더 받을 / 남는 대수</button><button aria-pressed="${gmode==='fr'}" data-gm="fr">제값 낙찰률</button></span>
   <span class="seg" style="margin-left:8px"><button data-gall="1" aria-pressed="false">모두 펼치기</button><button data-gall="0" aria-pressed="false">모두 접기</button></span></div>
-  <div class="legend"><span style="color:var(--ink)"><b>칸을 누르면 판정 근거</b></span><span><i style="background:var(--accent)"></i>더 가져올 차</span><span><i style="background:#5F6772"></i>받기 전 확인</span><span><i style="background:var(--ink)"></i>받지 않는 차</span><span><i style="background:#fff"></i>판단 보류</span><span>더 가져올 차 = 제값 낙찰률 55% 초과, 받기 전 확인 = 50% 미만 (제값 출품 30대 이상일 때)</span><span><b>진한 색</b> = 신뢰도 95% 이상 · <b>옅은 색</b> = 신뢰도 95% 미만 (신뢰도 = 실제 낙찰률이 기준을 넘을 가능성)</span><span>제값 낙찰률 = 희망가가 같은 조건 낙찰가 중앙값 ±5% 안에 나온 차의 낙찰률</span><span><span class="pf" style="position:static;display:inline-block;margin-right:4px">중앙값 대비 고가 차량 과출품</span>= 고가로 나온 차가 제값 · 저가로 나온 차보다 많고 고가 낙찰률이 제값보다 15%p 이상 낮은 칸. 희망가 조정이 먼저</span></div>`;
+  <div class="legend"><span style="color:var(--ink)"><b>칸을 누르면 판정 근거</b></span><span><i style="background:var(--accent)"></i>더 가져올 차</span><span><i style="background:#5F6772"></i>받기 전 확인</span><span><i style="background:var(--ink)"></i>받지 않는 차</span><span><i style="background:#fff"></i>판단 보류</span></div>`;
   h+=`<div><div class="card" style="margin:0"><div class="cb tw"><table class="gt"><thead><tr><th class="rh">차군 / 차종 계열 (주 출품)</th>${YLs.map(y=>`<th>${y}</th>`).join('')}<th class="sm">이번 주 지시</th></tr></thead><tbody>`;
   DATA.grid.forEach((g,gi)=>{
     const fhit=gfocus&&g.rows.some(r=>gfocus.names.includes(r.name));
@@ -1057,7 +1057,7 @@ function enhanceView(){
   [...V.querySelectorAll('.sbox')].forEach((b,i)=>{const t=(VJUMP[view]||[])[i]; if(t==null||!cards[t]) return; b.dataset.jump=t; b.title='누르면 아래 해당 목록으로 이동'; b.setAttribute('role','button');});
 }
 function render(){
-  {const VT={grid:(gview==='car'?'차종 × 연식':'연식 × 주행거리'),sales:'영업 화면',member:'회원운영 화면',rule:'판정 기준',sum3:'점검 요약',check:'주간 점검',report:'결과 리포트'};const e_=document.getElementById('vt');if(e_)e_.textContent=VT[view]?'· '+VT[view]:'';
+  {const VT={grid:(gview==='car'?'차종 × 연식':'연식 × 주행거리'),sales:'영업',member:'회원운영',rule:'판정 기준',sum3:'점검 요약',check:'주간 점검',report:'결과 리포트'};const e_=document.getElementById('vt');if(e_)e_.textContent=VT[view]?'· '+VT[view]:'';
    const W0=(DATA.meta&&DATA.meta.W)||16;
    const VD={car:`판정 기준: 차종 계열 × 연식대, 기본 최근 <b>${W0}</b>회차, 매주 경매 후 다시 계산. 칸을 누르면 판정 근거`,
      seg:`연식대 × 주행거리 구간별 출품 대수와 제값 낙찰률. 칸을 누르면 그 구간의 차종별 판정으로 이동`,
