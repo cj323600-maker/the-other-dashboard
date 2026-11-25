@@ -1,11 +1,11 @@
 name: 보고서 점검 프로그램
-# 파일 업데이트(이 저장소에 보고서 · 보관본이 올라올 때)와 매시 정각에 게시본 8개를 자동 대조하고 check/history.json에 기록
+# 파일 업데이트(이 저장소에 보고서 · 보관본이 올라올 때)와 30분마다(매시 7분 · 37분) 게시본 8개를 자동 대조하고 check/history.json에 기록
 on:
   push:
     branches: [main]
     paths-ignore: ['check/history.json', 'check/latest.json']
   schedule:
-    - cron: '7 * * * *'
+    - cron: '7,37 * * * *'   # 2026-11-25 사용자 지시: 30분마다
   workflow_dispatch:
 permissions:
   contents: write

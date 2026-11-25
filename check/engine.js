@@ -52,9 +52,12 @@ function run(get, now) {
     if (L) {
       var wN = T.weekly && T.weekly.match(/출품 ([\d,]+) \/ [\d,]+대\([\d.]+%\) · 낙찰 ([\d,]+) \/ [\d,]+대/), dW = wd ? RD.filter(function (r) { return r.d === wd; })[0] : null;
       if (dW) { addNum("주간보고 회차 출품", md(wd) + " 경매 · 단위 대", [{s: "추이", v: dW.n}, {s: "주보", v: wN && num(wN[1])}]); var wW = wN && num(wN[2]); addNum("주간보고 회차 낙찰", md(wd) + " 경매 · 단위 대" + cn(dW.w, wW), [{s: "추이", v: dW.w}, {s: "주보", v: wW}], 0, cj(dW.w, wW)); }
+      // 2026-11-25 사용자 지시: 경매일 저녁 일보는 그날 회차를 넣지만 추이 · 주보는 다음 날 집계 · 재무 확정 뒤 갱신 → 경매 다음 날 18시까지는 갱신 대기, 그 뒤에도 다르면 불일치
+      var dIso = dd ? dd[1] + "-" + dd[2] + "-" + dd[3] : null, aucGap = !!(dIso && L && dIso > L.d && new Date(+dd[1], +dd[2] - 1, +dd[3]).getDay() === 3);
+      var aucDue = dIso ? new Date(+dd[1], +dd[2] - 1, +dd[3] + 1, 18, 0) : null, aucWait = aucGap && now < aucDue, aucNote = aucWait ? " · " + md(dIso) + " 경매분은 다음 날 집계 후 추이 반영(" + md(iso(aucDue)) + " 18시까지 대기)" : "";
       var dm = T.daily && T.daily.match(/월 누적 팀별 성적표.*?합계 ([\d,]+) ([\d,]+) \d+% [\d.]+% ([\d,]+) ([\d,]+) /), dmo = sumMo(dd ? dd[1] + "-" + dd[2] : iso(today).slice(0, 7));
-      addNum("이번 달 누적 출품", (dd ? (+dd[2]) + "월" : "") + " · 경매가 지난 회차 합계 · 단위 대", [{s: "추이 합산", v: dmo.n}, {s: "일보 월 누적", v: dm && num(dm[2])}]);
-      var dMW = dm && num(dm[4]); addNum("이번 달 누적 낙찰", (dd ? (+dd[2]) + "월" : "") + " · 단위 대" + cn(dmo.w, dMW), [{s: "추이 합산", v: dmo.w}, {s: "일보 월 누적", v: dMW}], 0, cj(dmo.w, dMW));
+      addNum("이번 달 누적 출품", (dd ? (+dd[2]) + "월" : "") + " · 경매가 지난 회차 합계 · 단위 대" + aucNote, [{s: "추이 합산", v: dmo.n}, {s: "일보 월 누적", v: dm && num(dm[2])}], 0, aucWait && dm && num(dm[2]) !== dmo.n ? "wait" : undefined);
+      var dMW = dm && num(dm[4]); addNum("이번 달 누적 낙찰", (dd ? (+dd[2]) + "월" : "") + " · 단위 대" + (aucWait ? aucNote : cn(dmo.w, dMW)), [{s: "추이 합산", v: dmo.w}, {s: "일보 월 누적", v: dMW}], 0, aucWait && dMW !== dmo.w ? "wait" : cj(dmo.w, dMW));
       var wc = T.weekly && T.weekly.match(/(\d{1,2})월 누적 출품 ([\d,]+) \/ [\d,]+대\([\d.]+%\) · 낙찰 ([\d,]+) \//);
       if (wc && wd) { var wm = sumMo(wd.slice(0, 7), wd); addNum("주간보고 월 누적 출품 · 낙찰", wc[1] + "월 · " + md(wd) + "까지 · 단위 대" + cn(wm.w, num(wc[3])), [{s: "추이 출품", v: wm.n}, {s: "주보 출품", v: num(wc[2])}, {s: "추이 낙찰", v: wm.w}, {s: "주보 낙찰", v: num(wc[3])}], 0, wm.n === num(wc[2]) ? cj(wm.w, num(wc[3])) : "bad"); }
       var mN = T.monthly && T.monthly.match(/출품 ([\d,]+) \/ [\d,]+대\([\d.]+%\) · 낙찰 ([\d,]+) \/ [\d,]+대/);
@@ -67,7 +70,9 @@ function run(get, now) {
     var dg = T.daily && T.daily.match(/전사 매출이익 재무 확정 .*? ([\d.]+) ([\d.]+) [▲▼]/), wg = T.weekly && T.weekly.match(/낙찰 [\d,]+ \/ [\d,]+대\([\d.]+%\) · 매출이익 ([\d.]+) \/ [\d.]+억원/);
     // 2026-11-19: 주보가 재무 입력 전("입력 대기")이면 불일치가 아니라 갱신 대기로 본다(재무회계팀 입력은 경매 다음 날 오후)
     var wwait = !!(T.weekly && /매출이익 · 영업이익 입력 대기|재무 확정 입력 대기|W3 입력 대기/.test(T.weekly));
-    addNum("이번 달 누적 매출이익(재무 확정)", "일보 월 누적 전사 = 주보 월 누적 · 단위 억원" + (wwait && !wg ? " · 주보 재무 입력 대기" : ""), [{s: "일보", v: dg && +dg[2]}, {s: "주보", v: wg ? +wg[1] : (wwait ? "입력 대기" : null)}], 2, wwait && !wg ? "wait" : undefined);
+    var gIso = dd ? dd[1] + "-" + dd[2] + "-" + dd[3] : null, gDue = gIso ? new Date(+dd[1], +dd[2] - 1, +dd[3] + 1, 18, 0) : null;
+    var gWait = !!(gIso && wd && gIso > wd && new Date(+dd[1], +dd[2] - 1, +dd[3]).getDay() === 3 && now < gDue && !(dg && wg && +dg[2] === +wg[1]));   // 경매일 일보는 그 주 예상까지 넣음, 주보는 재무 확정(다음 날 16시) 뒤
+    addNum("이번 달 누적 매출이익(재무 확정)", "일보 월 누적 전사 = 주보 월 누적 · 단위 억원" + (wwait && !wg ? " · 주보 재무 입력 대기" : "") + (gWait ? " · " + md(gIso) + " 경매분은 재무 확정 후 주보 반영(" + md(iso(gDue)) + " 18시까지 대기)" : ""), [{s: "일보", v: dg && +dg[2]}, {s: "주보", v: wg ? +wg[1] : (wwait ? "입력 대기" : null)}], 2, (wwait && !wg) || gWait ? "wait" : undefined);
     var di = T.daily && T.daily.match(/재무 재고 평가액\((\d+\/\d+)\) ([\d.]+)억원/), wi = T.weekly && T.weekly.match(/재고 평가액 ([\d.]+)억원/);
     addNum("재무 재고 평가액", "일보 재고 자산 각주 = 주보 · 단위 억원" + (wwait && !wi ? " · 주보 재무 입력 대기" : ""), [{s: "일보" + (di ? "(" + di[1] + ")" : ""), v: di && +di[2]}, {s: "주보", v: wi ? +wi[1] : (wwait ? "입력 대기" : null)}], 2, wwait && !wi ? "wait" : undefined);
     var c = {ok: 0, bad: 0, wait: 0, info: 0}; R.concat(F).forEach(function (x) { c[x.j]++; });
