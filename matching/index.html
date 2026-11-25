@@ -214,12 +214,12 @@ tbody tr:hover td{background:#fafbfc}th{letter-spacing:0}td,th{padding:9px 10px}
 .st{display:block;height:8px;background:rgba(29,34,40,.08);border-radius:2px;margin-bottom:4px;overflow:hidden}.st i{display:block;height:100%;border-radius:2px}.st i.bt{background:var(--accent)}.st i.bc{background:#5F6772}
 .sc .h{font-size:11.5px;display:inline}.sc .muted{font-size:11px}
 .modal{border-radius:14px;overflow:hidden}.mh{position:sticky;top:0;background:var(--bg);z-index:2}.guide{border-radius:10px}.why3 .w{border-radius:8px}.why3 .w .v{font-size:20px;font-weight:800}
-.sb-i.on{box-shadow:inset 3px 0 0 var(--accent)}.sb-m::before{content:"화면";font-size:11px;color:#6f7984;font-weight:700;padding:0 10px 2px}
+.sb-i.on{box-shadow:inset 3px 0 0 var(--accent)}.sb-l{font-size:11.5px;color:#9aa6b2;font-weight:700;padding:0 10px 2px}.sb-l2{margin-top:12px;padding-top:12px;border-top:1px solid #39424d}.rp3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:0 0 12px}.rp3 button{appearance:none;font:inherit;text-align:left;background:#fff;border:1px solid var(--line);border-radius:10px;padding:9px 12px;cursor:pointer;color:var(--ink)}.rp3 button b{display:block;font-size:13.5px}.rp3 button span{display:block;font-size:12px;color:#3D4958;margin-top:2px}.rp3 button[aria-current="true"]{border:2px solid var(--accent);background:#eef3fa}@media (max-width:760px){.rp3{grid-template-columns:1fr}}
 .foot{line-height:1.7;max-width:1100px}
 .gc .pf{font-size:10.5px;padding:0 4px}
 @media (max-width:560px){.kt .d{display:none}.kt{padding:8px 12px}.head>div>.sub:not(#sub){display:none}.pill{font-size:12px;padding:3px 8px}.flow{display:none}}
 @media (max-width:1000px){.kp{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media (max-width:900px){.sb-m::before{display:none}}
+@media (max-width:900px){.sb-l{display:none}}
 @media (max-width:560px){.kt .v{font-size:20px}.head h1{font-size:20px}.sr{font-size:15px}.sb1{flex-direction:column;gap:0;font-size:10.5px}.sc{padding:6px 5px}}
 .erp{display:grid;grid-template-columns:220px minmax(0,1fr);min-height:100vh}
 .sb{background:#1d2228;color:#fff;position:sticky;top:0;height:100vh;padding:18px 12px;display:flex;flex-direction:column;gap:14px;overflow:auto}
@@ -417,14 +417,16 @@ canvas.sk-w{padding:10px;box-sizing:border-box}
 <nav class="sb" aria-label="매칭 테이블 메뉴">
   <div class="sb-h"><b>매칭 테이블</b><span>수요 공급 매칭 ERP</span></div>
   <div class="sb-m">
+    <span class="sb-l">업무 화면</span>
     <button class="sb-i on" data-v="grid" data-gv="car"><b>차종 × 연식</b><span>그리드, 칸을 누르면 상세</span></button>
     <button class="sb-i" data-v="grid" data-gv="seg"><b>연식 × 주행거리</b><span>세그먼트 요약 그리드</span></button>
     <button class="sb-i" data-v="sales"><b>영업 화면</b><span>희망가 조정, 더 가져올 묶음</span></button>
     <button class="sb-i" data-v="member"><b>회원운영 화면</b><span>전문 바이어 모집</span></button>
-    <button class="sb-i" data-v="check"><b>주간 점검</b><span>과제 진행, 판정 변화</span></button>
-    <button class="sb-i" data-v="jtest"><b>판정 시험</b><span>판정한 차가 다음 경매에 팔렸나</span></button>
     <button class="sb-i" data-v="rule"><b>판정 기준</b><span>계산 방법</span></button>
-    <button class="sb-i" data-v="simr"><b>결과 시뮬레이션 리포트</b><span>요청을 전부 수락했다면</span></button>
+    <span class="sb-l sb-l2">점검 · 검증 리포트</span>
+    <button class="sb-i" data-v="check"><b>주간 점검</b><span>이번 달 과제가 진행되고 있나</span></button>
+    <button class="sb-i" data-v="jtest"><b>판정 시험</b><span>지난 판정이 다음 경매에서 맞았나</span></button>
+    <button class="sb-i" data-v="simr"><b>결과 시뮬레이션 리포트</b><span>요청을 전부 수락했다면 결과가 얼마나 달랐나</span></button>
   </div>
   <div class="sb-f"><span>판정 기준 기간</span><b id="sbw"></b><span id="sbr"></span><a href="../" target="_top">← 경영 ERP로 돌아가기</a></div>
 </nav>
@@ -551,6 +553,8 @@ function btns(id,kind){
   <button class="btn ${s==='rej'?'rej':''}" data-id="${id}" data-a="rej">${s==='rej'?'반려함 (사유 입력)':'반려'}</button>`;
 }
 function sure(x){return x==='높음'?'<span class="tag t-hi">확실도 높음</span>':'<span class="tag t-mid">확실도 보통</span>'}
+function rp3(me){const R=[['check','주간 점검','보는 것: 이번 달 과제 · 묻는 것: 팀이 과제대로 움직이고 있나, 과제 근거(판정)가 그대로인가'],['jtest','판정 시험','보는 것: 지난 판정 · 묻는 것: 판정한 차가 다음 경매에서 실제로 그렇게 팔렸나(판정이 믿을 만한가)'],['simr','결과 시뮬레이션 리포트','보는 것: 요청의 효과 · 묻는 것: 요청을 전부 수락했다면 낙찰이 몇 대 달라졌나']];
+  return `<div class="rp3" role="group" aria-label="점검 · 검증 리포트 3종">${R.map(r=>`<button data-rp="${r[0]}" aria-current="${r[0]===me}"><b>${r[1]}</b><span>${r[2]}</span></button>`).join('')}</div>`;}
 function flow(me){
   const b=(k,t,d)=>`<div class="fb ${me===k?'me':''}"><b>${t}</b>${d}</div>`;
   return `<div class="flow">${b('ops','전략기획실 / 경매운영팀','전략기획실이 월초 과제 발행(대표님 과제), 경매운영팀이 매주 목 판정 갱신 확인')}<span class="ar">→</span>${b('sales','영업','4주 과제 실행, 매주 진행 체크')}<span class="ar" title="영업은 사지 않는 출품사를 회원 후보로 소개">⇄</span>${b('member','회원운영','신규 전문 바이어 모집, 영업이 소개한 출품사 전환')}</div>`;
@@ -994,7 +998,7 @@ function enhanceView(){
   [...V.querySelectorAll('.sbox')].forEach((b,i)=>{const t=(VJUMP[view]||[])[i]; if(t==null||!cards[t]) return; b.dataset.jump=t; b.title='누르면 아래 해당 목록으로 이동'; b.setAttribute('role','button');});
 }
 function render(){
-  document.getElementById('view').innerHTML=TX(view==='sales'?salesView():view==='member'?memberView():view==='grid'?gridView():view==='rule'?ruleView():view==='jtest'?jtView():view==='simr'?simView():checkView());
+  document.getElementById('view').innerHTML=TX(view==='sales'?salesView():view==='member'?memberView():view==='grid'?gridView():view==='rule'?ruleView():view==='jtest'?rp3('jtest')+jtView():view==='simr'?rp3('simr')+simView():rp3('check')+checkView());
   enhanceView();
   document.getElementById('modal').innerHTML=TX((view==='grid'&&gview==='car')?modalHTML():(view==='grid'&&gview==='seg')?segModalHTML():'');
   fx();
@@ -1003,6 +1007,7 @@ function render(){
 document.addEventListener('click',e=>{
   const cl=e.target.closest('[data-close]'); if(cl&&(e.target===cl||cl.classList.contains('mx'))){gsel=null;ssel=null;render();return;}
   const t=e.target.closest('.sb-i'); if(t){view=t.dataset.v;if(t.dataset.gv)gview=t.dataset.gv;gsel=null;ssel=null;render();window.scrollTo(0,0);return;}
+  const rb=e.target.closest('[data-rp]'); if(rb){view=rb.dataset.rp;render();window.scrollTo(0,0);return;}
   const jb=e.target.closest('[data-jt]'); if(jb){jtSel=+jb.dataset.jt;render();return;}
   const gv=e.target.closest('[data-gv]'); if(gv){gview=gv.dataset.gv;render();return;}
   const sch=e.target.closest('[data-schg]'); if(sch){schg=sch.dataset.schg;ssel=null;render();return;}
