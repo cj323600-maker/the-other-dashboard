@@ -173,7 +173,7 @@ function sheet(u){const t=u.v==='강함', c=u.v==='약함'||u.v==='중단';
    ${u.ct.length?`<div class="sh4">많이 사 간 나라 (대)</div>`+u.ct.map(x=>`<div class="br"><span>${x[0]}</span><u><i style="width:${x[1]/mxc*100}%"></i></u><b>${f(x[1])}대</b></div>`).join(''):''}
    ${buyers(u.tb,u.w)}<div class="sh4">많이 나온 세부모델</div><div style="font-size:14px">${u.det.join(', ')}</div><button class="lnk" data-pop="${u.nm}|${u.yr}">차량 선정 세부 근거 보기 ›</button><button class="cls" data-close="1">닫기</button></div>`;}
 // 세부 근거 팝업: 상세 화면을 한 번만 미리 불러 두고(숨김), 누르면 차종만 바꿔 바로 보여 줌(2026-11-26 사용자 지적: 매번 새로 불러와 느림)
-let popReady=false, popWant=null; const POPV='261126061916';
+let popReady=false, popWant=null; const POPV='261126063941';
 const popUrl=k=>'./index.html?v='+POPV+'#pop='+encodeURIComponent(k);
 function popFrame(){let d=document.getElementById('popf'); if(!d){d=document.createElement('div'); d.id='popf'; d.className='off wait'; d.innerHTML=`<div class="pl">세부 근거를 불러오는 중</div><iframe title="차량 선정 세부 근거"></iframe><button data-popx="1" aria-label="세부 근거 닫기">닫기 ✕</button>`; document.body.appendChild(d);
     const fr=d.querySelector('iframe'); fr.addEventListener('load',()=>{popReady=true; d.classList.remove('wait'); if(popWant&&!decodeURIComponent(fr.src).endsWith('#pop='+popWant)) fr.src=popUrl(popWant);}); fr.src=popUrl(popWant||'_');} return d;}
