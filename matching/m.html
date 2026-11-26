@@ -1,8 +1,8 @@
 <!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
-<title>매칭 테이블 · 폰 화면 시안</title>
+<title>매칭 테이블</title>
 <style>
-:root{--bg:#17171C;--card:#202027;--line:#2C2C35;--tx:#F2F3F5;--mut:#9A9CA6;--b1:#3182F6;--b2:#2A5DB8;--b3:#263F73;--g1:#4A4D58;--g2:#34363F;--w1:#7A4A2A}
+:root{--bg:#17171C;--card:#202027;--line:#2C2C35;--tx:#F2F3F5;--mut:#B0B3BD;--b1:#3182F6;--b2:#2A5DB8;--b3:#263F73;--g1:#4A4D58;--g2:#34363F;--w1:#7A4A2A}
 *{box-sizing:border-box}html,body{margin:0;background:#0F0F13;color:var(--tx);font-family:"Pretendard Variable",Pretendard,-apple-system,"Malgun Gothic",sans-serif;word-break:keep-all}
 .app{max-width:480px;margin:0 auto;min-height:100vh;background:var(--bg);padding-bottom:28px}
 .top{padding:18px 20px 6px;display:flex;justify-content:space-between;align-items:center}.top h1{font-size:21px;margin:0;font-weight:800}.top .cf{font-size:11px;color:#FF8A80;border:1px solid #FF8A80;border-radius:5px;padding:1px 6px;font-weight:700}
@@ -14,7 +14,7 @@
 .crumb{padding:2px 20px 10px;font-size:13.5px;color:var(--mut);display:flex;gap:6px;align-items:center;flex-wrap:wrap}.crumb button{appearance:none;border:0;background:#26262E;color:#fff;font:inherit;font-size:13px;font-weight:700;border-radius:10px;padding:6px 11px;cursor:pointer}.crumb b{color:#fff}
 .tm{position:relative;margin:0 20px;height:380px}.tile{position:absolute;border-radius:6px;padding:6px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;border:2px solid var(--bg);cursor:pointer;overflow:hidden;color:#fff;appearance:none;font:inherit}
 .tile b{font-size:15px;font-weight:800;line-height:1.25}.tile span{font-size:13px;font-weight:600;opacity:.95;margin-top:2px}.tile small{font-size:11px;opacity:.85;margin-top:2px}.tile.s b{font-size:12.5px}.tile.s span{font-size:11.5px}.tile.s small{display:none}.tile.xs span{display:none}
-.t-take{background:var(--b1)}.t-take2{background:var(--b2)}.t-hold{background:var(--g2)}.t-hold2{background:var(--g1)}.t-chk{background:var(--w1)}
+.tile.cur{outline:3px solid #fff;outline-offset:-3px;z-index:1}.t-take{background:var(--b1)}.t-take2{background:var(--b2)}.t-hold{background:var(--g2)}.t-hold2{background:var(--g1)}.t-chk{background:var(--w1)}
 .lg{padding:10px 20px 4px;display:flex;gap:12px;flex-wrap:wrap;font-size:12px;color:var(--mut)}.lg i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:4px;vertical-align:-1px}
 .list{padding:4px 20px}.row{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:13px 0;border-bottom:1px solid var(--line);cursor:pointer;background:none;border-left:0;border-right:0;border-top:0;width:100%;color:inherit;font:inherit;text-align:left}.row b{font-size:15.5px;font-weight:700}.row span{display:block;font-size:12.5px;color:var(--mut);margin-top:2px}.row em{font-style:normal;font-weight:800;font-size:15px;white-space:nowrap;text-align:right}.row em small{display:block;font-size:11.5px;font-weight:600;color:var(--mut)}.c-take{color:#5BA2FF}.c-chk{color:#F0A56A}
 .sheet{position:fixed;left:0;right:0;bottom:0;max-width:480px;margin:0 auto;background:#22222A;border-radius:22px 22px 0 0;padding:10px 20px 26px;box-shadow:0 -12px 40px rgba(0,0,0,.6);max-height:86vh;overflow:auto;z-index:5}.dim{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:4}
@@ -24,6 +24,13 @@
 .sh4{font-size:13px;color:var(--mut);margin:16px 0 6px;font-weight:700}.br{display:grid;grid-template-columns:96px minmax(0,1fr) 58px;gap:8px;align-items:center;font-size:13.5px;padding:4px 0}.br i{display:block;height:9px;border-radius:9px;background:var(--b1)}.br u{display:block;background:#33333D;border-radius:9px;text-decoration:none}.br b{text-align:right;font-weight:700}
 .cls{appearance:none;border:0;background:#33333D;color:#fff;font:inherit;font-weight:700;font-size:15px;border-radius:14px;padding:13px;width:100%;margin-top:16px;cursor:pointer}
 .note{padding:14px 20px 0;font-size:11.5px;color:#7C7E88;line-height:1.6}
+
+.pane{min-width:0}.lnk{display:block;margin:14px 20px 0;text-align:center;background:#26262E;color:#fff;text-decoration:none;font-weight:700;font-size:14px;border-radius:14px;padding:12px}
+.empty3{padding:60px 20px;color:var(--mut);font-size:14px;text-align:center}
+@media(min-width:1000px){.app{max-width:1560px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr) minmax(0,.9fr);gap:10px;background:#0F0F13;padding:0 10px 28px;align-items:start}
+ .hd{grid-column:1 / -1;background:var(--bg);border-radius:0 0 18px 18px}.pane{background:var(--bg);border-radius:18px;padding-bottom:18px;min-height:640px}
+ .app.w .dim{display:none}.app.w .sheet{position:static;max-width:none;box-shadow:none;background:none;border-radius:0;padding:6px 20px 10px;max-height:none;animation:none}.app.w .sheet .bar,.app.w .sheet .cls{display:none}.gap{display:none}.pane .sec{padding-top:18px}}
+@media(max-width:999px){.app.g .p1{display:none}.app:not(.g) .p2{display:none}.p3{display:contents}}
 @media(prefers-reduced-motion:no-preference){.sheet{animation:up .22s ease}.tile{transition:filter .12s}.tile:active{filter:brightness(1.25)}}@keyframes up{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
 </style></head><body><div class="app" id="app"></div>
 <script>
@@ -41,34 +48,43 @@ function squarify(items,W,H){ // items: [{v,...}] → [{x,y,w,h,...}] (단순 �
     row.forEach(o=>{const a=o.v/rs*(horiz?h:w); out.push(Object.assign({},o,horiz?{x,y:y+off,w:len,h:a}:{x:x+off,y,w:a,h:len})); off+=a;});
     if(horiz){x+=len;w-=len}else{y+=len;h-=len} rest=rest.slice(row.length); sum-=rs;}
   return out;}
-function tiles(items,H){const W=100; return squarify(items,W,H).map(o=>{const pxw=o.w/100*Math.min(innerWidth,480)*0.9, small=pxw<86||o.h<64, xs=pxw<58||o.h<44;
+function tiles(items,H,PW){const W=100; return squarify(items,W,H).map(o=>{const pxw=o.w/100*PW, small=pxw<86||o.h<64, xs=pxw<58||o.h<44;
   return `<button class="tile ${o.c} ${small?'s':''} ${xs?'xs':''}" data-k="${o.k}" style="left:${o.x}%;top:${o.y}px;width:${o.w}%;height:${o.h}px"><b>${o.t}</b><span>${o.s}</span>${o.m?`<small>${o.m}</small>`:''}</button>`}).join('');}
-function render(){const D=X[mk]; let h=`<div class="top"><h1>매칭 테이블</h1><span class="cf">[대외비]</span></div><div class="sub">최근 16회차(${META.r0md}~${META.lastmd}) · 낙찰 회원 구분 기준 · 폰 화면 시안</div><div class="gap"></div>`;
-  const all=D.g.flatMap(g=>g.u), take=all.filter(u=>u.v==='강함'), chk=all.filter(u=>u.v==='약함'||u.v==='중단');
-  h+=`<div class="sec"><h2>${grp?grp:'누가 사 가는 차'}</h2><div class="seg" role="group" aria-label="시장 선택">${['수출','내수'].map(m=>`<button data-mk="${m}" aria-pressed="${m===mk}">${m}</button>`).join('')}</div></div>`;
-  if(!grp){h+=`<div class="kp"><div><span>${mk} 낙찰</span><b>${f(D.tot)}<small>대</small></b></div><div><span>더 가져올 차</span><b style="color:#5BA2FF">${take.length}<small>종</small></b></div><div><span>받기 전 확인</span><b style="color:#F0A56A">${chk.length}<small>종</small></b></div></div>`;
-    const it=D.g.map(g=>{const t=g.u.filter(u=>u.v==='강함').length, c=g.u.filter(u=>u.v==='약함'||u.v==='중단').length; return {v:g.w,k:'g:'+g.g,t:g.g,s:f(g.w)+'대',m:(t?'더 가져올 차 '+t+'종':'')+(t&&c?' · ':'')+(c?'확인 '+c+'종':''),c:t?(t>=3?'t-take':'t-take2'):(c?'t-chk':'t-hold2')}});
-    h+=`<div class="tm" style="height:340px">${tiles(it,340)}</div><div class="lg"><span><i style="background:var(--b1)"></i>더 가져올 차가 있는 차군</span><span><i style="background:var(--g1)"></i>지시 없음</span><span>칸 크기 = ${mk} 낙찰 대수 · 누르면 차종</span></div>`;
-    h+=`<div class="gap" style="margin-top:14px"></div><div class="sec"><h2>이번 주 오더</h2></div><div class="list">`+[...take,...chk].sort((a,b)=>b.cf-a.cf).slice(0,6).map(u=>row(u)).join('')+(take.length+chk.length?'':`<div class="row"><span>${mk} 회원이 주로 사는 차 중 신뢰도 80% 이상 지시 없음</span></div>`)+`</div>`;
-  } else {const G=D.g.find(g=>g.g===grp), top=G.u.slice(0,14), rest=G.u.slice(14).reduce((a,u)=>a+u.w,0);
-    h+=`<div class="crumb"><button data-back="1">‹ ${mk} 전체</button><span>${mk}</span>›<b>${grp}</b><span>낙찰 ${f(G.w)}대</span></div>`;
-    const it=top.map(u=>({v:u.w,k:'u:'+u.nm+'|'+u.yr,t:u.nm,s:u.yr,m:f(u.w)+'대',c:cls(u)}));
-    h+=`<div class="tm" style="height:420px">${tiles(it,420)}</div><div class="lg"><span><i style="background:var(--b1)"></i>더 가져올 차</span><span><i style="background:var(--w1)"></i>받기 전 확인</span><span><i style="background:var(--g2)"></i>판단 보류</span>${rest?`<span>그 밖 ${G.u.length-14}종 ${f(rest)}대</span>`:''}</div>`;
-    h+=`<div class="gap" style="margin-top:14px"></div><div class="sec"><h2>${grp} 차종 × 연식</h2></div><div class="list">`+top.map(u=>row(u)).join('')+`</div>`;}
-  h+=`<div class="note">판정 = 최근 16회차 제값(희망가가 같은 조건 낙찰가 중앙값 ±5%) 출품 30대 이상 · 제값 낙찰률 55% 초과 = 더 가져올 차 · 50% 미만 = 받기 전 확인 · 신뢰도 80% 이상만 지시. 칸 크기 = 그 시장 회원이 낙찰받은 대수.</div>`;
-  if(sel) h+=sheet(sel);
-  document.getElementById('app').innerHTML=h;}
+const wide=()=>innerWidth>=1000;
+const main=u=>u.sh>=50;   // 그 시장 회원이 낙찰의 절반 이상을 사 간 차만 그 시장의 오더로 셈
+function render(){const D=X[mk], W=wide(); const all=D.g.flatMap(g=>g.u), take=all.filter(u=>u.v==='강함'&&main(u)), chk=all.filter(u=>(u.v==='약함'||u.v==='중단')&&main(u));
+  const ords=[...take,...chk].sort((a,b)=>b.cf-a.cf);
+  if(W&&!grp) grp=D.g[0].g; if(W&&!sel) sel=ords[0]||D.g.find(g=>g.g===grp).u[0];
+  const pw=W?Math.min(innerWidth,1560)/3.1:Math.min(innerWidth,480)*0.9;
+  let hd=`<div class="hd"><div class="top"><h1>매칭 테이블</h1><span style="display:flex;gap:8px;align-items:center"><a href="../" style="color:#B4B7C0;font-size:12.5px;text-decoration:none;border:1px solid #3A3A45;border-radius:8px;padding:3px 9px">‹ 경영 ERP</a><span class="cf">[대외비]</span></span></div><div class="sub">최근 16회차(${META.r0md}~${META.lastmd}) · 낙찰 회원 구분 기준 · 수출 · 내수 → 차군 → 차종 × 연식</div></div>`;
+  const seg=`<div class="seg" role="group" aria-label="시장 선택">${['수출','내수'].map(m=>`<button data-mk="${m}" aria-pressed="${m===mk}">${m}</button>`).join('')}</div>`;
+  // 1단계
+  let p1=`<div class="sec"><h2>누가 사 가는 차</h2>${seg}</div><div class="kp"><div><span>${mk} 낙찰</span><b>${f(D.tot)}<small>대</small></b></div><div><span>더 가져올 차</span><b style="color:#5BA2FF">${take.length}<small>종</small></b></div><div><span>받기 전 확인</span><b style="color:#F0A56A">${chk.length}<small>종</small></b></div></div>`;
+  const it=D.g.map(g=>{const t=g.u.filter(u=>u.v==='강함'&&main(u)).length, c=g.u.filter(u=>(u.v==='약함'||u.v==='중단')&&main(u)).length; return {v:g.w,k:'g:'+g.g,t:g.g,s:f(g.w)+'대',m:(t?'더 가져올 차 '+t+'종':'')+(t&&c?' · ':'')+(c?'받기 전 확인 '+c+'종':''),c:(W&&g.g===grp?'cur ':'')+(t?(t>=3?'t-take':'t-take2'):(c?'t-chk':'t-hold2'))}});
+  p1+=`<div class="tm" style="height:340px">${tiles(it,340,pw)}</div><div class="lg"><span><i style="background:var(--b1)"></i>더 가져올 차가 있는 차군</span><span><i style="background:var(--w1)"></i>받기 전 확인만 있는 차군</span><span><i style="background:var(--g1)"></i>지시 없음</span><span>칸 크기 = ${mk} 낙찰 대수 · 누르면 차종</span></div>`;
+  p1+=`<div class="gap" style="margin-top:14px"></div><div class="sec"><h2>이번 주 오더</h2></div><div class="list">`+(ords.length?ords.slice(0,8).map(u=>row(u)).join(''):`<div class="row"><span>${mk} 회원이 주로 사는 차 중 신뢰도 80% 이상 지시 없음</span></div>`)+`</div><a class="lnk" href="./index.html">팀별 오더 · 판정 근거 · 리포트 (상세 화면) ›</a>`;
+  // 2단계
+  let p2='';
+  if(grp){const G=D.g.find(g=>g.g===grp), top=G.u.slice(0,14), rest=G.u.slice(14).reduce((a,u)=>a+u.w,0);
+    p2=`<div class="sec"><h2>${grp}</h2>${W?'':seg}</div><div class="crumb">${W?'':`<button data-back="1">‹ ${mk} 전체</button>`}<span>${mk}</span>›<b>${grp}</b><span>낙찰 ${f(G.w)}대</span></div>`;
+    const it2=top.map(u=>({v:u.w,k:'u:'+u.nm+'|'+u.yr,t:u.nm,s:u.yr,m:f(u.w)+'대',c:(sel&&sel.nm===u.nm&&sel.yr===u.yr?'cur ':'')+cls(u)}));
+    p2+=`<div class="tm" style="height:420px">${tiles(it2,420,pw)}</div><div class="lg"><span><i style="background:var(--b1)"></i>더 가져올 차</span><span><i style="background:var(--w1)"></i>받기 전 확인</span><span><i style="background:var(--g2)"></i>판단 보류</span>${rest?`<span>그 밖 ${G.u.length-14}종 ${f(rest)}대</span>`:''}</div>`;
+    p2+=`<div class="gap" style="margin-top:14px"></div><div class="sec"><h2>${grp} 차종 × 연식</h2></div><div class="list">`+top.map(u=>row(u)).join('')+`</div>`;}
+  const p3=sel?sheet(sel):(W?`<div class="empty3">차종 × 연식 칸을 누르면 오더와 근거가 여기에 나옵니다</div>`:'');
+  const note=`<div class="note">판정 = 최근 16회차 제값(희망가가 같은 조건 낙찰가 중앙값 ±5%) 출품 30대 이상 · 제값 낙찰률 55% 초과 = 더 가져올 차 · 50% 미만 = 받기 전 확인 · 신뢰도 80% 이상만 지시. 칸 크기 = 그 시장 회원이 낙찰받은 대수. 오더 수 = 그 시장 회원이 낙찰의 절반 이상을 사 간 차만.</div>`;
+  const el=document.getElementById('app'); el.className='app'+(grp?' g':'')+(W?' w':'');
+  el.innerHTML=hd+`<div class="pane p1">${p1}${W?'':note}</div><div class="pane p2">${p2}${W?'':note}</div><div class="pane p3">${W?`<div class="sec"><h2>오더와 근거</h2></div>`:''}${p3}${W?note:''}</div>`;}
 function row(u){const t=u.v==='강함', c=u.v==='약함'||u.v==='중단';
   return `<button class="row" data-k="u:${u.nm}|${u.yr}"><div><b>${u.nm} ${u.yr}</b><span>${mk} 낙찰 ${f(u.w)}대 · 주행거리 ${u.km} 많음</span></div><em class="${t?'c-take':c?'c-chk':''}">${t?'더 가져올 차':c?'받기 전 확인':'판단 보류'}<small>제값 낙찰률 ${u.fn>=30?u.fr.toFixed(1)+'%':'표본 적음'}</small></em></button>`;}
 function sheet(u){const t=u.v==='강함', c=u.v==='약함'||u.v==='중단';
-  const ord=t?`<div class="ord"><small>영업 오더</small>${u.nm} ${u.yr}, 주행거리 ${u.km} 위주로 더 출품 (경매 1회당 약 +${u.q}대)</div>`:c?`<div class="ord c"><small>영업 오더</small>${u.nm} ${u.yr}은 희망가가 낙찰가 중앙값 ${f(u.p50)}만원 이하일 때만 받기</div>`:`<div class="ord h"><small style="color:#9A9CA6">지시 없음</small>${u.fn<30?'제값에 나온 차가 '+u.fn+'대로 30대 미만':'기준(55% 초과 · 50% 미만)이나 신뢰도 80%에 못 미침'}</div>`;
+  const ord=t?`<div class="ord"><small>영업 오더</small>${u.nm} ${u.yr}, 주행거리 ${u.km} 위주로 더 출품 (경매 1회당 약 +${u.q}대)</div>`:c?`<div class="ord c"><small>영업 오더</small>${u.nm} ${u.yr}은 희망가가 낙찰가 중앙값 ${f(u.p50)}만원 이하일 때만 받기</div>`:`<div class="ord h"><small style="color:#9A9CA6">지시 없음</small>${u.fn<30?'제값에 나온 차가 '+u.fn+'대로 30대 미만(표본 적음)':(u.fr>=50&&u.fr<=55)?'제값 낙찰률 '+u.fr.toFixed(1)+'%로 기준선(50~55%) 사이':'제값 낙찰률 '+u.fr.toFixed(1)+'%로 기준은 넘었지만 신뢰도 '+(u.cf==null?'':u.cf+'%로 ')+'80% 미만'}</div>`;
   const mxc=Math.max(1,...u.ct.map(x=>x[1]));
   return `<div class="dim" data-close="1"></div><div class="sheet" role="dialog" aria-label="${u.nm} ${u.yr}"><div class="bar"></div><h3>${u.nm} ${u.yr}</h3><span class="tg ${cls(u)}">${VN[u.v]}${u.cf!=null&&u.v!=='보류'?' · 신뢰도 '+(u.cf>=99.5?'99% 이상':u.cf+'%'):''}</span>${ord}
    <div class="fx"><div><span>제값 낙찰률</span><b>${u.fn?u.fr.toFixed(1)+'%':'-'}</b><small>${f(u.fn)}대 중 ${f(u.fw)}대</small></div><div><span>${mk} 낙찰</span><b>${f(u.w)}대</b><small>이 차 낙찰의 ${u.sh}%</small></div><div><span>낙찰가 중앙값</span><b>${f(u.p50)}</b><small>만원</small></div></div>
    ${u.ct.length?`<div class="sh4">많이 사 간 나라 (대)</div>`+u.ct.map(x=>`<div class="br"><span>${x[0]}</span><u><i style="width:${x[1]/mxc*100}%"></i></u><b>${f(x[1])}대</b></div>`).join(''):''}
    <div class="sh4">많이 나온 세부모델</div><div style="font-size:14px">${u.det.join(', ')}</div><button class="cls" data-close="1">닫기</button></div>`;}
-document.addEventListener('click',e=>{const m=e.target.closest('[data-mk]'); if(m){mk=m.dataset.mk;grp=null;sel=null;render();scrollTo(0,0);return;}
-  if(e.target.closest('[data-close]')){sel=null;render();return;} if(e.target.closest('[data-back]')){grp=null;render();scrollTo(0,0);return;}
-  const k=e.target.closest('[data-k]'); if(k){const v=k.dataset.k; if(v.startsWith('g:')){grp=v.slice(2);render();scrollTo(0,0);} else {const [n,y]=v.slice(2).split('|'); sel=X[mk].g.flatMap(g=>g.u).find(u=>u.nm===n&&u.yr===y); render();}}});
+document.addEventListener('click',e=>{const m=e.target.closest('[data-mk]'); if(m){mk=m.dataset.mk;grp=null;sel=null;render();if(!wide())scrollTo(0,0);return;}
+  if(e.target.closest('[data-close]')&&!wide()){sel=null;render();return;} if(e.target.closest('[data-back]')){grp=null;render();scrollTo(0,0);return;}
+  const k=e.target.closest('[data-k]'); if(k){const v=k.dataset.k; if(v.startsWith('g:')){grp=v.slice(2);if(wide())sel=null;render();if(!wide())scrollTo(0,0);} else {const [n,y]=v.slice(2).split('|'); sel=X[mk].g.flatMap(g=>g.u).find(u=>u.nm===n&&u.yr===y); render();}}});
 addEventListener('resize',render); render();
 </script></body></html>
