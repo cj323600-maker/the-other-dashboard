@@ -69,9 +69,10 @@ function renderSales(){const W=wide(), names=Object.keys(TEAMS); if(W&&!steam) s
   if(W&&steam&&!ssel){const T0=TEAMS[steam]; ssel=T0.kind==='exp'?(T0.ex.length?['ex',0]:null):T0.kind==='rtl'?(T0.buy.length?['buy',0]:T0.caut.length?['caut',0]:null):T0.take.length?['take',0]:T0.chk.length?['chk',0]:T0.po.length?['po',0]:null;}
   const pw=W?Math.min(innerWidth,1560)/3.1:Math.min(innerWidth,480)*0.9;
   const rank=names.slice().sort((a,b)=>cntOf(TEAMS[b])-cntOf(TEAMS[a]));
-  const it=names.map(n=>{const T=TEAMS[n], o={v:Math.max(1,cntOf(T)),k:'t:'+n,t:n,c:(n===steam?'cur ':'')+'tb'+(rank.indexOf(n)+1)};
+  const totc=names.reduce((a,n)=>a+cntOf(TEAMS[n]),0), TH=W?Math.max(460,innerHeight-250):Math.max(420,names.length*74);   // 넓게: 칸 그림이 화면 높이를 다 쓰고, 가장 작은 팀도 글자가 들어갈 크기
+  const it=names.map(n=>{const T=TEAMS[n], o={v:Math.max(totc*0.09,cntOf(T)),k:'t:'+n,t:n,c:(n===steam?'cur ':'')+'tb'+(rank.indexOf(n)+1)};
     if(T.kind==='exp'){o.s=`수출 직매입 후보 ${f(T.exN)}대`;o.m=`재출품 차 ${f(T.allN)}대 중`} else if(T.kind==='rtl'){o.s=`매입할 차 ${T.buy.length}종`;o.m=`매입 전 확인 ${T.caut.length}종`} else {o.s=`더 가져올 차 ${T.takeN}종`;o.m=`받기 전 확인 ${T.chkN}종 · 희망가 조정 ${T.poN}대`} return o;});
-  let p1=`<div class="sec"><h2>팀별 영업 오더</h2></div><div class="tm" style="height:380px">${tiles(it,380,pw).replace(/data-k="t:/g,'data-t="')}</div><div class="lg"><span>칸 크기 · 파랑 진하기 = 오더 건수 · 누르면 그 팀 오더</span></div>`;
+  let p1=`<div class="sec"><h2>팀별 영업 오더</h2></div><div class="tm" style="height:${TH}px">${tiles(it,TH,pw).replace(/data-k="t:/g,'data-t="')}</div><div class="lg"><span>칸 크기 · 파랑 진하기 = 오더 건수(작은 팀은 글자가 보이는 크기까지 키움) · 누르면 그 팀 오더</span></div>`;
   let p2='';
   if(steam){const T=TEAMS[steam];
     const rw=(k,i,b,s,cl,e,sm)=>`<button class="row${ssel&&ssel[0]===k&&ssel[1]===i?' on':''}" data-s="${k}:${i}"><div><b>${b}</b><span>${s}</span></div><em class="${cl}">${e}<small>${sm}</small></em></button>`;
@@ -171,11 +172,14 @@ function sheet(u){const t=u.v==='강함', c=u.v==='약함'||u.v==='중단';
    ${u.ct.length?`<div class="sh4">많이 사 간 나라 (대)</div>`+u.ct.map(x=>`<div class="br"><span>${x[0]}</span><u><i style="width:${x[1]/mxc*100}%"></i></u><b>${f(x[1])}대</b></div>`).join(''):''}
    ${buyers(u.tb,u.w)}<div class="sh4">많이 나온 세부모델</div><div style="font-size:14px">${u.det.join(', ')}</div><button class="lnk" data-pop="${u.nm}|${u.yr}">차량 선정 세부 근거 보기 ›</button><button class="cls" data-close="1">닫기</button></div>`;}
 // 세부 근거 팝업: 상세 화면을 한 번만 미리 불러 두고(숨김), 누르면 차종만 바꿔 바로 보여 줌(2026-11-26 사용자 지적: 매번 새로 불러와 느림)
-let popReady=false, popWant=null;
-function popFrame(){let d=document.getElementById('popf'); if(!d){d=document.createElement('div'); d.id='popf'; d.className='off'; d.innerHTML=`<div class="pl">세부 근거를 불러오는 중</div><iframe title="차량 선정 세부 근거" src="./index.html#pop=_"></iframe><button data-popx="1" aria-label="세부 근거 닫기">닫기 ✕</button>`; document.body.appendChild(d);} return d;}
-function showPop(k){const d=popFrame(), fr=d.querySelector('iframe'); popWant=k; d.classList.remove('off'); d.classList.toggle('wait',!popReady); if(popReady){try{fr.contentWindow.location.hash='pop='+encodeURIComponent(k)}catch(_){fr.src='./index.html#pop='+encodeURIComponent(k)}}}
+let popReady=false, popWant=null; const POPV='261126061733';
+const popUrl=k=>'./index.html?v='+POPV+'#pop='+encodeURIComponent(k);
+function popFrame(){let d=document.getElementById('popf'); if(!d){d=document.createElement('div'); d.id='popf'; d.className='off wait'; d.innerHTML=`<div class="pl">세부 근거를 불러오는 중</div><iframe title="차량 선정 세부 근거"></iframe><button data-popx="1" aria-label="세부 근거 닫기">닫기 ✕</button>`; document.body.appendChild(d);
+    const fr=d.querySelector('iframe'); fr.addEventListener('load',()=>{popReady=true; d.classList.remove('wait'); if(popWant&&!decodeURIComponent(fr.src).endsWith('#pop='+popWant)) fr.src=popUrl(popWant);}); fr.src=popUrl(popWant||'_');} return d;}
+function showPop(k){popWant=k; const d=popFrame(), fr=d.querySelector('iframe'); d.classList.remove('off'); if(popReady) fr.src=popUrl(k);   // 같은 파일이라 주소 끝(#)만 바뀜 = 다시 불러오지 않고 차종만 바뀜
+  clearTimeout(showPop.t); showPop.t=setTimeout(()=>d.classList.remove('wait'),5000);}
 function closePop(){const d=document.getElementById('popf'); if(d) d.classList.add('off'); popWant=null;}
-addEventListener('message',e=>{if(e.data==='mt-pop-close') closePop(); if(e.data==='mt-pop-ready'){const first=!popReady; popReady=true; const d=document.getElementById('popf'); if(d) d.classList.remove('wait'); if(first&&popWant) showPop(popWant);}});
+addEventListener('message',e=>{if(e.data==='mt-pop-close') closePop();});
 addEventListener('keydown',e=>{if(e.key==='Escape') closePop();}); addEventListener('load',()=>setTimeout(popFrame,600));
 document.addEventListener('click',e=>{const pp=e.target.closest('[data-pop]'); if(pp){showPop(pp.dataset.pop); return;}
   if(e.target.closest('[data-popx]')){closePop();return;}
