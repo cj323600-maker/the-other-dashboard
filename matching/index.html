@@ -336,6 +336,7 @@ tbody tr:hover td{background:#fafbfc}th{letter-spacing:0}td,th{padding:9px 10px}
 .v11b{margin:10px 0 0;padding:10px 14px;border-radius:10px;background:#FDF0DB;color:#7A4A00;border:1px solid #F1D58C;font-size:13.5px;font-weight:600;line-height:1.5}
 th .thn{display:block;font-weight:500;font-size:11px;line-height:1.35;white-space:normal;min-width:150px}
 @media (min-width:821px){.xsc{max-height:440px;overflow:auto}}
+.legend .lgd2{flex-basis:100%;font-size:12.5px;color:var(--ink2,#3D4958);margin-top:2px}
 </style>
 <!--SKIN--><style>
 *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
@@ -880,7 +881,8 @@ function carGrid(){
   if(gfocus) h+=`<div class="warnbox" style="margin-bottom:8px">세그먼트 <b>${gfocus.label}</b> 안 차종만 강조 중 <button class="btn" data-clearfocus="1">전체 보기</button></div>`;
   h+=`<div class="gtool"><span class="lab2">칸 숫자</span><span class="seg"><button aria-pressed="${gmode==='n'}" data-gm="n">주 출품 대수</button><button aria-pressed="${gmode==='q'}" data-gm="q">더 받을 / 남는 대수</button><button aria-pressed="${gmode==='fr'}" data-gm="fr">제값 낙찰률</button></span>
   <span class="seg" style="margin-left:8px"><button data-gall="1" aria-pressed="false">모두 펼치기</button><button data-gall="0" aria-pressed="false">모두 접기</button></span></div>
-  <div class="legend"><span style="color:var(--ink)"><b>칸을 누르면 판정 근거</b></span><span><i style="background:var(--accent)"></i>더 가져올 차</span><span><i style="background:#5F6772"></i>받기 전 확인</span><span><i style="background:var(--ink)"></i>받지 않는 차</span><span><i style="background:#fff"></i>판단 보류</span></div>`;
+  <div class="legend"><span style="color:var(--ink)"><b>칸을 누르면 판정 근거</b></span><span><i style="background:var(--accent)"></i>더 가져올 차 (제값 낙찰률 55% 초과)</span><span><i style="background:#5F6772"></i>받기 전 확인 (50% 미만)</span><span><i style="background:var(--ink)"></i>받지 않는 차 (20% 미만)</span><span><i style="background:#fff"></i>판단 보류 (50~55% 또는 신뢰도 80% 미만)</span><span><i style="background:repeating-linear-gradient(135deg,#f3f5f7 0 4px,#d5dae0 4px 8px)"></i>표본 적음 (제값 출품 30대 미만)</span>
+   <div class="lgd2">색 조건: 최근 ${DATA.meta.W||16}회차, 제값(희망가가 같은 조건 낙찰가 중앙값 ±5%)에 나온 차 30대 이상, 신뢰도 80% 이상일 때만 색을 칠함. 진한 색 = 신뢰도 95% 이상, 옅은 색 = 80~95%</div></div>`;
   h+=`<div><div class="card" style="margin:0"><div class="cb tw"><table class="gt"><thead><tr><th class="rh">차군 / 차종 계열 (주 출품)</th>${YLs.map(y=>`<th>${y}</th>`).join('')}<th class="sm">이번 주 지시</th></tr></thead><tbody>`;
   DATA.grid.forEach((g,gi)=>{
     const fhit=gfocus&&g.rows.some(r=>gfocus.names.includes(r.name));
