@@ -340,7 +340,7 @@ th .thn{display:block;font-weight:500;font-size:11px;line-height:1.35;white-spac
 @media (min-width:821px){.xsc{max-height:440px;overflow:auto}}
 .legend .lgd2{flex-basis:100%;font-size:12.5px;color:var(--ink2,#cfd0d7);margin-top:2px}
 .dethd{margin:18px 0 8px;font-weight:700;font-size:15px;color:#ffffff}
-</style>
+html.embed,html.embed body{background:transparent!important}html.embed .erp>*:not(.app),html.embed .app>*:not(.modal-bg){display:none!important}html.embed .erp{display:block!important}html.embed.nopop body:after{content:'이 차종 · 연식은 판정 칸이 없어 세부 근거가 없습니다';display:block;color:#ffffff;text-align:center;padding:40px;font-size:16px}</style>
 <!--SKIN--><style>:root{--ink:#F2F3F5!important;--muted:#B9BCC6!important;--line:#33343D!important;--soft:#111216!important;--bg:#1B1C22!important;--accent:#6AA5FF!important;--accent-soft:#1E2B45!important;--ok:#6AA5FF!important;--warn:#E8AE4A!important;--fixed:#F56570!important;--accent-bg:#2160D8;--ink-bg:#4A4D58;--muted-bg:#5F6772;--ok-bg:#2160D8;--fixed-bg:#C8102E}html,body{background:#111216!important}button,input,select,textarea{color:#F2F3F5}.sb-l{color:#B9BCC6!important}.sb{background:#16171C!important}.sb-i{color:#D5DBE1!important}.sb-i span{color:#B4B7C0!important}.sb-i.on{background:#2A2B34!important;color:#fff!important;box-shadow:inset 3px 0 0 #3182F6!important}</style><script src="https://cj323600-maker.github.io/the-other-dashboard/track/track.js" defer></script><!--/SKIN--></head>
 <body>
 <div class="topbar"></div>
@@ -1095,7 +1095,7 @@ function render(){
   document.querySelectorAll('.sb-i').forEach(t=>{const on=t.dataset.v===view&&(!t.dataset.gv||t.dataset.gv===gview);t.classList.toggle('on',on);t.setAttribute('aria-current',on?'page':'false')});
 }
 document.addEventListener('click',e=>{
-  const cl=e.target.closest('[data-close]'); if(cl&&(e.target===cl||cl.classList.contains('mx'))){gsel=null;ssel=null;render();return;}
+  const cl=e.target.closest('[data-close]'); if(cl&&(e.target===cl||cl.classList.contains('mx'))){if(document.documentElement.classList.contains('embed')){try{parent.postMessage('mt-pop-close','*')}catch(_){}return;} gsel=null;ssel=null;render();return;}
   const t=e.target.closest('.sb-i'); if(t){view=t.dataset.v;if(t.dataset.gv)gview=t.dataset.gv;gsel=null;ssel=null;render();window.scrollTo(0,0);return;}
   const rb=e.target.closest('[data-rp]'); if(rb){view=rb.dataset.rp;render();window.scrollTo(0,0);return;}
   const gcr=e.target.closest('[data-gocar]'); if(gcr&&ssel){const nm=gcr.dataset.gocar,yy=ssel.y;for(let gi=0;gi<DATA.grid.length;gi++){const ri=DATA.grid[gi].rows.findIndex(r=>r.name===nm);if(ri>=0&&DATA.grid[gi].rows[ri].cells[yy]){gopen.add(gi);ssel=null;gview='car';gsel={g:gi,ri,y:yy,r:DATA.grid[gi].rows[ri]};render();return;}}return;}
@@ -1119,14 +1119,17 @@ document.addEventListener('click',e=>{
       if(why===null) return; why=({'1':'데이터 오류','2':'팀이 통제할 수 없음','3':'자원 부족'})[why.trim()]||why.trim(); if(!why) return;}
     state[id]=nv; saveLocal(); const row=b.closest('tr,.task'); let lab=''; if(row){const cl=row.cloneNode(true); cl.querySelectorAll('.btn,select,.hp').forEach(x=>x.remove()); lab=[...cl.children].map(x=>x.textContent.replace(/\s+/g,' ').trim()).filter(Boolean).join(' · ').slice(0,150);} sendReply(id,nv,why,lab); render();}
 });
-document.addEventListener('keydown',e=>{if(e.key==='Escape'&&(gsel||ssel)){gsel=null;ssel=null;render();}
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.documentElement.classList.contains('embed')){try{parent.postMessage('mt-pop-close','*')}catch(_){}return;} if(e.key==='Escape'&&(gsel||ssel)){gsel=null;ssel=null;render();}
  if(gsel&&(e.key==='ArrowLeft'||e.key==='ArrowRight')){const r=DATA.grid[gsel.g].rows[gsel.ri];let y=gsel.y;do{y+=e.key==='ArrowRight'?1:-1}while(y>=0&&y<6&&!r.cells[y]);if(y>=0&&y<6){gsel={...gsel,y};render();}}});
 // 2026-11-25 팀별 바로가기 주소: #sales/팀이름 · #member · #car · #seg · #rule · #sum3 · #check · #report (링크로 보낸 화면이 바로 열림)
 function setHash(){const k=view==='grid'?gview:view; const h='#'+k+(view==='sales'?'/'+encodeURIComponent(team):''); if(location.hash!==h){try{history.replaceState(null,'',h)}catch(e){}}}
 function readHash(){const m=decodeURIComponent(location.hash.slice(1)).split('/'); let k=m[0]; if(!k) return; if(k==='sum3') k='report';   // 2026-11-26 점검 요약은 결과 리포트에 합침
   if(k==='car'||k==='seg'){view='grid';gview=k;} else if(document.querySelector('.sb-i[data-v="'+k+'"]')) view=k;
   if(k==='sales'&&m[1]&&(DATA.teams[m[1]]||m[1]==='수출사업'||m[1]==='소매판매')) team=m[1];}
-readHash(); window.addEventListener('hashchange',()=>{readHash();render();window.scrollTo(0,0);});
+function openPop(){const h=decodeURIComponent(location.hash.slice(1)); if(!h.startsWith('pop=')) return false; const a=h.slice(4).split('|'), YL=['2023년 이후','2021~22년','2019~20년','2017~18년','2014~16년','2013년 이전'], y=YL.indexOf(a[1]);
+  for(let g=0;g<DATA.grid.length;g++){const ri=DATA.grid[g].rows.findIndex(r=>r.name===a[0]); if(ri>=0&&y>=0&&DATA.grid[g].rows[ri].cells[y]){view='grid';gview='car';gsel={g,ri,y,r:DATA.grid[g].rows[ri]};document.documentElement.classList.add('embed');return true;}}
+  document.documentElement.classList.add('embed','nopop'); return false;}
+const EMB=openPop(); if(!EMB) readHash(); window.addEventListener('hashchange',()=>{readHash();render();window.scrollTo(0,0);});
 render();
 window.addEventListener('load',()=>setTimeout(loadReplies,300));   // track.js(받는 곳 주소)가 읽힌 뒤 공유 회신을 불러옴
 </script>
