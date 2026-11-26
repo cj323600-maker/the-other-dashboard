@@ -622,9 +622,9 @@ function sumView(){
   let g2='';
   if(JT.length){const ser=[['더 가져올 차','a'],['받기 전 확인','b']];
     const val=(r,k)=>{const q=r.groups.find(z=>z[0]===k);return q&&q[3]?q[4]/q[3]*100:null};
-    g2=`<div class="card"><div class="ch"><h2>판정 검증 추이: 판정별 다음 회차 제값 낙찰률 (%)</h2><span class="why">최근 ${fmt(JT.length)}회차 · 점선 = 기준 55%</span></div><div class="cb">
-     <div class="vlg"><span><i class="a"></i>더 가져올 차 판정</span><span><i class="b"></i>받기 전 확인 판정</span><span><i class="c"></i>회차 전체 낙찰률</span></div>
-     <div class="vb">${JT.map((r,i)=>{const v=[val(r,'더 가져올 차'),val(r,'받기 전 확인'),r.w/r.n*100];return `<div class="vbc${i<JT.length-4?' old':''}"><div class="vbb"><s></s>${v.map((x,k)=>`<span class="vbi"><em>${x==null?'-':x.toFixed(0)}</em><i class="${'abc'[k]}" style="height:${x==null?0:Math.min(x,100)}%"></i></span>`).join('')}</div><div class="vbd">${md_(r.test)}</div></div>`}).join('')}</div></div></div>`;}
+    g2=`<div class="card"><div class="ch"><h2>판정 검증 추이: 더 가져올 차 판정의 다음 회차 제값 낙찰률 (%)</h2><span class="why">최근 ${fmt(JT.length)}회차 · 점선 = 기준 55%</span></div><div class="cb">
+     <div class="vlg"><span><i class="a"></i>더 가져올 차 판정</span><span><i class="c"></i>회차 전체 낙찰률</span></div>
+     <div class="vb">${JT.map((r,i)=>{const v=[val(r,'더 가져올 차'),r.w/r.n*100];return `<div class="vbc${i<JT.length-4?' old':''}"><div class="vbb"><s></s>${v.map((x,k)=>`<span class="vbi"><em>${x==null?'-':x.toFixed(0)}</em><i class="${'ac'[k]}" style="height:${x==null?0:Math.min(x,100)}%"></i></span>`).join('')}</div><div class="vbd">${md_(r.test)}</div></div>`}).join('')}</div></div></div>`;}
   let g3='';
   if(SIM){const SS=DATA.sims||[];
     g3=`<div class="card"><div class="ch"><h2>요청 효과 추이: 회차별 낙찰률 (%)</h2><span class="why">실제와 요청을 전부 수락했을 때 · 최근 ${fmt(SS.length)}회차</span></div><div class="cb">
