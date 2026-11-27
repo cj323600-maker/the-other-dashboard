@@ -4,6 +4,8 @@
 (function () {
   var HASH = "a66e796f897a67b3b0b3697010611011411456970bb7ab3c4221dda694eafb5b";  // sha256("kaa-erp:" + 비밀번호)
   var HOURS = 12, KEY = "kaa_auth";
+  var ON = false;   // 2026-11-27 사용자 지시: 비밀번호는 나중에 붙임. true로 바꾸면 모든 화면에 로그인이 켜짐
+  if (!ON) return;
   if (navigator.webdriver || location.protocol === "about:" || window.__kaaGate) return;   // 자동 점검 · 회원사 분석 안쪽 화면은 통과
   var inner = false; try { inner = window.self !== window.top; } catch (e) { inner = true; }
   window.__kaaGate = 1;
