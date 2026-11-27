@@ -37,6 +37,6 @@
         .then(function (j) { return { ip: j.ip, country: j.country, region: j.region, city: j.city, org: (j.org || "").replace(/^AS\d+\s*/, "") }; }); })
       .catch(function () { return {}; });
   }
-  var go = function () { geo().then(send); };
+  var go = function () { if (window.KAA_GATE_WAIT) { window.addEventListener("kaa-login", function () { geo().then(send); }, { once: true }); return; } geo().then(send); };   // 2026-11-27: 로그인 전에는 기다렸다가 로그인한 이름으로 기록
   if (document.readyState === "complete") setTimeout(go, 300); else window.addEventListener("load", function () { setTimeout(go, 300); });
 })();
